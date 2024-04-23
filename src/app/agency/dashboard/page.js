@@ -1,7 +1,9 @@
-import React from 'react'
 
+import React from 'react'
 export default function Dashboardpage() {
   return (
-    <div>dahboardpage</div>
+    <div>
+        <h2> this is s page</h2>
+    </div>
   )
 }
