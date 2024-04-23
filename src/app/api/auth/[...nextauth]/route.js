@@ -51,12 +51,13 @@ const authOptions = {
       try{
         const user = await User.findOne({email:params.token.email})
         params.token.role = user.role
+        params.token.uid = user._id     
         return params.token;
       }catch(e){
         return params.token;
       }
     },
-    async signIn({ profile, user }) {
+    async signIn({  user }) {
       try {
         const userObj = {
           name: user.name,
@@ -70,16 +71,16 @@ const authOptions = {
           const user = await User.create(userObj);
           return user;
         }
-        return existUser
+        return existUser 
     
       } catch (e) {
         return false;
       }
   
     },
-    async session({ session, token, user }) {
+    async session({ session, token}) {
       session.accessToken = token.accessToken
-      session.user.id = token.id
+      session.user.id = token.uid
       return session
     },
     async redirect({ url, baseUrl }) {
