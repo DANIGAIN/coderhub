@@ -21,26 +21,27 @@ export default function ContactPage() {
     }
   }, [data])
 
-  const onSubmit = async(d) => {
+  const onSubmit = async (d) => {
     if (status === 'unauthenticated') {
       toast("Please login first  then come ", { duration: 3000 })
     } else {
-       setIsLoading(true)
-      try{
+      setIsLoading(true)
+      try {
         d.uid = data.user.id
         const res = await axios.post('/api/contact', d)
-        if(res.data.success){
+        if (res.data.success) {
           toast.success(res.data.message)
           router.push('/')
         }
-      }catch(error){
+      } catch (error) {
         // toast.error(error?.message)
-      }finally{
+      } finally {
         setIsLoading(false)
       }
     }
-  } 
+  }
   return (
+
     <section
       id="contact"
       className="py-12 bg-gray-100 flex justify-center items-center"
@@ -108,7 +109,7 @@ export default function ContactPage() {
                 id="message"
                 name="message"
                 {
-                  ...register('message')
+                ...register('message')
                 }
                 placeholder="Enter your message"
                 rows={5}
