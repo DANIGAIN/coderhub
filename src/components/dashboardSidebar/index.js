@@ -26,6 +26,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         }
     }, [sidebarExpanded]);
 
+
+
     return (
         <aside
             ref={sidebar}
@@ -43,7 +45,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         priority
                     />
                 </Link>
-                <p className="font-bold text-xl"> Agency Dashboard</p>
+                <p className="font-bold text-xl "> Agency  Dashboard</p>
                 <button
                     ref={trigger}
                     onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -151,11 +153,20 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                 <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                                                     <li>
                                                         <Link
-                                                            href="/"
+                                                            href="/agency/dashboard/service"
                                                             className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/" && "text-white"
                                                                 }`}
                                                         >
-                                                            eCommerce
+                                                            service
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link
+                                                            href="/agency/dashboard/category"
+                                                            className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/" && "text-white"
+                                                                }`}
+                                                        >
+                                                            category
                                                         </Link>
                                                     </li>
                                                 </ul>
@@ -165,9 +176,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                     );
                                 }}
                             </SidebarLinkGroup>
-                            {/* <!-- Menu Item Dashboard --> */}
-
-                            {/* <!-- Menu Item Calendar --> */}
+            
                             <li>
                                 <Link
                                     href="/calendar"
@@ -191,9 +200,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                     Calendar
                                 </Link>
                             </li>
-                            {/* <!-- Menu Item Calendar --> */}
-
-                            {/* <!-- Menu Item Profile --> */}
+                      
                             <li>
                                 <Link
                                     href="/profile"
@@ -220,9 +227,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                     Profile
                                 </Link>
                             </li>
-                            {/* <!-- Menu Item Profile --> */}
-
-                            {/* <!-- Menu Item Forms --> */}
+                        
                             <SidebarLinkGroup
                                 activeCondition={
                                     pathname === "/forms" || pathname.includes("forms")
