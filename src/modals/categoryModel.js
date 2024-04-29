@@ -10,8 +10,7 @@ const categorySchema = new mongoose.Schema({
         type: String
     },
     subcategory:[{
-        type:mongoose.Types.ObjectId,
-        ref:'Subcategory'
+        type:String
     }],
     status: {
         type: Boolean,
@@ -19,6 +18,9 @@ const categorySchema = new mongoose.Schema({
     },
     logo:{ 
         type: String
+    },
+    image:{
+        type:String
     },
     description:{
         type:String,
