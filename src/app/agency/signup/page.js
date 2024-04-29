@@ -251,7 +251,7 @@ export default function SignUp() {
             </div>
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-md w-full p-6">
-                    <h1 className="text-3xl font-semibold mb-6 text-black text-center">
+                    <h1 className="text-3xl font-semibold mb-6 text-white text-center">
                         Sign up
                     </h1>
                     <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
@@ -422,7 +422,7 @@ export default function SignUp() {
                             {!isloading ?
                                 <button
                                     type="submit"
-                                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800  focus:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                                    className="w-full bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
                                     Sign Up
                                 </button> : <Loading />}

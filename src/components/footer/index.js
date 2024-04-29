@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 function Footer() {
     return (
-        <footer className="bg-gray-50 dark:bg-gray-800 antialiased fixed bottom-0 w-full">
+        <footer className="bg-slate-800  dark:bg-gray-800 antialiased fixed bottom-0 w-full">
             <div className="p-4 py-6 mx-auto max-w-screen-xl md:p-3 lg:p-5">
                 <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-5" />
                 <div className="text-center">

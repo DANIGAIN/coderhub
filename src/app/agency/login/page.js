@@ -251,7 +251,7 @@ export default function Login() {
             </div>
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-md w-full p-6">
-                    <h1 className="text-3xl font-semibold mb-6 text-black text-center">
+                    <h1 className="text-3xl font-semibold mb-6 text-width text-center">
                         Sign in
                     </h1>
                     <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
@@ -262,7 +262,7 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={()=> signIn('google')}
-                                className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
+                                className="w-full flex justify-center items-center gap-2  text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -294,7 +294,7 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={()=> signIn('github')}
-                                className="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
+                                className="w-full flex justify-center items-center gap-2  text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -403,7 +403,7 @@ export default function Login() {
                             {!isLoading ?
                                 <button
                                     type="submit"
-                                    className="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none focus:bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                                    className="w-full  bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none  focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
                                     Login
                                 </button> : <Loading />}
