@@ -60,3 +60,20 @@ export async function POST(request) {
     }, { status: 500 })
   }
 }
+export async function GET(){
+  try{
+    const data = await Category.find({});
+    return NextResponse.json({
+      message:"catagory founed",
+      data,     
+      success:true 
+    })
+         
+  }catch(error){
+    return NextResponse.json({
+      message:error.message,
+      success:false,
+      error:error
+    })
+  }
+}
