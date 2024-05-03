@@ -2,11 +2,14 @@
 import DefaultLayout from '@/components/dashboardLayout'
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react'
+import {useRouter} from 'next/navigation';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function AddCategory() {
     const [subcategoris, setSubcategories] = useState([]);
     const [enabled, setEnabled] = useState(false);
+    const router = useRouter()
     const { register, handleSubmit, formState: { errors } } = useForm()
     const handleKeyDown = (e) => {
         if (e.key == 'Enter') {
@@ -23,26 +26,31 @@ function AddCategory() {
     const onSubmit = async(d)=>{
         
         const data = new FormData()
-        d.image[0] && data.set('image' , d.image[0])
-        d.logo[0] && data.set('logo', d.logo[0])
-        d.name && data.set('name' , d.name)
-        d.description && data.set('description' , d.description)
-        data.set('status' , d.status)
-        d.subcategoris && data.set('subcategoris',subcategoris)
-        d.slug && data.set('slug' , d.slug)
-
+        d.image.length && data.append('image' , d.image?.[0])
+        d.logo.length && data.append('logo', d.logo?.[0])
+        data.append('name' , d.name)
+        data.append('description' , d.description)
+        data.append('status' , d.status)
+        subcategoris && data.append('subcategoris',subcategoris)
+        d.slug && data.append('slug' ,d.slug)
+    
         try{
-            const res = await axios.post('/api/category')
-            console.log(res.data)
+          const res  = await axios.post('/api/category' , data )
+          console.log(res)
+          if(res.data.success){
+            toast.success(res.data.message)
+            router.push('/agency/dashboard/category')
+          }
+        
         }catch(error){
-            console.log(error.message)
+            error.response?.data && toast.error((error.response?.data?.message))
         }
     }
-    return (
+    return (         
         <DefaultLayout>
             <div className="grid  gap-9 ">
                 <div className="flex flex-col gap-9">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form >
                         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                             <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                                 <h3 className="font-medium text-black dark:text-white">
@@ -132,7 +140,7 @@ function AddCategory() {
                                 <div className="flex flex-col gap-5.5 ">
                                     <div>
                                         <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            Image
+                                          Image
                                         </label>
                                         <input
                                             type="file"
@@ -218,7 +226,7 @@ function AddCategory() {
                         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
 
                             <div className="flex flex-col gap-5.5 p-2">
-                                <button type='submit' className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
+                                <button type='button' onClick={handleSubmit(onSubmit)} className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
                                     <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-blue-500 rounded-full group-hover:w-full group-hover:h-56"></span>
                                     <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
                                     <span className="relative">Submit</span>

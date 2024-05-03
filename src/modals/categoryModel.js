@@ -9,12 +9,12 @@ const categorySchema = new mongoose.Schema({
     slug: {
         type: String
     },
-    subcategory:[{
+    subcategoris:[{
         type:String
     }],
     status: {
         type: Boolean,
-        required: true
+        required: true    
     },
     logo:{ 
         type: String
