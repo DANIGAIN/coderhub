@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Agency Management Syetem 
+  description: Many times it is seen that those who work freelancer marketplace are very busy. There is a lot of work coming but could not be done due to lack of time. It is very challenging to start a business here. Agency management system where he can distribute the tasks nicely.
+  termsOfService: https://example.com/term
+  contact:
+    name: Dani Gain 
+    url: https://example.com/contact
+    email: danigain1234@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licences/LICENSE-2.0.html
+servers:
+  - url:  http://localhost:3000
+    description: Dev
+paths:
+  /categories:
+     get:
+      tags: ['category'] 
+      summary: Get all categories
+      parameters:
+        - in: query
+          name: search
+          description: 'search by the product name'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "A list of catagory retrive successfully"
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  success: 
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                     $ref: '#/components/schemas/categories'
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: '/agency/dashboard/category'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+     post:
+      security: 
+        - bearerAuth: []
+      tags: ['category']
+      summary: Create a new catagory
+      requestBody:
+        required: true 
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/categories'
+      responses:
+        '201':
+          description: product created successfully'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/structuredResponces'
+        '401':
+          $ref: '#/components/responses/Unauthorize'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /categories/{id}:
+     get:
+      tags: ['category']
+      summary: Get a category by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 'Id for product retrive'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A catagory retrive successfuly
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/categories'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+     put:
+         security:
+          - bearerAuth: []
+         tags: ['category']
+         summary: update a catagory by id
+         parameters:
+            - name: id
+              in: path
+              required: true
+              description: 'Id for product retrive'
+              schema:
+                type: string
+         requestBody:
+              required: true
+              content:
+                'application/json':
+                  schema:
+                    $ref: '#/components/schemas/categories'
+         responses:
+            '200':
+              description: A catagory update successfuly
+              content:
+                'application/json':
+                   schema:
+                    $ref: '#/components/schemas/structuredResponces'
+            '401':
+              $ref: '#/components/responses/Unauthorize'
+            '400':
+              $ref: '#/components/responses/BadRequest'
+            '404':
+              $ref: '#/components/responses/NotFound'
+            '500':
+              $ref: '#/components/responses/InternalServerError'
+     delete:
+         security:
+           - bearerAuth: []
+         tags: ['category']
+         summary: Delete an existing product 
+         parameters:
+            - name: id
+              in: path
+              required: true
+              description: Id of the product to delete
+              schema:
+                type: string
+
+         responses:
+            '200':
+              description: Catagory deleted successfuly
+              content:
+                'application/json':
+                   schema:
+                    $ref: '#/components/schemas/structuredResponces'
+            '401':
+              $ref: '#/components/responses/Unauthorize'
+            '400':
+              $ref: '#/components/responses/BadRequest'
+            '404':
+              $ref: '#/components/responses/NotFound'
+            '500':
+              $ref: '#/components/responses/InternalServerError'
+  
+components: 
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    categories: 
+     type : object
+     properties:
+      name:
+        type: string
+      slug: 
+        type: string
+      subcategoris:
+        type: array
+        items:
+          type: string 
+      status: 
+        type: boolean
+      logo: 
+        type: string
+      image:
+        type: string
+      description:
+        type: string 
+    structuredResponces:
+      type: object
+      properties:
+        message:
+          type: string 
+        success:
+          type: boolean
+        data:
+         oneOf:
+          - $ref: '#/components/schemas/categories'
+          - type: array
+            items:
+              $ref: '#/components/schemas/categories'
+  responses:
+    Unauthorize:
+      description: 'UnAuthorized'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 401
+              message:
+                type: string
+                example: 'UnAuthorized ! Please autenticate to access this resounce'
+              links:
+                type: string
+                example: 'https://localhost:3000/agency/login'
+    BadRequest:
+      description: 'Bad Request'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 400
+
+              message:
+                type: string
+                example: 'Bad request ! Requested property are invalid'
+    NotFound:
+      description: 'Not Found'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 404
+              message:
+                type: string
+                example: 'Not found! The requested resounce wes not found'
+    InternalServerError:
+      description: 'Internal server Error'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 500
+              message:
+                type: string
+                example: 'Internal server error!An unexpected error occurred, please try agein later.'
+    Forbidden:
+      description: Forbidden
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              status:
+                type: number
+                example: 403
+              message:
+                type: string
+                example: 'Forbedden! your role can not allow access !.'
