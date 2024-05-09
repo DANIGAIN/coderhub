@@ -36,15 +36,14 @@ function AddCategory() {
     
         try{
           const res  = await axios.post('/api/categories' , data )
-          console.log(res)
-        //   if(res.data.success){
-        //     toast.success(res.data.message)
-        //     router.push('/agency/dashboard/category')
-        //   }
+          if(res.data.success){
+            toast.success(res.data.message)
+            router.push('/agency/dashboard/category')
+          }
         
         }catch(error){
-             console.log(error.response)
-            // error.response?.data && toast.error((error.response?.data?.message))
+             console.log(error.response.data)
+
         }
     }
     return (         
