@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
 import { connect } from '@/db/dbConfig'
-import { adminUser } from '@/lib/constants'
+import { adminUser } from '@/utils/constants'
 
 connect()
 
@@ -40,8 +40,4 @@ export async function POST(request) {
         }, { status: 500 })
 
     }
-
-
-
-
 }

@@ -35,15 +35,16 @@ function AddCategory() {
         d.slug && data.append('slug' ,d.slug)
     
         try{
-          const res  = await axios.post('/api/category' , data )
+          const res  = await axios.post('/api/categories' , data )
           console.log(res)
-          if(res.data.success){
-            toast.success(res.data.message)
-            router.push('/agency/dashboard/category')
-          }
+        //   if(res.data.success){
+        //     toast.success(res.data.message)
+        //     router.push('/agency/dashboard/category')
+        //   }
         
         }catch(error){
-            error.response?.data && toast.error((error.response?.data?.message))
+             console.log(error.response)
+            // error.response?.data && toast.error((error.response?.data?.message))
         }
     }
     return (         

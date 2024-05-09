@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { connect } from '@/db/dbConfig'
 import { upload } from '@/helpers/upload'
 import Category from '@/modals/categoryModel'
+import CustomError from '@/utils/Error'
 
 await connect()
 
@@ -12,32 +13,25 @@ export async function POST(request) {
     if (formData.get('image')) {
       const img = await upload(formData.get('image') || null, 'category')
       if (img.error) {
-        return NextResponse.json({
-          success: false,
-          message: img.error
-        }, { status: 400 })
+        return NextResponse.json(CustomError.notFoundError(ing.error), { status: 404 })
       }
       obj.image = img.image
     }
-
-
     if (formData.get('logo')) {
       const logo = await upload(formData.get('logo') || null, 'category')
       if (logo.error) {
-        return NextResponse.json({
-          success: false,
-          message: logo.error
-        }, { status: 400 })
+        return NextResponse.json(CustomError.notFoundError(ing.error), { status: 404 })
       }
       obj.logo = logo.image
     }
- 
-    obj.name = formData.get('name')
+    obj.name = formData.get('name')|| null ;
+    obj.description = formData.get('description')|| null;
+
+    if(!obj.name || !obj.description){
+      return NextResponse.json(CustomError.badRequestError({message:"Name and description are required fields"}), { status: 400})
+    }
     if (formData.get('slug')) {
       obj.slug = formData.get('slug')
-    }
-    if (formData.get('description')) {
-      obj.description = formData.get('description')
     }
     obj.status = formData.get('status')
 
@@ -53,21 +47,17 @@ export async function POST(request) {
       message: "category created successfully"
     })
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: err.message,
-      error: err
-    }, { status: 500 })
+    return NextResponse.json(CustomError.internalServerError(err), { status: 500 })
   }
 }
 export async function GET(){
   try{
-    const data = await Category.find({});
-    return NextResponse.json({
-      message:"catagory founed",
-      data,     
-      success:true 
-    })
+    const catagory = await Category.find({});
+    // return NextResponse.json({
+    //   message:"catagory founed",
+    //   data,     
+    //   success:true 
+    // })
          
   }catch(error){
     return NextResponse.json({
