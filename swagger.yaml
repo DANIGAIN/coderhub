@@ -22,9 +22,10 @@ paths:
       parameters:
         - in: query
           name: search
-          description: 'search by the product name'
+          description: 'search by the category name'
           schema:
             type: string
+            example: Data science
       responses:
         '200':
           description: "A list of catagory retrive successfully"
@@ -41,14 +42,8 @@ paths:
                     type: array
                     items:
                      $ref: '#/components/schemas/categories'
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: '/agency/dashboard/category'
-        '403':
-          $ref: '#/components/responses/Forbidden'
+               
+       
         '500':
           $ref: '#/components/responses/InternalServerError'
      post:
@@ -59,9 +54,27 @@ paths:
       requestBody:
         required: true 
         content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/categories'
+          application/json:
+              schema:
+                  type: object
+                  properties:
+          
+                    name:
+                      type: string
+                    slug:
+                      type: string
+                    subcategoris:
+                      type: array
+                      items:
+                        type: string
+                    status:
+                      type: boolean
+                    logo:
+                      type: string
+                    image:
+                      type: string
+                    description:
+                      type: string
       responses:
         '201':
           description: product created successfully'
@@ -90,11 +103,11 @@ paths:
             type: string
       responses:
         '200':
-          description: A catagory retrive successfuly
+          description: A product retrive successfully'
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/categories'
+                $ref: '#/components/schemas/structuredResponces'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -112,11 +125,28 @@ paths:
               schema:
                 type: string
          requestBody:
-              required: true
-              content:
-                'application/json':
-                  schema:
-                    $ref: '#/components/schemas/categories'
+          required: true 
+          content:
+            application/json:
+                schema:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                      subcategoris:
+                        type: array
+                        items:
+                          type: string
+                      status:
+                        type: boolean
+                      logo:
+                        type: string
+                      image:
+                        type: string
+                      description:
+                        type: string
          responses:
             '200':
               description: A catagory update successfuly
@@ -171,6 +201,8 @@ components:
     categories: 
      type : object
      properties:
+      id:
+        type: string
       name:
         type: string
       slug: 
@@ -187,6 +219,12 @@ components:
         type: string
       description:
         type: string 
+      links:
+       type: object
+       properties:
+          self:
+            type: string
+            example: '/agency/dashboard/category'
     structuredResponces:
       type: object
       properties:

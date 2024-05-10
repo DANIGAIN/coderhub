@@ -35,5 +35,22 @@ export const adminUser = [
   'z@gmail.com'
 ]
 export const publicDomain =[
-    '/team-condition'
+    '/team-condition',
+    '/',
+    '/home',
+    '/about',
+    '/contact',
+    '/service',
+    '/team',
+    '/contact'
+]
+
+export const matcherPath = [
+  '/',
+  '/home',
+  '/agency/login',
+  '/agency/signup',
+  '/home/:id',
+  '/agency/dashboard',
+  '/api/categories/:id*'
 ]

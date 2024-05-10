@@ -17,7 +17,7 @@ export async function POST(req) {
       }
       obj.image = img.image
     }
-  
+
     if (formData.get('logo')) {
       const logo = await upload(formData.get('logo') || null, 'category')
       if (!logo.image) {
@@ -25,48 +25,46 @@ export async function POST(req) {
       }
       obj.logo = logo.image
     }
-    obj.name = formData.get('name')|| null ;
-    obj.description = formData.get('description')|| null;
+    obj.name = formData.get('name') || null;
+    obj.description = formData.get('description') || null;
 
-    if(!obj.name || !obj.description){
-      return NextResponse.json(CustomError.badRequestError({message:"Name and description are required fields"}), { status: 400})
+    if (!obj.name || !obj.description) {
+      return NextResponse.json(CustomError.badRequestError({ message: "Name and description are required fields" }), { status: 400 })
     }
     if (formData.get('slug')) {
       obj.slug = formData.get('slug')
     }
     obj.status = formData.get('status')
     const sub = formData.get('subcategoris').split(',')
-    if (sub.length && sub[0].length ) {
+    if (sub.length && sub[0].length) {
       obj.subcategoris = formData.get('subcategoris').split(',')
     }
-    console.log(obj)
-   
-    const data = await Category.create(obj)  
+    const data = await Category.create(obj).select('-__v')
     return NextResponse.json({
       success: true,
       data,
       message: "category created successfully"
-    },{status: 201})
+    }, { status: 201 })
   } catch (err) {
     return NextResponse.json(CustomError.internalServerError(err), { status: 500 })
   }
 }
-export async function GET(req, res){
-  try{
-     const url = new URL(req.url);
-     const name = url.searchParams.get('search');
-     console.log(name)
-     const data = await Category.find({
-      $text:{$search:name}
-     });
-    // Handle the data
-    console.log(data);
+export async function GET(req, res) {
+  try {
+    const url = new URL(req.url);
+    const name = url.searchParams.get('search') || '';
+    const data = await Category.aggregate([
+      { $match: { name: { $regex: name, $options: 'i' } } },
+      { $addFields: { id: { $toString: '$_id' }, links: { self: "/agency/dashboard/category" } } },
+      { $project: { __v: 0, _id: 0 } }
+    ]).exec()
     return NextResponse.json({
-      message:"catagory founed",
-      data,     
-      success:true 
-    })       
-                   
-  }catch(error){
-    return NextResponse.json(CustomError.internalServerError(error), {status:500})}
+      message: "catagory founed",
+      data,
+      success: true
+    })
+
+  } catch (error) {
+    return NextResponse.json(CustomError.internalServerError(error), { status: 500 })
+  }
 }

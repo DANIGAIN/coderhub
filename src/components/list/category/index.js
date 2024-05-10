@@ -9,13 +9,15 @@ const Categorys = () => {
     const [categoryData, setCategoriData] = useState([]);
     const getCategory = async () => {
         try {
-            const res = await axios.get('/api/category');
+            const res = await axios.get('/api/categories');
             if (res.data.success) setCategoriData(res.data.data)
         } catch (error) {
             console.log(error)
         }
     }
-    console.log(categoryData)
+    const handelDelete  = (id) =>{
+        console.log(id)
+    }
     useEffect(() => { getCategory() }, [])
     return (
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -118,7 +120,7 @@ const Categorys = () => {
                                     />
                                 </svg>
                             </button>
-                            <button className="hover:text-primary">
+                            <button onClick={()=> handelDelete(category.id)} className="hover:text-primary">
                                 <svg
                                     className="fill-current"
                                     width="18"
