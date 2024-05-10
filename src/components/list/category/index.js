@@ -4,9 +4,11 @@ import { Catamaran } from "next/font/google";
 import Image from "next/image";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const Categorys = () => {
     const [categoryData, setCategoriData] = useState([]);
+    const router = useRouter()
     const getCategory = async () => {
         try {
             const res = await axios.get('/api/categories');
@@ -15,8 +17,15 @@ const Categorys = () => {
             console.log(error)
         }
     }
-    const handelDelete  = (id) =>{
-        console.log(id)
+    const handelDelete = async (id) => {
+        try {
+            await axios.delete(`/api/categories/${id}`)
+            const newCategoryData = categoryData.filter((data) => data.id != id)
+            setCategoriData(newCategoryData)
+
+        } catch (error) {
+            console.log(error)
+        }
     }
     useEffect(() => { getCategory() }, [])
     return (
@@ -120,7 +129,7 @@ const Categorys = () => {
                                     />
                                 </svg>
                             </button>
-                            <button onClick={()=> handelDelete(category.id)} className="hover:text-primary">
+                            <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
                                 <svg
                                     className="fill-current"
                                     width="18"
@@ -147,23 +156,10 @@ const Categorys = () => {
                                     />
                                 </svg>
                             </button>
-                            <button className="hover:text-primary">
-                                <svg
-                                    className="fill-current"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 18 18"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
-                                        fill=""
-                                    />
-                                    <path
-                                        d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
-                                        fill=""
-                                    />
+                            <button onClick={()=> router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
+                                <svg width="18" height="18" viewBox="0 0 420.827 420.827" fill="#ffffff">
+                                    <path d="M210.29,0C156,0,104.43,20.693,65.077,58.269C25.859,95.715,2.794,146.022,0.134,199.921 c-0.135,2.734,0.857,5.404,2.744,7.388c1.889,1.983,4.507,3.105,7.244,3.105h45.211c5.275,0,9.644-4.098,9.979-9.362 c4.871-76.214,68.553-135.914,144.979-135.914c80.105,0,145.275,65.171,145.275,145.276c0,80.105-65.17,145.276-145.275,145.276 c-18.109,0-35.772-3.287-52.501-9.771l17.366-15.425c2.686-2.354,3.912-5.964,3.217-9.468c-0.696-3.506-3.209-6.371-6.592-7.521 l-113-32.552c-3.387-1.149-7.122-0.407-9.81,1.948c-2.686,2.354-3.913,5.963-3.218,9.467L69.71,403.157 c0.696,3.505,3.209,6.372,6.591,7.521c3.383,1.147,7.122,0.408,9.81-1.946l18.599-16.298 c31.946,18.574,68.456,28.394,105.581,28.394c116.021,0,210.414-94.392,210.414-210.414C420.705,94.391,326.312,0,210.29,0z"></path>
+                                    <path d="M195.112,237.9h118.5c2.757,0,5-2.242,5-5v-30c0-2.757-2.243-5-5-5h-83.5v-91c0-2.757-2.243-5-5-5h-30 c-2.757,0-5,2.243-5,5v126C190.112,235.658,192.355,237.9,195.112,237.9z"></path>
                                 </svg>
                             </button>
                         </div>
