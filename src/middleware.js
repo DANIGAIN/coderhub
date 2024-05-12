@@ -1,7 +1,7 @@
 import {  NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { varifyToken } from "./utils/varifyToken";
-import { adminRoute, matcherPath , privateDomain } from "./utils/constants";
+import { varifyToken } from "./helpers/varifyToken";
+import {  matcherPath  } from "./utils/Constants";
 import CustomError from "./utils/Error";
 const SECRET = process.env.SECRET ;
 export  async function middleware(req){

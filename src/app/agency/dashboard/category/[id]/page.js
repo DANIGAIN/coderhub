@@ -1,43 +1,58 @@
 "use client"
-import DefaultLayout from '@/components/dashboardLayout'
-import { useForm } from 'react-hook-form';
-import React, { useState } from 'react'
-import {useRouter, useSearchParams} from 'next/navigation';
+import DefaultLayout from '@/components/dashboardLayout';
+import React, { useEffect, useState } from 'react';
+import {useRouter} from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
 function UpdateCategory({params}) {
     const id = params.id;
     const [subcategoris, setSubcategories] = useState([]);
-    
-    const [enabled, setEnabled] = useState(false);
+    const [categories , setCategories] = useState();
+    const [enabled, setEnabled] = useState();
+    const getData = async()=>{
+        try{
+            const res =  await axios.get(`/api/categories/${id}`)
+            if(res.data.success){
+                const {name , slug ,subcategoris, description , status} = res.data?.data;
+                setCategories({name , slug ,subcategoris,description,status})
+                setSubcategories(res.data?.data.subcategoris)
+                setEnabled(status)
+            }
+            
+        }catch(error){
+            console.log(error)
+        }
+    }
+    useEffect(()=>{getData()},[])
+
     const router = useRouter()
-    const { register, handleSubmit, formState: { errors } } = useForm()
     const handleKeyDown = (e) => {
         if (e.key == 'Enter') {
             if (subcategoris.length < 5 && !subcategoris.includes(e.target.value)) {
-                e.target.value && setSubcategories([...subcategoris, e.target.value])
+                const newList = [...subcategoris, e.target.value]
+                setSubcategories(newList)
+                setCategories((prev)=>({...prev , subcategoris:newList}))
             }
             e.target.value = ''
         }
+       
     }
 
     const removeSubcategory = (ind) => {
-        setSubcategories(subcategoris.filter((d) => d !== subcategoris[ind]))
-    }
-    const onSubmit = async(d)=>{
         
-        const data = new FormData()
-        d.image.length && data.append('image' , d.image?.[0])
-        d.logo.length && data.append('logo', d.logo?.[0])
-        data.append('name' , d.name)
-        data.append('description' , d.description)
-        data.append('status' , d.status)
-        subcategoris && data.append('subcategoris',subcategoris)
-        d.slug && data.append('slug' ,d.slug)
-    
+        const newList = subcategoris.filter((d) => d !== subcategoris[ind])
+        setCategories((prev)=>({...prev , subcategoris:newList}))
+        setSubcategories(newList)
+        
+    }
+    const handleSubmit = async(ind)=>{
+        if(categories.description == '') {
+            toast('please write some description !' , {duration:3000})
+            return 
+        }
         try{
-          const res  = await axios.post('/api/categories' , data )
+          const res  = await axios.put(`/api/categories/${id}` , categories)
           if(res.data.success){
             toast.success(res.data.message)
             router.push('/agency/dashboard/category')
@@ -47,7 +62,8 @@ function UpdateCategory({params}) {
              console.log(error.response.data)
 
         }
-    }
+}
+    
     return (         
         <DefaultLayout>
             <div className="grid  gap-9 ">
@@ -56,40 +72,38 @@ function UpdateCategory({params}) {
                         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                             <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                                 <h3 className="font-medium text-black dark:text-white">
-                                    Add Category
+                                    Edit Category
                                 </h3>
                             </div>
                             <div className="flex flex-col gap-5.5 p-6.5">
-                                <div>
-                                    {(!errors.name)? <label className="mb-3 block text-sm font-medium text-black dark:text-white">Name</label>:
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">{errors.name.message}</label>}
+                               { categories?.name && <div>
+                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">Name</label>
+
                                     <input
                                         type="text"
                                         name='name'
-                                        {
-                                            ...register('name',{
-                                                required:'Please fill the name field'
-                                            })
-                                        }
+                                        value={categories.name}
+                                        onChange={(e)=> setCategories((prev)=>({...prev , name: e.target.value}))}
+                                        disabled= {true}
                                         placeholder="Input category name"
-                                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default  dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                     />
-                                </div>
+                                </div>}
 
-                                <div>
+                               {categories?.slug && <div>
                                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                                         slug
                                     </label>
                                     <input
                                         type="text"
                                         name='slug'
-                                        {
-                                            ...register('slug')
-                                        }
+                                        value={categories.slug}
+                                        onChange={(e)=> setCategories((prev)=>({...prev , slug: e.target.value}))}
+                                      
                                         placeholder="Input slug"
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                     />
-                                </div>
+                                </div>}
 
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
@@ -99,10 +113,8 @@ function UpdateCategory({params}) {
                                         type="text"
                                         placeholder="input subcategory"
                                         name='subcatagory'
-                                        {
-                                            ...register('subcatagory')
-                                        }
                                         onKeyDown={handleKeyDown}
+                                      
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
                                     />
                                     {subcategoris && subcategoris.map((data, ind) => (
@@ -139,54 +151,19 @@ function UpdateCategory({params}) {
                                         </div>
                                     ))}
                                 </div>
-                                <div className="flex flex-col gap-5.5 ">
-                                    <div>
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                          Image
-                                        </label>
-                                        <input
-                                            type="file"
-                                            name='image'
-                                            {
-                                                ...register('image')
-                                            }
-                                            className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                </div>
-                                <div className="flex flex-col gap-5.5 ">
-                                    <div>
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            logo
-                                        </label>
-                                        <input
-                                            type="file"
-                                            name='logo'
-                                            {
-                                                ...register('logo')
-                                            }
-                                            className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-                                        />
-                                    </div>
-
-                                </div>
-
+                    
 
                                 <div>
-                                    {!(errors.description)?<label className="mb-3 block text-sm font-medium text-black dark:text-white">Description</label> :
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">{errors.description.message}</label>
-                                    }
+                                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">Description</label> 
                                     
                                     <textarea
                                         rows={6}
                                         name='description'
                                         placeholder="Description of the category"
-                                        {
-                                            ...register('description',{
-                                                required:"Please fill some catagory info"
-                                            })
-                                        }
+                                        value={categories?.description}
+                                        minLength={1}
+                                        onChange={(e)=> setCategories((prev)=>({...prev , description: e.target.value}))}
+                                      
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
                                     ></textarea>
                                 </div>
@@ -206,11 +183,10 @@ function UpdateCategory({params}) {
                                                     name='status'
                                                     type="checkbox"
                                                     className="sr-only"
-                                                    {
-                                                        ...register('status')
-                                                    }
+                                                    
                                                     onChange={() => {
                                                         setEnabled(!enabled);
+                                                        setCategories((prev)=>({...prev , status: !enabled}))
                                                     }}
                                                 />
                                                 <div className="h-5 w-14 rounded-full bg-meta-9 shadow-inner dark:bg-[#5A616B]"></div>
@@ -228,7 +204,7 @@ function UpdateCategory({params}) {
                         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
 
                             <div className="flex flex-col gap-5.5 p-2">
-                                <button type='button' onClick={handleSubmit(onSubmit)} className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
+                                <button type='button' onClick={()=> handleSubmit()} className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
                                     <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-blue-500 rounded-full group-hover:w-full group-hover:h-56"></span>
                                     <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
                                     <span className="relative">Submit</span>

@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials"
-import { adminUser } from "@/utils/constants";
+import { adminUser } from "@/utils/Constants";
 import { connect } from "@/db/dbConfig";
 import User from "@/modals/userModel";
 import bcryptjs from 'bcryptjs'

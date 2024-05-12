@@ -20,7 +20,7 @@ export async function GET(req, context) {
 
     return NextResponse.json({
       success: true,
-      data,    
+      data:data[0],    
       message: "find a catagory successfully"
     }, { status: 200 })
   } catch (err) {
