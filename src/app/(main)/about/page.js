@@ -6,12 +6,12 @@ export default function aboutPage() {
         <div>
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
             <div className="sm:flex items-center  max-w-screen-xl">
-                <div className="sm:w-1/2 p-10">
+                <div className="sm:w-1/2 p-10 hidden sm:block">
                     <div className="image object-center text-center">
                         <Image alt='no image ' width={500} height={500} src="https://i.imgur.com/WbQnbas.png" />
                     </div>
                 </div>
-                <div className="sm:w-1/2 p-5">
+                <div className="sm:w-1/2 p-5 mt-25 lg:mt-0">
                     <div className="text">
                         <span className="text-gray-500 border-b-2 border-indigo-600 uppercase">
                             About us

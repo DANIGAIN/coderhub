@@ -42,12 +42,12 @@ export default function ContactPage() {
   }
   return (
     <>
-      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10 " />
       <section
         id="contact"
-        className="py-12 bg-gray-100 flex justify-center items-center"
+        className="py-12 bg-gray-100 flex justify-center items-center "
       >
-        <div className="container mx-auto px-4 w-full items-center md:w-2/3 lg:w-1/2 items center">
+        <div className="container mx-auto px-4 w-full items-center md:w-2/3 lg:w-1/2 items center ">
           <div className="bg-zinc-700 shadow-md  border-2 border-solid border-gray-600 rounded-lg p-5 ">
             <h3 className="text-3xl mb-8 text-gray-400 p-4 justify-center">
               Contact Us
@@ -75,7 +75,7 @@ export default function ContactPage() {
                   }
                   name="name"
                   placeholder="Enter your name"
-                  className=" bg-zinc-500 focus:border-blue-300  w-full border border-gray-300 text-slate-400 rounded-md px-4 py-2 focus:outline-none focus:ring-gray-800 focus:border-gray-800"
+                  className= " bg-zinc-500 focus:border-blue-300  w-full border border-gray-300 text-slate-400 rounded-md px-4 py-2 focus:outline-none focus:ring-gray-800 focus:border-gray-800 "
                 />
               </div>
 
