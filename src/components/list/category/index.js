@@ -1,7 +1,7 @@
 'use client'
-import DeleteIcon from "@/components/ui/icons/DeleteIcon";
-import ShowIcon from "@/components/ui/icons/ShowIcon";
-import UpdateIcon from "@/components/ui/icons/UpdateIcon";
+import { AiFillEye } from "react-icons/ai";
+import { MdModeEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { GlobalContext } from "@/context";
 import axios from "axios";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 const Categorys = () => {
     const router = useRouter()
-    const {categories ,setCategories} = useContext(GlobalContext)
+    const { categories, setCategories } = useContext(GlobalContext)
     const handelDelete = async (id) => {
         try {
             await axios.delete(`/api/categories/${id}`)
@@ -105,13 +105,13 @@ const Categorys = () => {
                     <div className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
                             <button className="hover:text-primary">
-                                <ShowIcon/>
+                                <AiFillEye />
                             </button>
                             <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
-                               <DeleteIcon/>
+                                <MdDelete />
                             </button>
-                            <button onClick={()=> router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
-                               <UpdateIcon/>
+                            <button onClick={() => router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
+                                < MdModeEdit />
                             </button>
                         </div>
                     </div>

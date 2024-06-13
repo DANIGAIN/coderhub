@@ -19,12 +19,16 @@ export default function aboutPage() {
                         <h2 className="my-4 font-bold text-3xl  sm:text-4xl ">
                             About <span className="text-indigo-600">Our Company</span>
                         </h2>
-                        <p className="text-gray-700">
+                        <p className="text-gray-700 mt-10">
                              we specialize in delivering cutting-edge IT solutions in web development, data science,
                              machine learning, and mobile application development. Our team of experts leverages the 
                              latest technology to help businesses succeed &  stay ahead in today  fast-paced digital 
                              landscape. With a focus on innovation and excellence, we are dedicated to turning data 
-                             into insights, and insights into action and predictability
+                             into insights, and insights into action and predictability.Our mission is to harness 
+                             the power of technology to create a more efficient, transparent, and responsive 
+                             government that serves the needs of all .We measure our success by the positive 
+                             impact we have on citizens, and we continually strive to improve and expand our 
+                             services to meet their evolving needs.
                         </p>
                     </div>
                 </div>

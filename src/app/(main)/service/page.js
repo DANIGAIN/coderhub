@@ -1,7 +1,6 @@
 'use client'
 import axios from 'axios';
 import Image from 'next/image'
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
@@ -26,7 +25,7 @@ export default function servicePage() {
     return (
         <>
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
-            <div className="container mx-auto p-4 mb-20">
+            <div className="container mx-auto p-4 ">
                 <h2 className="text-3xl font-bold mb-12 text-center">Our Services</h2>
                 <div className="flex flex-wrap -mx-4 mb-25">
                     {services.map((service, index) => (

@@ -1,7 +1,7 @@
 "use client"
-import DeleteIcon from "@/components/ui/icons/DeleteIcon";
-import ShowIcon from "@/components/ui/icons/ShowIcon";
-import UpdateIcon from "@/components/ui/icons/UpdateIcon";
+import { AiFillEye } from "react-icons/ai";
+import { MdModeEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { GlobalContext } from "@/context";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +11,7 @@ const Services = () => {
     const {services } = useContext(GlobalContext);
 
     return (
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm border  shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-6 md:px-6 xl:px-7.5">
                 <div className="flow-root ">
                     <h4 className=" float-left text-xl font-semibold text-black dark:text-white">Top Products</h4>
@@ -47,9 +47,10 @@ const Services = () => {
                             <div className="h-12.5 w-15 rounded-md">
                                 <Image
                                     src={'/category/' + service?.category?.image || null}
-                                    width={60}
-                                    height={50}
+                                    width={600}
+                                    height={500}
                                     alt="Product"
+                                    className="h-full w-full"
                                 />
                             </div>
                             <p className="text-sm text-black dark:text-white">
@@ -77,13 +78,13 @@ const Services = () => {
                     <div className="col-span-1 flex items-center">
                         <div className="flex items-center space-x-3.5">
                             <button className="hover:text-primary">
-                                <ShowIcon />
+                                <AiFillEye />
                             </button>
                             <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
-                                <DeleteIcon />
+                                <MdDelete />
                             </button>
                             <button onClick={() => router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
-                                <UpdateIcon />
+                                <MdModeEdit />
                             </button>
                         </div>
                     </div>
