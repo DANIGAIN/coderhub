@@ -54,3 +54,22 @@ export const matcherPath = [
   '/agency/dashboard',
   '/api/categories/:id*'
 ]
+
+export const modalStyles = {
+  content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      borderStyle: 'solid',
+      borderRadius:'20px',
+      backgroundColor: '#f0f0f0', 
+      color: '#333',
+      boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+}

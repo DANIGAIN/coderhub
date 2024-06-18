@@ -26,6 +26,7 @@ export async function GET(req, context) {
 }
 export async function PUT(req, context) {
     const { id } = context.params;
+
     const data = await req.json();
     try {
         const role = await Role.find({ _id: id })
