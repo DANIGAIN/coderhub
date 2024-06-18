@@ -7,30 +7,51 @@ export const GlobalContext = createContext(null)
 export function GlobalState({ children }) {
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
-  const getServices = async () => {
-    try {
-      const res = await axios.get('/api/services');
-      if (res.data.success) {
-        setServices(res.data?.data);
+  const [roles , setRoles] = useState([]);
+  useEffect(()=>{
+    const getRoles = async()=>{
+      try{
+
+        const res = await axios.get('/api/roles');
+        if(res.data.success){
+          setRoles(res.data.data)
+        }
+
+      }catch(error){
+        console.log(error)
       }
-
-    } catch (error) {
-      console.log(error)
     }
-  }
-  const getCategories = async () => {
-    try {
-      const res = await axios.get('/api/categories');
-      if (res.data.success) setCategories(res.data.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+    getRoles()
 
-  useEffect(() => { 
-    getServices(); 
+  },[])
+ 
+  useEffect(()=>{
+    const getCategories = async () => {
+      try {
+        const res = await axios.get('/api/categories');
+        if (res.data.success) setCategories(res.data.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
     getCategories();
 
+  },[])
+
+  useEffect(() => { 
+    const getServices = async () => {
+      try {
+        const res = await axios.get('/api/services');
+        if (res.data.success) {
+          setServices(res.data?.data);
+        }
+  
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getServices(); 
+  
   }, [])
 
   return (
@@ -39,7 +60,9 @@ export function GlobalState({ children }) {
         services,
         setServices,
         categories,
-        setCategories
+        setCategories,
+        roles ,
+        setRoles
       }}
     >
       {children}

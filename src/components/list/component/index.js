@@ -1,13 +1,21 @@
 'use client'
 import axios from 'axios'
 import Link from 'next/link'
+import { AiFillEye } from "react-icons/ai";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import React from 'react'
-import toast from 'react-hot-toast';
+import React, { useEffect } from 'react'
 
-export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles}) {
-  
+export default function Components({ setReq, setIsOpenRole, roles, setRoles ,setRole}) {
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get('/api/roles');
+      if (res.data.success) {
+        setRoles(res.data.data)
+      }
+    })()
+  }, [])
   const handelComponentUpdate = async (id) => {
     const data = roles.filter((data) => data._id == id)[0];
     setReq('update');
@@ -15,19 +23,8 @@ export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles
     setIsOpenRole(true);
 }
 
-  const handelDelete = async(id) => {
-    try{
-
-      const res = await axios.delete(`/api/roles/${id}`);
-      if(res.data.success){
-        const newRoles  = roles.filter((data) => data._id != id);
-        setRoles(newRoles)
-        toast.success(res.data.message);
-      }
-
-    }catch(error){
-      console.log(error)
-    }
+  const handelDelete = (id) => {
+    console.log(id)
   }
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
