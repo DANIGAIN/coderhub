@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
 import { connect } from '@/db/dbConfig'
 import { adminUser } from '@/utils/Constants'
+import Role from '@/modals/roleModel'
 
 connect()
 
@@ -23,12 +24,12 @@ export async function POST(request) {
 
         const solt = await bcryptjs.genSalt(10)
         const hashPassword = await bcryptjs.hash(password, solt)
-        const role =   (adminUser.includes(email)) ? 0 : 10;
-        const savedUser = await User.create({ name, email, password: hashPassword, role})
-        savedUser.password = password;
+        const role =   await Role.findOne({name:"Supper-Admin" ,isActive:true})
+        const data = await User.create({ name, email, password: hashPassword, role})
+        data.password = password;
         return NextResponse.json({
             success: true,
-            savedUser,
+            data,
             message: "User is created successfuly"
         } , {status:200 })
 

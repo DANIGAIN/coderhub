@@ -6,6 +6,7 @@ import { adminUser } from "@/utils/Constants";
 import { connect } from "@/db/dbConfig";
 import User from "@/modals/userModel";
 import bcryptjs from 'bcryptjs'
+import Role from "@/modals/roleModel";
 
 
 await connect();
@@ -59,13 +60,14 @@ const authOptions = {
     },
     async signIn({  user }) {
       try {
+        const role = await Role.findOne({name:"Supper-Admin" ,isActive:true})
         const userObj = {
           name: user.name,
           email: user.email,
           image: user.image,
-          providerId: user.id
+          providerId: user.id,
+          role: role._id
         };
-        userObj.role = (adminUser.includes(user.email)) ? 0 : 10;
         const existUser = await User.findOne({ email: user.email });
         if (!existUser) {
           const user = await User.create(userObj);
@@ -81,6 +83,7 @@ const authOptions = {
     async session({ session, token}) {
       session.accessToken = token.accessToken
       session.user.id = token.uid
+      session.user.role = token.role
       return session
     },
     async redirect({ url, baseUrl }) {

@@ -15,7 +15,7 @@ export default function SignUp() {
         setIsLoading(true)
         axios.post('/api/auth/signup', data)
             .then(async function (data) {
-                const info = data.data.savedUser
+                const info = data.data.data
                 const res = await signIn("credentials", {
                     ...info,
                     redirect: false

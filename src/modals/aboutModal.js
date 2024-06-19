@@ -10,6 +10,18 @@ const aboutSchema = new mongoose.Schema({
         type:String,
         maxLength:500
     },
+    specialist:{
+        type:String,
+        maxLength:255
+    },
+    skill:[{
+        type:String,
+        maxLength:255
+    }],
+    links:[{
+        type:String,
+        maxLength:255
+    }],
     isOneline:{
          type:Boolean,
          default:false
@@ -17,10 +29,11 @@ const aboutSchema = new mongoose.Schema({
     isSubscribe:{
         type:Boolean,
         default:false
-    }
+    },
+    
 }, {
     timestamps: true
 });
 
-const About = mongoose.models.About || mongoose.model("About", roleSchema);
+const About = mongoose.models.About || mongoose.model("About", aboutSchema);
 export default About;

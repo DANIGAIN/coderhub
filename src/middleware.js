@@ -14,21 +14,21 @@ export  async function middleware(req){
         return NextResponse.rewrite(new URL('/home' , req.url))
     }
     
-    if(
-        (token && pathname == '/agency/login') || 
-        (token && pathname == '/agency/signup')|| 
-        (!vToken && pathname.startsWith('/agency/dashboard')) ||
-        (pathname.startsWith('/agency/dashboard') && token.role == 10)
-    ){
-        return NextResponse.redirect(new URL('/home', req.url))
-    } 
+    // if(
+    //     (token && pathname == '/agency/login') || 
+    //     (token && pathname == '/agency/signup')|| 
+    //     (!vToken && pathname.startsWith('/agency/dashboard')) ||
+    //     (pathname.startsWith('/agency/dashboard') && token.role == 10)
+    // ){
+    //     return NextResponse.redirect(new URL('/home', req.url))
+    // } 
        
-    if(pathname.startsWith('/api/categories') && ['POST','PUT', 'DELETE'].includes(req.method) && !vToken){
-        return NextResponse.json(CustomError.unauthorizeError({message:"UnAuthorized ! Please autenticate to access this resounce"}) , {status:401})
-    }
-    if(pathname.startsWith('/api/services') && ['POST','PUT', 'DELETE'].includes(req.method) && !vToken){
-        return NextResponse.json(CustomError.unauthorizeError({message:"UnAuthorized ! Please autenticate to access this resounce"}) , {status:401})
-    }
+    // if(pathname.startsWith('/api/categories') && ['POST','PUT', 'DELETE'].includes(req.method) && !vToken){
+    //     return NextResponse.json(CustomError.unauthorizeError({message:"UnAuthorized ! Please autenticate to access this resounce"}) , {status:401})
+    // }
+    // if(pathname.startsWith('/api/services') && ['POST','PUT', 'DELETE'].includes(req.method) && !vToken){
+    //     return NextResponse.json(CustomError.unauthorizeError({message:"UnAuthorized ! Please autenticate to access this resounce"}) , {status:401})
+    // }
 }    
 export const config = {
     matcher: matcherPath

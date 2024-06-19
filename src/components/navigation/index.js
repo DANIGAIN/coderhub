@@ -9,6 +9,7 @@ function Navigation() {
     const [header, setHeader] = useState(false);
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
+    console.log(session)
     const scrollHeader = () => {
         if (window.scrollY >= 20) {
             setHeader(true)
