@@ -26,7 +26,9 @@ export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles
       }
 
     }catch(error){
-      console.log(error)
+      if (!error.response.success && error.response.status === 400) {
+        toast.error(error.response.data.message)
+      }
     }
   }
   return (

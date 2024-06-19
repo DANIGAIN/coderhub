@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const roleSchema = new mongoose.Schema({
+const aboutSchema = new mongoose.Schema({
     phone:{
         type:Number,
         minLength: 10,
@@ -22,5 +22,5 @@ const roleSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Role = mongoose.models.Role || mongoose.model("Role", roleSchema);
-export default Role;
+const About = mongoose.models.About || mongoose.model("About", roleSchema);
+export default About;

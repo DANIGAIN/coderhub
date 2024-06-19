@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     role: {
-        type: Number,
-        required: true
+         type:mongoose.Types.ObjectId,
+         ref:'Role'
     },
     isVerified: { 
         type: Boolean,
@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     },
     verifyTokenExpiry: { 
         type: Date
+    },
+    about:{
+        type:mongoose.Types.ObjectId,
+        ref:'About'
     }
 }, {
     timestamps: true

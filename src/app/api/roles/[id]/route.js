@@ -52,7 +52,7 @@ export async function DELETE(req, context) {
         if (!role) {
             return NextResponse.json({ message: "Requested role was not found " }, { status: 404 })
         }
-        const rc = await RC_Maping.findOne({ _id: id });
+        const rc = await RC_Maping.findOne({ role: id });
         if (rc) {
             return NextResponse.json({
                 success: false,

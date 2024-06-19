@@ -4,34 +4,26 @@ import Link from 'next/link'
 import { AiFillEye } from "react-icons/ai";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import React, { useEffect } from 'react'
+import React from 'react'
 
-export default function Components({ setReq, setIsOpenRole, roles, setRoles ,setRole}) {
-
-  useEffect(() => {
-    (async () => {
-      const res = await axios.get('/api/roles');
-      if (res.data.success) {
-        setRoles(res.data.data)
-      }
-    })()
-  }, [])
-  const handelComponentUpdate = async (id) => {
-    const data = roles.filter((data) => data._id == id)[0];
+export default function Components({ setReq, setIsOpenComponent, setComponent, components}) {
+  const handleUpdate = async (id) => {
+    const data = components.filter((data) => data._id == id)[0];
     setReq('update');
-    setRole(data);
-    setIsOpenRole(true);
+    setComponent(data);
+    setIsOpenComponent(true);
 }
 
   const handelDelete = (id) => {
     console.log(id)
   }
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="px-4 py-6 md:px-6 xl:px-7.5">
         <div className="flow-root ">
-          <h4 className=" float-left text-xl font-semibold text-black dark:text-white">Role List</h4>
-          <button onClick={() => (setIsOpenRole(true), setReq('create'))} className="float-right inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8">Add</button>
+          <h4 className=" float-left text-xl font-semibold text-black dark:text-white">Component List</h4>
+          <button onClick={() => (setIsOpenComponent(true), setReq('create'))} className="float-right inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8">Add</button>
         </div>
       </div>
 
@@ -49,7 +41,7 @@ export default function Components({ setReq, setIsOpenRole, roles, setRoles ,set
         </div>
       </div>
 
-      {roles.map((data, ind) => (
+      {components.map((data, ind) => (
         <div
           className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={ind}
@@ -77,7 +69,7 @@ export default function Components({ setReq, setIsOpenRole, roles, setRoles ,set
               <MdDelete />
             </button>
             <button
-              onClick={() => handelComponentUpdate(data._id)}
+              onClick={() => handleUpdate(data._id)}
               className="hover:text-primary text-xl"
             >
               <MdModeEdit />

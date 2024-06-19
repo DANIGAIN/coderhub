@@ -318,14 +318,12 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         </ul>
                     </div>
 
-                    {/* <!-- Others Group --> */}
                     <div>
                         <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
-                            OTHERS
+                            Agency Offer
                         </h3>
 
                         <ul className="mb-6 flex flex-col gap-1.5">
-                            {/* <!-- Menu Item Chart --> */}
                             <li>
                                 <Link
                                     href="/chart"
@@ -366,7 +364,9 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                             </li>
 
                             <SidebarLinkGroup
-                                activeCondition={pathname === "/agency/dashboard/ui" || pathname.includes("ui")}
+                                activeCondition={
+                                    pathname === "/agency/dashboard/service" 
+                                    || pathname === "/agency/dashboard/category"}
                             >
                                 {(handleClick, open) => {
                                     return (
@@ -416,7 +416,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                         </clipPath>
                                                     </defs>
                                                 </svg>
-                                                UI Elements
+                                                Elements
                                                 <svg
                                                     className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
                                                         }`}
@@ -442,20 +442,20 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                 <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                                                     <li>
                                                         <Link
-                                                            href="/ui/alerts"
-                                                            className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/ui/alerts" && "text-white"
+                                                            href="/agency/dashboard/service"
+                                                            className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/agency/dashboard/service" && "text-white"
                                                                 }`}
                                                         >
-                                                            Alerts
+                                                            service
                                                         </Link>
                                                     </li>
                                                     <li>
                                                         <Link
-                                                            href="/ui/buttons"
+                                                            href="/agency/dashboard/category"
                                                             className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ${pathname === "/ui/buttons" && "text-white"
                                                                 }`}
                                                         >
-                                                            Buttons
+                                                            category
                                                         </Link>
                                                     </li>
                                                 </ul>

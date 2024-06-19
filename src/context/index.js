@@ -7,7 +7,35 @@ export const GlobalContext = createContext(null)
 export function GlobalState({ children }) {
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [components ,setComponents] = useState([]);
+  const [mapings, setMapings] = useState([]);
   const [roles , setRoles] = useState([]);
+  useEffect(()=>{
+    const getMapings = async()=>{
+      try{
+        const res = await axios.get('/api/mapings');
+        if(res.data.success){
+          setMapings(res.data.data)
+        }
+      }catch(error){
+        console.log(error)
+      }
+    }
+    getMapings()
+  },[mapings.length])
+  useEffect(()=>{
+    const getComponents = async()=>{
+      try{
+        const res = await axios.get('/api/components');
+        if(res.data.success){
+          setComponents(res.data.data)
+        }
+      }catch(error){
+        console.log(error)
+      }
+    }
+    getComponents()
+  },[])
   useEffect(()=>{
     const getRoles = async()=>{
       try{
@@ -62,7 +90,11 @@ export function GlobalState({ children }) {
         categories,
         setCategories,
         roles ,
-        setRoles
+        setRoles,
+        components,
+        setComponents,
+        mapings,
+        setMapings
       }}
     >
       {children}
