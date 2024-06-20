@@ -27,8 +27,6 @@ const subscriptionSchema = new mongoose.Schema({
     amount_total:{
         type: String
     }
-  
-  
 }, {
     timestamps: true
 });

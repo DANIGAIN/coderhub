@@ -1,17 +1,24 @@
 'use client'
 import { pricingCards } from "@/utils/Constants";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+import toast from "react-hot-toast";
 const MemberPlan = () => {
-    const handleSubmit = async(id) =>{
-        const plan = pricingCards.find((data)=> data.id == id);
-        try{
-            const res = await axios.post('/api/payments/subscription',{price:plan.price_id , quantity:1})
-        }catch(error){
+    const { data: section, status } = useSession();
+    const router = useRouter();
+    const handleSubmit = async (id) => {
+        const plan = pricingCards.find((data) => data.id == id);
+        try {
+            const res = await axios.post('/api/payments/subscription', { price: plan.price_id, quantity: 1, uid: section.user.id })
+            if (res.data.success) {
+                router.push(res.data.data.url)
+            }
+        } catch (error) {
             console.log(error)
         }
-
-    }  
-
+    }
     return (
         <section className=" bg-slate-900 dark:bg-gray-900">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -125,7 +132,9 @@ const MemberPlan = () => {
                                 </li>
                             </ul>
                             <button
-                                onClick={()=> handleSubmit(data.id)}
+                                onClick={() => status === 'authenticated' ? handleSubmit(data.id) : toast(
+                                    "please login first then come to our agency member", { duration: 6000 }
+                                )}
                                 className=" bg-sky-800 text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
                             >
                                 Get started
