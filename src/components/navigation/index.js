@@ -5,11 +5,9 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import Skeleton from '../loading/Skeleton';
 function Navigation() {
-    const [activeLink, setActiveLink] = useState('Home');
     const [header, setHeader] = useState(false);
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
-    console.log(session)
     const scrollHeader = () => {
         if (window.scrollY >= 20) {
             setHeader(true)

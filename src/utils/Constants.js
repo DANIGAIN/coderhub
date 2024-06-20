@@ -1,30 +1,44 @@
 export const pricingCards = [
     {
-      title: 'Starter',
-      description: 'Perfect for trying out plura',
-      price: 'Free',
-      duration: '',
-      highlight: 'Key features',
-      features: ['3 Sub accounts', '2 Team members', 'Unlimited pipelines'],
-      priceId: '',
-    },
-    {
-      title: 'Unlimited Saas',
-      description: 'The ultimate agency kit',
-      price: '$199',
-      duration: 'month',
-      highlight: 'Key features',
-      features: ['Rebilling', '24/7 Support team'],
-      priceId: 'price_1OYxkqFj9oKEERu1KfJGWxgN',
-    },
-    {
+      id:1,
       title: 'Basic',
-      description: 'For serious agency owners',
-      price: '$49',
+      price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_BASIC,
+      description: 'You will have 5% discout on every service .',
+      price: '$10',
       duration: 'month',
-      highlight: 'Everything in Starter, plus',
-      features: ['Unlimited Sub accounts', 'Unlimited Team members'],
-      priceId: 'price_1OYxkqFj9oKEERu1NbKUxXxN',
+      domain:"free 1 domain month 1 month hosting",
+      ex:"No setup, or hidden fees",
+      team_size: "1 developer",
+      premium_support:'6 months',
+      free_updates:'6 months'
+    
+    },
+    {
+      id:2,
+      title: 'Company',
+      price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_COMPANY,
+      description: 'You will have 15% discout on every service',
+      price: '$15',
+      duration: 'month',
+      domain:"free 1 domain month 6 month hosting",
+      ex:"No setup, or hidden fees",
+      team_size: "5 developer",
+      free_updates:'10 months'
+
+
+    },
+    {
+      id:3,
+      title: 'Enterprise',
+      price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_ENTERPRICE,
+      description: 'You will have 20% discout on every service .',
+      price: '$20',
+      duration: 'month',
+      domain:"free 1 domain month 1 year hosting",
+      ex:"No setup, or hidden fees",
+      team_size: "10 developer",
+      free_updates:'24 months'
+
     },
   ]
 
