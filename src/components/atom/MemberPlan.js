@@ -2,16 +2,28 @@
 import { pricingCards } from "@/utils/Constants";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 const MemberPlan = () => {
-    const { data: section, status } = useSession();
+    const [planId , setPalnId] = useState(null)
     const router = useRouter();
+    const { data: section, status } = useSession();
+    const search = useSearchParams()
+    const checkout_id = search.get('session_id');
     const handleSubmit = async (id) => {
+        if(planId){
+            toast(
+                "You have alrady agency member",{
+                    duration:600
+                }
+            )
+            return ;
+        }
         const plan = pricingCards.find((data) => data.id == id);
         try {
-            const res = await axios.post('/api/payments/subscription', { price: plan.price_id, quantity: 1, uid: section.user.id })
+            const res = await axios.post('/api/payments/subscription', { price: plan.price_id, quantity: 1, planId: id })
             if (res.data.success) {
                 router.push(res.data.data.url)
             }
@@ -19,6 +31,28 @@ const MemberPlan = () => {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        if (checkout_id && status === 'authenticated') {
+            ;(async () => {
+                const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
+                if (res.data.success && res.data.data.payment_status == "paid") {
+                    setPalnId(res.data.data.planId)
+                }
+            })()
+        }
+    }, [section])
+
+    useEffect(() => {
+        if ( status === 'authenticated') {
+            ;(async () => {
+                const res = await axios.get(`/api/payments/subscription?uid=${section.user.id}`)
+                if (res.data.success && res.data.data) {
+                    setPalnId(res.data.data.planId)
+                }
+            })()
+        }
+    }, [section])
     return (
         <section className=" bg-slate-900 dark:bg-gray-900">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -33,7 +67,7 @@ const MemberPlan = () => {
                 <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
                     {/* Pricing Card */}
                     {pricingCards.map((data, index) => (
-                        <div key={index} className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900  rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                        <div key={index} className={`${planId == data.id ? 'bg-blue-400': null} flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900  rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white`}>
                             <h3 className="mb-4 text-2xl font-semibold"> {data.title}</h3>
                             <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                                 {data.description}

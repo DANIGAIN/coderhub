@@ -9,16 +9,13 @@ const subscriptionSchema = new mongoose.Schema({
     checkout_id:{
         type:String,
     },
-    stripe_price_id:{
-        type:String,
-    },
     created:{
         type: String
     },
     expires_at:{
         type: String
     },
-    status:{
+    payment_status:{
         type:String
     },
     tex:{
@@ -26,6 +23,12 @@ const subscriptionSchema = new mongoose.Schema({
     },
     amount_total:{
         type: String
+    },
+    planId:{
+        type: String 
+    },
+    price:{
+        type: String,
     }
 }, {
     timestamps: true
