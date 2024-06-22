@@ -7,53 +7,69 @@ export const GlobalContext = createContext(null)
 export function GlobalState({ children }) {
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [components ,setComponents] = useState([]);
+  const [components, setComponents] = useState([]);
   const [mapings, setMapings] = useState([]);
-  const [roles , setRoles] = useState([]);
-  useEffect(()=>{
-    const getMapings = async()=>{
-      try{
+  const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const getAllUsers = async () => {
+      try {
+
+        const res = await axios.get('/api/auth/users');
+        if (res.data.success) {
+          setUsers(res.data.data);
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAllUsers()
+  }, [])
+  useEffect(() => {
+    const getMapings = async () => {
+      try {
         const res = await axios.get('/api/mapings');
-        if(res.data.success){
+        if (res.data.success) {
           setMapings(res.data.data)
         }
-      }catch(error){
+      } catch (error) {
         console.log(error)
       }
     }
     getMapings()
-  },[mapings.length])
-  useEffect(()=>{
-    const getComponents = async()=>{
-      try{
+  }, [mapings.length])
+  useEffect(() => {
+    const getComponents = async () => {
+      try {
         const res = await axios.get('/api/components');
-        if(res.data.success){
+        if (res.data.success) {
           setComponents(res.data.data)
         }
-      }catch(error){
+      } catch (error) {
         console.log(error)
       }
     }
     getComponents()
-  },[])
-  useEffect(()=>{
-    const getRoles = async()=>{
-      try{
+  }, [])
+  useEffect(() => {
+    const getRoles = async () => {
+      try {
 
         const res = await axios.get('/api/roles');
-        if(res.data.success){
+        if (res.data.success) {
           setRoles(res.data.data)
         }
 
-      }catch(error){
+      } catch (error) {
         console.log(error)
       }
     }
     getRoles()
 
-  },[])
- 
-  useEffect(()=>{
+  }, [])
+
+  useEffect(() => {
     const getCategories = async () => {
       try {
         const res = await axios.get('/api/categories');
@@ -64,32 +80,34 @@ export function GlobalState({ children }) {
     }
     getCategories();
 
-  },[])
+  }, [])
 
-  useEffect(() => { 
+  useEffect(() => {
     const getServices = async () => {
       try {
         const res = await axios.get('/api/services');
         if (res.data.success) {
           setServices(res.data?.data);
         }
-  
+
       } catch (error) {
         console.log(error)
       }
     }
-    getServices(); 
-  
+    getServices();
+
   }, [])
 
   return (
     <GlobalContext.Provider
       value={{
+        users,
+        setUsers,
         services,
         setServices,
         categories,
         setCategories,
-        roles ,
+        roles,
         setRoles,
         components,
         setComponents,

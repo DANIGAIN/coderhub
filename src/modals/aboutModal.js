@@ -18,10 +18,6 @@ const aboutSchema = new mongoose.Schema({
         type:String,
         maxLength:255
     }],
-    links:[{
-        type:String,
-        maxLength:255
-    }],
     isOneline:{
          type:Boolean,
          default:false
