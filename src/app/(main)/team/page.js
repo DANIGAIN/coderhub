@@ -23,8 +23,8 @@ export default function teamPage() {
                         <div key={index} className=" bg-slate-900 items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
 
                             <Image
-                                className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-                                src={`/users/${data.image}`}
+                                className=" rounded-lg sm:rounded-none sm:rounded-l-lg w-50 h-50 "
+                                src={data.image}
                                 width={200}
                                 height={200}
                                 alt="Developer image"

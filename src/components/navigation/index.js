@@ -40,7 +40,7 @@ function Navigation() {
                             {status == 'authenticated' && <button type="button" onClick={() => setMenuOpen(!isMenuOpen)} className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                                 <span className="sr-only">Open user menu</span>
                                 {session.user?.image ?
-                                    <Image className="rounded-full" src={`/users/${session.user?.image}`} alt="user photo" height={35} width={35} />
+                                    <Image className="rounded-full" src={session.user?.image} alt="user photo" height={35} width={35} />
                                 
                                     :
                                     <Skeleton />

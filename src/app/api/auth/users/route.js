@@ -28,7 +28,7 @@ export async function GET(req, res) {
     }
 }
 
-export async function POST(req, res) {
+export async function POST(req) {
     try {
         const body = await req.formData()
         const obj = {};
@@ -52,7 +52,7 @@ export async function POST(req, res) {
             if (!img.image) {
                 return NextResponse.json(CustomError.notFoundError(img.error), { status: 404 })
             }
-            userobj.image = img.image
+            userobj.image = `/users/${img.image}`
         }
         
         if(about){

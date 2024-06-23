@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials"
-import { adminUser } from "@/utils/Constants";
 import { connect } from "@/db/dbConfig";
 import User from "@/modals/userModel";
 import bcryptjs from 'bcryptjs'
@@ -12,7 +11,6 @@ import Role from "@/modals/roleModel";
 await connect();
 
 const authOptions = {
-
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -27,10 +25,11 @@ const authOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials;
+        console.log(credentials)
         try {
           const user = await User.findOne({ email });
-          if (!user && !credentials?._id ) {
-             throw new Error("User can not exist")
+          if (!user && !credentials?._id) {
+            throw new Error("User can not exist")
           }
           const hashPassword = await bcryptjs.compare(password, user.password)
           if (!hashPassword) {
@@ -48,39 +47,40 @@ const authOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async jwt(params){
-      try{
-        const user = await User.findOne({email:params.token.email})
+    async jwt(params) {
+      try {
+        const user = await User.findOne({ email: params.token.email })
         params.token.role = user.role
-        params.token.uid = user._id     
+        params.token.uid = user._id
         return params.token;
-      }catch(e){
+      } catch (e) {
         return params.token;
       }
     },
-    async signIn({  user }) {
+    async signIn({ user }) {
       try {
-        const role = await Role.findOne({name:"Supper-Admin" ,isActive:true})
+        const role = await Role.findOne({ name: "Supper-Admin", isActive: true })
         const userObj = {
           name: user.name,
-          email: user.email,
+          email: user.email,        
           image: user.image,
           providerId: user.id,
           role: role._id
         };
         const existUser = await User.findOne({ email: user.email });
         if (!existUser) {
-          const user = await User.create(userObj);
+          const user = await User.create(userObj)
           return user;
         }
-        return existUser 
-    
-      } catch (e) {
+        return existUser
+
+      } catch (error) {
+        console.log(error)
         return false;
       }
-  
+
     },
-    async session({ session, token}) {
+    async session({ session, token }) {
       session.accessToken = token.accessToken
       session.user.id = token.uid
       session.user.role = token.role
@@ -91,7 +91,7 @@ const authOptions = {
       return baseUrl
     }
   },
-  pages:{
+  pages: {
     error: '/auth/error',
   }
 };

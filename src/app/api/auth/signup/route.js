@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
 import { connect } from '@/db/dbConfig'
-import { adminUser } from '@/utils/Constants'
 import Role from '@/modals/roleModel'
 
 await connect()
