@@ -30,6 +30,7 @@ function AddService() {
         try{
             const res = await axios.post('/api/services',data)
             if(res.data.success){
+                router.push(-1)
                 toast.success('create a new service');
             }
         }catch(error){

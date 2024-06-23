@@ -1,28 +1,13 @@
 'use client'
-import axios from 'axios';
+import { GlobalContext } from '@/context';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useContext} from 'react'
 
 export default function servicePage() {
     const router = useRouter();
-    const [services, setServices] = useState([]);
-    const getAllServices = async () => {
-        try {
-            const res = await axios.get('/api/services');
-            if (res.data.success) {
-                setServices(res.data.data);
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    useEffect(() => {
-        getAllServices();
-    }, [])
-    console.log(services);
-    return (
+    const {services} = useContext(GlobalContext)
+    return (  
         <>
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
             <div className="container mx-auto p-4 ">
@@ -35,8 +20,8 @@ export default function servicePage() {
                                     src={`/category/${service.category?.image}`}
                                     alt="Service image"
                                     className="w-full h-48 object-cover mb-4 rounded-t"
-                                    width={50}
-                                    height={50}
+                                    width={200}
+                                    height={200}
                                 />
                                 {service.category.logo ?
                                     <Image
@@ -57,6 +42,9 @@ export default function servicePage() {
                                     <h3 className="text-xl font-bold mb-2 text-indigo-300">{service.category.name}</h3>
                                     <p className="text-gray-600 mb-4">
                                         {service.category?.slug}
+                                    </p>
+                                    <p className="text-gray-600 mb-4">
+                                        {service.category?.description.slice(0,100) + '  ...'}
                                     </p>
                                     <button
                                         onClick={()=> router.push(`/service/${service._id}`)}

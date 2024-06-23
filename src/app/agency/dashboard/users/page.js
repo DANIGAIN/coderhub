@@ -27,6 +27,7 @@ export default function userPage() {
              users={users}
              user={user}
              req={req}
+             setUser={setUser}
              setReq={setReq}
            />
         </DefaultLayout>

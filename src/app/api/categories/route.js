@@ -39,7 +39,7 @@ export async function POST(req) {
     if (sub.length && sub[0].length) {
       obj.subcategoris = formData.get('subcategoris').split(',')
     }
-    const data = await Category.create(obj).select('-__v')
+    const data = await Category.create(obj)
     return NextResponse.json({
       success: true,
       data,

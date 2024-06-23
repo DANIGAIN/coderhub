@@ -13,7 +13,7 @@ export  async function middleware(req){
     if(pathname == '/' || pathname == '/home'){
         return NextResponse.rewrite(new URL('/home' , req.url))
     }
-    
+        
     // if(
     //     (token && pathname == '/agency/login') || 
     //     (token && pathname == '/agency/signup')|| 

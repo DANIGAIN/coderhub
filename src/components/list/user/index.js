@@ -1,7 +1,14 @@
 import React from 'react'
 import Link from 'next/link'
+import { MdModeEdit } from 'react-icons/md';
 
-export default function Users({setIsOpenUser, setReq, users}) {
+export default function Users({setIsOpenUser, setReq, users ,setUser}) {
+  const handleUpdate = (id)=>{
+    const data = users.find((data) => data._id == id);
+    setReq('update');
+    setUser(data);
+    setIsOpenUser(true);
+  }
     
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -60,9 +67,7 @@ export default function Users({setIsOpenUser, setReq, users}) {
                     <div className="hidden sm:block  col-span-1 items-center">
                         <p className="text-sm text-white">
                             {data.about?.specialist.name}
-                            {
-                                console.log(data.about)
-                            }
+                        
                         </p>
                     </div>
                     <div className="border-b border-[#eee] px-4 py-5 dark:border-strokedark ">
@@ -82,10 +87,12 @@ export default function Users({setIsOpenUser, setReq, users}) {
                             </button> */}
                             {/* <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
                                <DeleteIcon/>
+                            </button>*/}
+                            <button  
+                            onClick={() => handleUpdate(data._id)} 
+                            className="hover:text-primary">
+                                <MdModeEdit />
                             </button>
-                            <button onClick={()=> router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
-                               <UpdateIcon/>
-                            </button> */}
                         </div>
                     </div>
 
