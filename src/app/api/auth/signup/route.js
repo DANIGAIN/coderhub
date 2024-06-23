@@ -5,7 +5,7 @@ import { connect } from '@/db/dbConfig'
 import { adminUser } from '@/utils/Constants'
 import Role from '@/modals/roleModel'
 
-connect()
+await connect()
 
 export async function POST(request) {
     try {

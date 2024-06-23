@@ -9,50 +9,45 @@ import { GlobalContext } from "@/context";
 
 export default function UserModal(props) {
   const [isLoading, setIsLoading] = useState(false);
-  const { roles, setRoles, categories } = useContext(GlobalContext)
+  const { users, setUsers, categories } = useContext(GlobalContext)
   const [skills, setSkills] = useState([]);
   const { req, setIsOpenUser, user, isOpenUser } = props;
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: user ? {
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      image: user.image
-
-    } : {}
-  });
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
   const onSubmit = async (data) => {
-    // setIsLoading(true)
-    // try {
-    //   if (req === 'create') {
-    //     const res = await axios.post('/api/roles', data);
-    //     if (res.data.success) {
-    //       setRoles([res.data.data, ...roles])
-    //       toast.success(res.data?.message);
-    //     }
-    //   } else if (req === 'update') {
-    //     const res = await axios.put(`/api/roles/${role._id}`, data);
-    //     if (res.data.success) {
-    //       const filderRole = roles.filter((data) => data._id !== role._id);
-    //       data._id = role._id;
-    //       setRoles([data, ...filderRole]);
-    //       toast.success(res.data?.message);
-    //     }
-    //   }
-    //   reset()
-    //   setIsOpenRole(false)
+    const formData = new FormData();
+    formData.append('name', data.name)
+    formData.append('email', data.email)
+    formData.append('password', data.password)
+    data.phone && formData.append('phone', data.phone)
+    data.bio && formData.append('bio', data.bio)
+    data.specialist && formData.append('specialist', data.specialist)
+    skills[0] && formData.append('skill', skills)
+    data.image[0] && formData.append('image', data.image[0]);
+    setIsLoading(true)
+    try {
+      if (req === 'create') {
+        const res = await axios.post('/api/auth/users',formData);
+        console.log(res.data)
+        if (res.data.success) {
+          console.log(res.data)
+          setUsers([res.data.data, ...users])
+          toast.success(res.data?.message);
+        }
+      } 
+      
+      reset()
+      setIsOpenUser(false)
 
-    // } catch (error) {
-    //   if (!error.response.success && error.response.status === 400) {
-    //     reset()
-    //     setIsOpenMaping(false)
-    //     toast.error(error.response.data.message)
-    //   }
-    //   // console.log(error);
-    //   setIsLoading(false)
-    // } finally {
-    //   setIsLoading(false)
-    // }
+    } catch (error) {   
+      if (!error.response.success && error.response.status === 400) {
+        reset()
+        setIsOpenUser(false)
+        toast.error(error.response.data.message)
+      }
+      setIsLoading(false)
+    } finally {
+      setIsLoading(false)
+    }
 
   }
   return (
@@ -71,13 +66,13 @@ export default function UserModal(props) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex justify-between space-x-4">
+        <div className="sm:flex sm:justify-between sm:space-x-4 ">
           <div>
             {
               !errors.name ? (
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 "
                 >
                   Name
                 </label>
@@ -113,7 +108,7 @@ export default function UserModal(props) {
               !errors.email ? (
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 mt-5 sm:mt-0"
                 >
                   Email
                 </label>
@@ -145,7 +140,7 @@ export default function UserModal(props) {
             />
           </div>
         </div>
-        <div className="flex justify-between space-x-4">
+        <div className="sm:flex sm:justify-between sm:space-x-4 ">
           <div>
             {
               !errors.password ? (
@@ -186,16 +181,13 @@ export default function UserModal(props) {
 
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 mt-5 sm:mt-0"
             >
               Phone
             </label>
             <input
               type="number"
-              {...register("phone",
-                {
-                  required: "Phone is required"
-                })}
+              {...register("phone")}
               id="phone"
               name="phone"
               placeholder='Enter user phone - (optional)'
@@ -239,19 +231,18 @@ export default function UserModal(props) {
           <select
             id="specialist"
             name="specialist"
-
+            {
+            ...register('specialist')
+            }
             defaultValue={""}
-            
             className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600  border-gray-400`}
           >
             <option disabled value="" hidden >Enter user specialist stack</option>
-            <option value='Saturday'>Saturday</option>
-            <option value='Sunday'>Sunday</option>
-            <option value='Monday'>Monday</option>
-            <option value='Tuesday'>Tuesday</option>
-            <option value='Wednesday'>Wednesday</option>
-            <option value='Thursday'>Thursday</option>
-            <option value='Friday'>Friday</option>
+            {
+              categories.map((data, index) => (
+                <option key={index} value={data.id}>{data.name}</option>
+              ))
+            }
           </select>
         </div>
         <div>
@@ -266,26 +257,29 @@ export default function UserModal(props) {
           <select
             id="skill"
             name="skill"
-
+            onChange={(e) => {
+              if (!skills.includes(e.target.value)) setSkills((prev) => ([e.target.value, ...prev]))
+            }}
             defaultValue={""}
-            
+
             className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600  border-gray-400`}
           >
             <option disabled value="" hidden >Enter user skill stack</option>
-            <option value='Saturday'>Saturday</option>
-            <option value='Sunday'>Sunday</option>
-            <option value='Monday'>Monday</option>
-            <option value='Tuesday'>Tuesday</option>
-            <option value='Wednesday'>Wednesday</option>
-            <option value='Thursday'>Thursday</option>
-            <option value='Friday'>Friday</option>
+            {
+              watch().specialist ?
+                categories.find((data) => data.id === watch().specialist)
+                  .subcategoris.map((data, index) => (
+                    <option key={index} value={data}>{data}</option>
+                  )) : null
+            }
+
           </select>
-           <div>
-          {/* {skills.map((data, index)=>(
-               <span key={index}> {data}</span> 
-          ))} */}
-        
-        </div>
+          <div className="mt-2">
+            {skills.map((data , index)=>(
+              <span key={index}> {data}</span>
+            ))}
+
+          </div>
         </div>
         <div >
           <label
@@ -293,7 +287,11 @@ export default function UserModal(props) {
             htmlFor="image">Upload file</label>
           <input
             className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 border-gray-400`}
-            id="image" type="file" />
+            id="image"
+            {
+            ...register('image')
+            }
+            type="file" />
         </div>
 
 

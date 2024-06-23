@@ -24,8 +24,10 @@ export default function userPage() {
            <Users
              setIsOpenUser={setIsOpenUser}
              isOpenUser={isOpenUser}
+             users={users}
              user={user}
              req={req}
+             setReq={setReq}
            />
         </DefaultLayout>
     );

@@ -11,8 +11,8 @@ const aboutSchema = new mongoose.Schema({
         maxLength:500
     },
     specialist:{
-        type:String,
-        maxLength:255
+        type:mongoose.Types.ObjectId,
+        ref:'Category'
     },
     skill:[{
         type:String,
@@ -25,7 +25,7 @@ const aboutSchema = new mongoose.Schema({
     isSubscribe:{
         type:Boolean,
         default:false
-    },
+    }
     
 }, {
     timestamps: true

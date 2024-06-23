@@ -4,10 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import Skeleton from '../loading/Skeleton';
+import { useRouter } from 'next/navigation';
 function Navigation() {
     const [header, setHeader] = useState(false);
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
+    const router = useRouter();
     const scrollHeader = () => {
         if (window.scrollY >= 20) {
             setHeader(true)
@@ -38,7 +40,8 @@ function Navigation() {
                             {status == 'authenticated' && <button type="button" onClick={() => setMenuOpen(!isMenuOpen)} className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                                 <span className="sr-only">Open user menu</span>
                                 {session.user?.image ?
-                                    <Image className="rounded-full" src={`${session.user?.image}`} alt="user photo" height={35} width={35} />
+                                    <Image className="rounded-full" src={`/users/${session.user?.image}`} alt="user photo" height={35} width={35} />
+                                
                                     :
                                     <Skeleton />
                                 }
@@ -56,7 +59,22 @@ function Navigation() {
                                     </div>
                                     <ul className="py-2" aria-labelledby="user-menu-button">
                                         <li>
-                                            <button className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboaed</button>
+                                            <button 
+                                            onClick={()=> router.push('/agency/dashboard')} 
+                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                            >Dashboaed</button>
+                                        </li>
+                                        <li>
+                                            <button
+                                             onClick={()=> router.push('/profile')} 
+                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                            
+                                            >profile</button>
+                                        </li>
+                                        <li>
+                                            <button 
+                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                            >setting</button>
                                         </li>
                                         <li>
                                             <button onClick={() => signOut()} href='/' className=" hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
