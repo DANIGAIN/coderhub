@@ -5,8 +5,7 @@ import { sendEmail } from '@/helpers/sendEmail'
 import { VerifyTamp } from '@/utils/VerifyTamp'
 import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
-const SECRET = process.env.SECRET || null
-
+const SECRET = process.env.SECRET || null;
 
 await connect()
 
