@@ -18,11 +18,11 @@ export async function PUT(req, context) {
         if(maping){
             return NextResponse.json(CustomError.badRequestError({message:"This map alrady exist"}), { status: 400 });
         }
-        await RC_Maping.findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
+       const res =  await RC_Maping.findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
 
         return NextResponse.json({
             success: true,
-            message: "The RC maping is updated successfully",
+            message: "This user updated successfully",
         }, { status: 200 });
 
     } catch (error) {
