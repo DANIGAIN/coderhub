@@ -65,7 +65,8 @@ const authOptions = {
           email: user.email,        
           image: user.image,
           providerId: user.id,
-          role: role._id
+          role: role._id,
+          isVerified:true,
         };
         const existUser = await User.findOne({ email: user.email });
         if (!existUser) {
