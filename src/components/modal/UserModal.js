@@ -263,42 +263,6 @@ export default function UserModal(props) {
           </select>
         </div>}
         {req === 'create' && <div>
-
-
-          <label
-            htmlFor="skill"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Skill
-          </label>
-          <select
-            id="skill"
-            name="skill"
-            onChange={(e) => {
-              if (!skills.includes(e.target.value)) setSkills((prev) => ([e.target.value, ...prev]))
-            }}
-            defaultValue={""}
-
-            className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600  border-gray-400`}
-          >
-            <option disabled value="" hidden >Enter user skill stack</option>
-            {
-              watch().specialist ?
-                categories.find((data) => data.id === watch().specialist)
-                  .subcategoris.map((data, index) => (
-                    <option key={index} value={data}>{data}</option>
-                  )) : null
-            }
-
-          </select>
-          <div className="mt-2">
-            {skills.map((data, index) => (
-              <span key={index}> {data}</span>
-            ))}
-
-          </div>
-        </div>}
-        {req === 'create' && <div>
           <label
             htmlFor="skill"
             className="block text-sm font-medium text-gray-700"
