@@ -43,7 +43,7 @@ export async function GET(req) {
         const user = await User.findOne({ email })
 
         if (varifyTokenString && expiry && email) {
-            if (user && user.verifyToken == varifyTokenString && user.verifyTokenExpiry >= expiry) {
+            if (user && user.verifyToken == varifyTokenString && user.verifyTokenExpiry >= new Date(Date.now())) {
                 await User.findByIdAndUpdate(user._id, {
                     isVerified: true,
                     verifyToken: null,

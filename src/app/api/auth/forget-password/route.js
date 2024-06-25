@@ -3,11 +3,12 @@ import CustomError from "@/utils/Error";
 import { NextResponse } from "next/server";
 import { sendEmail } from '@/helpers/sendEmail'
 import bcryptjs from 'bcryptjs'
+import { VerifyTamp } from "@/utils/VerifyTamp";
 
 
 export async function POST(req) {
     try {
-        const email = await req.json();
+        const {email} = await req.json();
 
         const user = await User.findOne({ email })
         if (!user) {
@@ -16,7 +17,7 @@ export async function POST(req) {
 
         const hashToken = await bcryptjs.hash((user._id).toString(), 10);
         const extime = Date.now() +(2 * 60 *  1000);
-        const sendUrl = `${process.env.NEXTAUTH_URL}/api/auth/forget-password?token=${hashToken}&email=${email}&extime=${extime}`
+        const sendUrl = `${process.env.NEXTAUTH_URL}/agency/forget-password?token=${hashToken}&email=${email}&extime=${extime}`
         await User.findByIdAndUpdate(user._id, {
             forgetToken: hashToken,
             forgetTokenExpiry: extime,
@@ -30,28 +31,4 @@ export async function POST(req) {
         return NextResponse.json(CustomError.internalServerError(err), { status: 500 })
 
     }
-}
-export async function GET(req){
-    try{
-        const url = new URL(req.url)
-        const email = url.searchParams.get('email')|| null;
-        const token = url.searchParams.get('token')|| null;
-        const extime = url.searchParams.get('extime')|| null;
-        return NextResponse.json({
-            message: "ok",
-            data:{
-                email,
-                token,
-                extime,
-            },
-            success: true,
-        });
-
-    }catch(error){
-        return NextResponse.json(CustomError.internalServerError(err), { status: 500 })
-    }
-  
-
-
-
 }

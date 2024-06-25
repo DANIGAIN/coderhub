@@ -1,40 +1,60 @@
 "use client"
 import Link from 'next/link'
-import React, { useState } from 'react'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
 import { Loading } from '@/components/loading/dot'
-import { useRouter } from 'next/navigation'
-export default function SignUp() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm()
-    const [isloading, setIsLoading] = useState(false);
-    const router = useRouter();
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import toast from 'react-hot-toast'
+import axios from 'axios'
+
+export default function ForgetToken() {
+    const [isLoading, setIsLoading] = useState(false)
+    const { register, handleSubmit,watch, formState: { errors } } = useForm()
+    const [time , setTime] = useState(null);
+    const search  = useSearchParams();
+    const router = useRouter()
+    const email = search.get('email')|| null;
+    const token = search.get('token')|| null;
+    const extime = search.get('extime')|| null;
+    useEffect(()=>{
+        const intervalId = setInterval(()=>{
+            const ex = new Date(parseInt(extime) + (2* 60  *1000));
+            const current = new Date(Date.now())
+            let diff = ex - current;
+            diff = Math.max(0, diff);
+            const totalSeconds = Math.floor(diff / 1000);
+            if(totalSeconds >= 0){
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                setTime(minutes +':'+ seconds) 
+            }
+        },1000)
+        return () => clearInterval(intervalId);
+    },[])
+
     const onSubmit = async (data) => {
-        setIsLoading(true)
-        axios.post('/api/auth/signup', data)
-            .then(async function (data) {
-                const info = data.data.data
-                const res = await signIn("credentials", {
-                    ...info,
-                    redirect: false
-                });
-                if (res.ok) {
-                    toast.success('account created successfuly and check your email for varification')
-                    await axios.post('/api/auth/verify-email',{id:data.data.data._id})
-                    router.push('/')
-                } 
-                setIsLoading(false)
-
-            }).catch(function (e) {
-                setIsLoading(false)
-                toast.error(e.response?.data?.message)
+        try {
+            setIsLoading(true)
+            const res = await axios.post(`/api/auth/verify-forget-passowrd`,{
+                email,
+                token,
+                password:data.password,
             })
-
+            if(res?.data?.success){
+                toast.success(res.data.message)
+                router.push('/agency/login')
+            }
+        } catch (error) {
+            if (!error.response?.data?.success && error.response?.data?.status === 400) {
+                router.push(`/forget-error?message=${error.response?.data.message }&status=${error.response?.data?.status}`);
+              }
+            setIsLoading(false)
+        } finally {
+            setIsLoading(false)
+        }
     }
-
-    return (
+    return (   
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                 <div className="max-w-md text-center">
@@ -252,89 +272,12 @@ export default function SignUp() {
             </div>
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-md w-full p-6">
-                    <h1 className="text-3xl font-semibold mb-6 text-white text-center">
-                        Sign up
+                    <h1 className="text-3xl font-semibold mb-6 text-width text-center">
+                         new password
                     </h1>
-                    <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
-                        Join to Our team with all access
-                    </h1>
-
+                
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
-                            {!errors.name ? (
-                                <label
-                                    htmlFor="name"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Name
-                                </label>
-
-                            ) : (
-                                <label
-                                    htmlFor="name"
-                                    className="block text-sm font-medium text-red-700"
-                                >
-                                    {`${errors.name?.message}`}
-                                </label>
-
-                            )}
-
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder='Enter your name'
-                                {...register("name", {
-                                    required: "name is required"
-                                })}
-                                className={`block w-full bg-transparent outline-none border-b-2 py-2 px-4  text-gray-700 placeholder-gray-400 focus:border-gray-600 ${errors.name
-                                    ? " border-red-400"
-                                    : " border-gray-400"
-                                    }`}
-                            />
-                        </div>
-                        <div>
-                            {
-                                !errors.email ? (
-                                    <label
-                                        htmlFor="email"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Email
-                                    </label>
-
-                                ) : (
-
-                                    <label
-                                        htmlFor="email"
-                                        className="block text-sm font-medium text-red-700"
-                                    >
-                                        {`${errors.email?.message}`}
-                                    </label>
-                                )
-                            }
-
-                            <input
-                                type="text"
-                                {...register("email",
-                                    {
-                                        required: "email is required",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: "invalid email address"
-                                        }
-                                    })}
-                                id="email"
-                                name="email"
-                                placeholder='Enter your email'
-                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.email
-                                    ? " border-red-400"
-                                    : " border-gray-400"
-                                    }`}
-                            />
-                        </div>
-
-                        <div>
+                          <div>
                             {
                                 !errors.password ?
                                     (
@@ -380,7 +323,6 @@ export default function SignUp() {
                                     }`}
                             />
                         </div>
-
                         <div>
                             {
                                 !errors.confirmpwd ?
@@ -419,23 +361,20 @@ export default function SignUp() {
                                     }`}
                             />
                         </div>
+
                         <div>
-                            {!isloading ?
+                            {!isLoading ?
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800   focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                                    className="w-full  bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none  focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
-                                    Sign Up
-                                </button> : <Loading />}
+                                    conform
+                                </button> : <Loading/>}
                         </div>
                     </form>
-     
-                    <div className="mt-5 text-sm text-gray-600 text-center">
-                        <p>
-                            Do you have an account ?
-                            <Link href="/agency/login" className='text-slate-400 hover:underline'> login here</Link>
-                        </p>
-                    </div>
+                    <h1 className="text-sm font-semibold mb-6  text-center mt-5">
+                         Time :  {time}
+                    </h1>
                 </div>
             </div>
         </div>

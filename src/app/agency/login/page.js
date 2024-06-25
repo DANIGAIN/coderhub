@@ -34,7 +34,8 @@ export default function Login() {
             }else{
               
                 const res = await axios.post('/api/auth/forget-password',{email:data.email})
-                if(res.data.sucess){
+                if(res.data.success){
+                    router.push('/home')
                     toast(res.data.message ,{duration:6000})
                 }
             }

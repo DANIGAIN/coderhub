@@ -66,7 +66,8 @@ export const matcherPath = [
   '/agency/signup',
   '/home/:id',
   '/agency/dashboard',
-  '/api/categories/:id*'
+  '/api/categories/:id*',
+  'agency/forget-password'
 ]
 
 export const modalStyles = {

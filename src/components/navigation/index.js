@@ -32,12 +32,12 @@ function Navigation() {
             <div className={header ? 'fixed w-full z-9 text-white' : 'bg-transparent'}>
                 <nav className="bg-slate-800 border-gray-200 dark:bg-gray-900">
                     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                        <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                        <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
                             <Image src="/assets/agency-logo.svg" height={35} width={35} alt="Flowbite Logo" />
                             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Agency</span>
-                        </a>
+                        </Link>
                         <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                            {status == 'authenticated' && <button type="button" onClick={() => setMenuOpen(!isMenuOpen)} className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                            {status == 'authenticated' && <button type="button" onMouseEnter={() => setMenuOpen(!isMenuOpen)} className="flex text-sm bg-gray-800 rounded-full md:me-0 hover:ring-4 hover:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                                 <span className="sr-only">Open user menu</span>
                                 {session.user?.image ?
                                     <Image className="rounded-full" src={session.user?.image} alt="user photo" height={35} width={35} />
