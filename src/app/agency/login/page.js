@@ -1,38 +1,50 @@
 "use client"
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-import React, { useState }from 'react'
+import React, { useState } from 'react'
 import { Loading } from '@/components/loading/dot'
-import {signIn  } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import axios from 'axios'
 
 export default function Login() {
     const [isLoading, setIsLoading] = useState(false)
-    const {register,handleSubmit,formState:{ errors }} = useForm()
+    const [currentState, SetCurrentState] = useState('sign-up');
+    const { register, handleSubmit, formState: { errors } } = useForm()
     const router = useRouter()
     const onSubmit = async (data) => {
         try {
-            setIsLoading(true) 
-           const res =  await signIn("credentials",{
-            ...data,
-            redirect:false
-            });
-          if(!res.ok) {
-               if(res.error == 'Illegal arguments: string, undefined') toast("login with google or github",{icon: '👏'})
-            else
-               toast.error(res.error)
-            router.push('/agency/login')
-          }else{
-            toast.success('successfuly login')
-            router.push('/')
-          }
+            setIsLoading(true)
+            if (currentState === 'sign-up') {
+                const res = await signIn("credentials", {
+                    ...data,
+                    redirect: false
+                });
+                if (!res.ok) {
+                    if (res.error == 'Illegal arguments: string, undefined') toast("login with google or github", { icon: '👏' })
+                    else
+                        toast.error(res.error)
+                    router.push('/agency/login')
+                } else {
+                    toast.success('successfuly login')
+                    router.push('/')
+                }
+
+            }else{
+              
+                const res = await axios.post('/api/auth/forget-password',{email:data.email})
+                if(res.data.sucess){
+                    toast(res.data.message ,{duration:6000})
+                }
+            }
+
         } catch (error) {
             setIsLoading(false)
         } finally {
             setIsLoading(false)
-        } 
-    }   
+        }
+    }
     return (
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
@@ -252,16 +264,16 @@ export default function Login() {
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-md w-full p-6">
                     <h1 className="text-3xl font-semibold mb-6 text-width text-center">
-                        Sign in
+                        {currentState === 'sign-up' ? 'Sign in' : 'Reset Password'}
                     </h1>
                     <h1 className="text-sm font-semibold mb-6 text-gray-500 text-center">
                         Join to Our team with all access
                     </h1>
-                    <div className="mt-4 flex flex-col lg:flex-row items-center justify-between">
+                    {currentState === 'sign-up' && <div className="mt-4 flex flex-col lg:flex-row items-center justify-between">
                         <div className="w-full lg:w-1/2 mb-2 lg:mb-0">
                             <button
                                 type="button"
-                                onClick={()=> signIn('google')}
+                                onClick={() => signIn('google')}
                                 className="w-full flex justify-center items-center gap-2  text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg
@@ -293,7 +305,7 @@ export default function Login() {
                         <div className="w-full lg:w-1/2 ml-0 lg:ml-2">
                             <button
                                 type="button"
-                                onClick={()=> signIn('github')}
+                                onClick={() => signIn('github')}
                                 className="w-full flex justify-center items-center gap-2  text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300"
                             >
                                 <svg
@@ -307,10 +319,10 @@ export default function Login() {
                                 Sign Up with Github{" "}
                             </button>
                         </div>
-                    </div>
-                    <div className="mt-4 text-sm text-gray-600 text-center">
+                    </div>}
+                    {currentState === 'sign-up' && <div className="mt-4 text-sm text-gray-600 text-center">
                         <p>or with email</p>
-                    </div>
+                    </div>}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
                             {
@@ -352,7 +364,7 @@ export default function Login() {
                                     }`}
                             />
                         </div>
-                        <div>
+                        {currentState === 'sign-up' && <div>
                             {
                                 !errors.password ?
                                     (
@@ -397,7 +409,7 @@ export default function Login() {
                                     : " border-gray-400"
                                     }`}
                             />
-                        </div>
+                        </div>}
 
                         <div>
                             {!isLoading ?
@@ -405,20 +417,22 @@ export default function Login() {
                                     type="submit"
                                     className="w-full  bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none  focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
-                                    Login
+                                    {currentState === 'sign-up' ? 'Login' : "Submit"}
                                 </button> : <Loading />}
                         </div>
                     </form>
-                    <div className="mt-4 mb-3 text-sm text-gray-600 text-center">
-                        <Link href="/signup" className='text-black hover:underline'> Forgotten password?</Link>
-                    </div>
-                    <hr />
-                    <div className="mt-3 text-sm text-gray-600 text-center">
+                    {currentState === 'sign-up' && <div className="mt-4 mb-3 text-sm text-gray-100 text-center">
+                        <button
+                            onClick={() => SetCurrentState('forget-password')}
+                            className='text-slate-400 hover:underline'> Forgotten password?</button>
+                    </div>}
+                    {currentState === 'sign-up' && <hr />}
+                    {currentState === 'sign-up' && <div className="mt-3 text-sm text-gray-600 text-center">
                         <p>
                             Do you create an account ?
-                            <Link href="/agency/signup" className='text-black hover:underline'> sign up here</Link>
+                            <Link href="/agency/signup" className='text-slate-400 hover:underline'> sign up here</Link>
                         </p>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

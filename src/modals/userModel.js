@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema({
     verifyTokenExpiry: { 
         type: Date
     },
+    forgetToken: { 
+        type: String
+    },
+    forgetTokenExpiry: { 
+        type: Date
+    },
     about:{
         type:mongoose.Types.ObjectId,
         ref:'About'

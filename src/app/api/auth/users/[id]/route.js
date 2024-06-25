@@ -22,11 +22,12 @@ export async function PUT(req, context) {
             userobj.image = `/users/${img.image}`
         }
         const res = await User.findByIdAndUpdate({ _id: id }, { $set: userobj }, { new: true });
+        console.log(res)
         if (res?.about) {
             await About.findByIdAndUpdate({ _id: res.about }, { $set: obj }, { new: true });
         } else {
-            const res = await User.findOne({ _id: id });
-            await About.findByIdAndUpdate({ _id: res.data.about }, { $set: obj }, { new: true });
+           const about =  await About.create(obj);
+           await User.findByIdAndUpdate({_id:id},{$set:{about:about._id}},{ new: true })
         }
 
         const data = await User.findOne({ _id: id })

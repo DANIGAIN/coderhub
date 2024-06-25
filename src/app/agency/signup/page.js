@@ -22,7 +22,7 @@ export default function SignUp() {
                 });
                 if (res.ok) {
                     toast.success('account created successfuly and check your email for varification')
-                    await axios.get(`/api/auth/verify-email?id=${data.data.data._id}`)
+                    await axios.post('/api/auth/verify-email',{id:data.data.data._id})
                     router.push('/')
                 } 
                 setIsLoading(false)

@@ -14,8 +14,8 @@ export default function UserModal(props) {
   const { req, setIsOpenUser, user, isOpenUser } = props;
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
     defaultValues: user ? {
-      bio: user.about.bio,
-      phone: user.about.phone,
+      bio: user?.about?.bio,
+      phone: user?.about?.phone,
       role: user.role._id,
     } : {}
   });
@@ -41,7 +41,7 @@ export default function UserModal(props) {
           console.log(res.data)
           setUsers([res.data.data, ...users])
           toast.success(res.data?.message);
-          await axios.get(`/api/auth/verify-email?id=${res.data.data._id}`);
+          await axios.post('/api/auth/verify-email',{id:res.data.data._id})
         }
       } else if (req === 'update') {
         const res = await axios.put(`/api/auth/users/${user._id}`, formData);

@@ -12,16 +12,30 @@ const transporter = nodemailer.createTransport({
 
 
 export async function sendEmail(receiver , type , subject , html) {
+  if(type === 'varify'){
+    const info = await transporter.sendMail({
+      from: process.env.GMAIL, 
+      to: receiver,
+      subject, 
+      text: "Hey ! please click the link for verify your application ", 
+      html, 
+    });
   
-  const info = await transporter.sendMail({
-    from: process.env.GMAIL, 
-    to: receiver,
-    subject, 
-    text: "Hey ! please click the link for verify your application ", 
-    html, 
-  });
+    console.log("Message sent: %s", info.messageId); 
+  }else{
+    const info = await transporter.sendMail({
+      from: process.env.GMAIL, 
+      to: receiver,
+      subject, 
+      text: "Hey ! please click the link for forgot  your password ", 
+      html, 
+    });
+  
+    console.log("Message sent: %s", info.messageId); 
 
-  console.log("Message sent: %s", info.messageId);
+  }
+  
+
 }
 
 

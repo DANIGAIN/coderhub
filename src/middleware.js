@@ -2,7 +2,6 @@ import {  NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { varifyToken } from "./helpers/varifyToken";
 import {  matcherPath  } from "./utils/Constants";
-import CustomError from "./utils/Error";
 const SECRET = process.env.SECRET ;
 export  async function middleware(req){
     const token = await getToken({req ,secret: SECRET})
