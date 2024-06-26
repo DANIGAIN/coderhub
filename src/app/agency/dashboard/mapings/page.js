@@ -7,7 +7,7 @@ import { GlobalContext } from '@/context'
 import React, { useContext, useState } from 'react'
 
 export default function MapingPage() {
-    const [isOpenMaping, setIsOpenMaping] = useState(false);
+    const [isOpenMaping, setIsOpenMaping] = useState(true);
     const { mapings, setMapings ,components, roles } = useContext(GlobalContext)
     const [maping, setMaping] = useState('');
     const [req, setReq] = useState(null);

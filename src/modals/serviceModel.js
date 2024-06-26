@@ -10,17 +10,26 @@ const serviceSchema = new mongoose.Schema({
         type:Number,
         required: true
     },
+    type:{
+        type:String,
+        required:true,
+    },
+    time:{
+        type:Number,
+        required:true,
+    },
     category:{
         type: mongoose.Types.ObjectId,
         ref:'Category',
         required:true
     },
-    tags:{
-        type: String
-    },
+    love:[{
+        type: mongoose.Types.ObjectId,
+        ref:'User'
+    }],
     reviews:[{
         type: mongoose.Types.ObjectId,
-        ref:'Reviews'
+        ref:'Review'
     }]
   
 }, {

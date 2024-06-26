@@ -1,16 +1,20 @@
 "use client"
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react"
 
 export const GlobalContext = createContext(null)
 
 export function GlobalState({ children }) {
+ 
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [components, setComponents] = useState([]);
   const [mapings, setMapings] = useState([]);
   const [roles, setRoles] = useState([]);
   const [users, setUsers] = useState([]);
+
+
   useEffect(() => {
     const getAllUsers = async () => {
       try {

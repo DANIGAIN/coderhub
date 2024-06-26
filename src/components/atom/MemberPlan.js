@@ -3,7 +3,7 @@ import { pricingCards } from "@/utils/Constants";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 const MemberPlan = () => {
@@ -42,17 +42,18 @@ const MemberPlan = () => {
             })()
         }
     }, [section])
-
     useEffect(() => {
-        if ( status === 'authenticated') {
-            ;(async () => {
-                const res = await axios.get(`/api/payments/subscription?uid=${section.user.id}`)
-                if (res.data.success && res.data.data) {
-                    setPalnId(res.data.data.planId)
-                }
-            })()
-        }
-    }, [section])
+      if (status === 'authenticated') {
+          ;(async () => {
+              const res = await axios.get(`/api/payments/subscription?uid=${section.user.id}`)
+              if (res.data.success && res.data.data) {
+                  setPalnId(res.data.data.planId)
+              }
+          })()
+      }
+   }, [section])
+
+
     return (
         <section className=" bg-slate-900 dark:bg-gray-900">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">

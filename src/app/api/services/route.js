@@ -8,15 +8,10 @@ export async function POST(req) {
     try {
         const body = await req.json()
         body.price = parseInt(body.price);
-        body.category = body.categoryId;
-        if (!body.price || !body.category) {
-            return NextResponse.json(CustomError.notFoundError({ message: "requested resource are not found" }), { status: 404 })
-        }
-        if (!body.uid) {
-            return NextResponse.json(CustomError.unauthorizeError({ message: "Auauthorice ! login first user can not exist" }), { status: 401 })
-        }
+        body.time = parseInt(body.time);
+        
         const service = await Service.create(body)
-        body._id = service;
+        body._id = service._id;
         return NextResponse.json({
             success: true,
             data: body,
@@ -30,6 +25,7 @@ export async function POST(req) {
 export async function GET(req) {
     try {
         const data = await Service.find()
+            .sort({'createdAt':-1}) 
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v' },
                 { path: 'uid', select: 'name' }

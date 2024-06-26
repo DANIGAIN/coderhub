@@ -2,6 +2,7 @@ export const pricingCards = [
     {
       id:1,
       title: 'Basic',
+      discount:5,
       price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_BASIC,
       description: 'You will have 5% discout on every service .',
       price: '$10',
@@ -17,6 +18,7 @@ export const pricingCards = [
       id:2,
       title: 'Company',
       price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_COMPANY,
+      disount:15,
       description: 'You will have 15% discout on every service',
       price: '$15',
       duration: 'month',
@@ -30,6 +32,7 @@ export const pricingCards = [
     {
       id:3,
       title: 'Enterprise',
+      disount:20,
       price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_ENTERPRICE,
       description: 'You will have 20% discout on every service .',
       price: '$20',

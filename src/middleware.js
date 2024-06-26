@@ -16,7 +16,6 @@ export  async function middleware(req){
     if(
         (token && pathname == '/agency/login') || 
         (token && pathname == '/agency/signup')|| 
-        (!vToken && pathname.startsWith('/agency/dashboard')) ||
         (!token && pathname === '/profile')
     ){
         return NextResponse.redirect(new URL('/home', req.url))
