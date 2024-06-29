@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import { FaUserLock } from "react-icons/fa6";
+import { AiOutlineBell } from "react-icons/ai";
 
 const { usePathname } = require("next/navigation");
 
@@ -25,7 +26,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
             document.querySelector("body")?.classList.remove("sidebar-expanded");
         }
     }, [sidebarExpanded]);
-  
+
 
     return (
         <aside
@@ -143,12 +144,12 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
                             <SidebarLinkGroup
                                 activeCondition={
-                                    pathname === "/agency/dashboard/users" || 
+                                    pathname === "/agency/dashboard/users" ||
                                     pathname === '/agency/dashboard/roles' ||
                                     pathname === '/agency/dashboard/mapings' ||
                                     pathname === '/agency/dashboard/components'
                                 }
-                                
+
                             >
                                 {(handleClick, open) => {
                                     return (
@@ -238,9 +239,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 }}
                             </SidebarLinkGroup>
 
-                    
-
-                            {/* <!-- Menu Item Settings --> */}
                             <li>
                                 <Link
                                     href="/settings"
@@ -289,12 +287,12 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                             Agency Offer
                         </h3>
 
-                        <ul className="mb-6 flex flex-col gap-1.5">
-                         
+                        <ul className="flex flex-col gap-1.5">
+
 
                             <SidebarLinkGroup
                                 activeCondition={
-                                    pathname === "/agency/dashboard/service" 
+                                    pathname === "/agency/dashboard/service"
                                     || pathname === "/agency/dashboard/category"}
                             >
                                 {(handleClick, open) => {
@@ -395,6 +393,21 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 }}
                             </SidebarLinkGroup>
                             {/* <!-- Menu Item Ui Elements --> */}
+                        </ul>
+                    </div>
+                    <div>
+                        <ul className="flex flex-col gap-1.5">
+                            <li>
+                                <Link
+                                    href="/agency/dashboard/proposal"
+                                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("proposal") &&
+                                        "bg-graydark dark:bg-meta-4"
+                                        }`}
+                                >
+                                    <AiOutlineBell className="text-current h-5 w-5"/>
+                                     Proposals
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>

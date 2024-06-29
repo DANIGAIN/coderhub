@@ -4,8 +4,8 @@ import Services from "@/components/list/service";
 export default function servicePage() {
     return (
         <DefaultLayout>
-           <Breadcrumb pageName="service" />
-           <Services/>
+            <Breadcrumb pageName="service" />
+            <Services />
         </DefaultLayout>
     );
 };

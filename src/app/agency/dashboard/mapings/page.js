@@ -30,7 +30,6 @@ export default function MapingPage() {
                     mapings={mapings}
                     setMaping={setMaping}
                     setReq={setReq}
-                    
                 />
             </DefaultLayout>
         </div>

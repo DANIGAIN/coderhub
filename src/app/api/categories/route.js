@@ -57,7 +57,7 @@ export async function GET(req, res) {
       { $match: { name: { $regex: name, $options: 'i' } } },
       { $addFields: { id: { $toString: '$_id' }, links: { self: "/agency/dashboard/category" } } },
       { $project: { __v: 0, _id: 0 } }
-    ]).exec()
+    ]).sort({'createdAt':-1}).exec()
     return NextResponse.json({
       message: "catagory founed",
       data,

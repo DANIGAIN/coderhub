@@ -15,7 +15,7 @@ const Services = () => {
         <div className="rounded-sm border  shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="px-4 py-6 md:px-6 xl:px-7.5">
                 <div className="flow-root ">
-                    <h4 className=" float-left text-xl font-semibold text-black dark:text-white">Top Products</h4>
+                    <h4 className=" float-left text-xl font-semibold text-black dark:text-white">Top Services</h4>
                     <Link href={`/agency/dashboard/service/add`} className="float-right inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8">Add</Link>
                 </div>
             </div>

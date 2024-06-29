@@ -8,12 +8,18 @@ import Modal from 'react-modal'
 import { useSession } from "next-auth/react";
 
 export default function ProposalModal(props) {
-    const {data:section,status} = useSession();
+    const { data: section, status } = useSession();
     const [isLoading, setIsLoading] = useState(false);
-    const { req, isopenProposal, setIsOpenProposal,service,setProposals } = props;
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { req, isopenProposal, setIsOpenProposal, service, setProposals, fieldPermission = [], proposal, proposals} = props;
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        defaultValues: proposal ? {
+            title: proposal.title,
+            day: proposal.day,
+            type: proposal.type,
+            description: proposal.description
+        } : {}
+    });
     const rootRef = createRef();
-
     const onSubmit = async (data) => {
         setIsLoading(true)
         try {
@@ -26,21 +32,17 @@ export default function ProposalModal(props) {
                     setProposals(res.data.data)
                 }
             } else if (req === 'update') {
-                // const res = await axios.put(`/api/mapings/${maping._id}`, data);
-                // if (res.data.success) {
-                //     const filderMaping = mapings.filter((data) => data._id !== maping._id);
-                //     setMapings([...filderMaping]);
-                //     toast.success(res.data?.message);
-                // }
+                const res = await axios.put(`/api/proposals/${proposal._id}`, data);
+                if (res.data.success) {
+                    const filterProposal = proposals.filter((data) => data._id !== proposal._id);
+                    data._id = proposal._id;
+                    setProposals([data, ...filterProposal]);
+                    toast.success(res.data?.message);
+                }
             }
             reset()
             setIsOpenProposal(false)
         } catch (error) {
-            // if (!error.response.success && error.response.status === 400) {
-            //     reset()
-            //     setIsOpenMaping(false)
-            //     toast.error(error.response.data.message)
-            // }
             console.log(error);
             setIsLoading(false)
         } finally {
@@ -64,7 +66,7 @@ export default function ProposalModal(props) {
                 </div>
                 <div ref={rootRef} id="root">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div>
+                        {(fieldPermission.includes('title') || req === 'create') && <div>
                             {
                                 !errors.title ? (
                                     <label
@@ -99,8 +101,8 @@ export default function ProposalModal(props) {
                                     : " border-gray-400"
                                     }`}
                             />
-                        </div>
-                        <div>
+                        </div>}
+                        {(fieldPermission.includes('type') || req === 'create') && <div>
                             {
                                 !errors.type ? (
                                     <label
@@ -140,8 +142,8 @@ export default function ProposalModal(props) {
                                 <option value='medium' > medium </option>
                                 <option value='large' > large </option>
                             </select>
-                        </div>
-                        <div>
+                        </div>}
+                        {(fieldPermission.includes('day') || req === 'create') && <div>
                             {
                                 !errors.day ? (
                                     <label
@@ -176,8 +178,8 @@ export default function ProposalModal(props) {
                                     : " border-gray-400"
                                     }`}
                             />
-                        </div>
-                        <div>
+                        </div>}
+                        {(fieldPermission.includes('description') || req === 'create') && <div>
                             {
                                 !errors.description ? (
                                     <label
@@ -212,7 +214,43 @@ export default function ProposalModal(props) {
                                     : " border-gray-400"
                                     }`}
                             />
-                        </div>
+                        </div>}
+                        {(fieldPermission.includes('amount') || req === 'create') && <div>
+                            {
+                                !errors.amount ? (
+                                    <label
+                                        htmlFor="amount"
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        Amount
+                                    </label>
+
+                                ) : (
+
+                                    <label
+                                        htmlFor="amount"
+                                        className="block text-bolt  font-medium text-red"
+                                    >
+                                        {errors.amount?.message}
+                                    </label>
+                                )
+                            }
+
+                            <input
+                                type="number"
+                                {...register("amount",
+                                    {
+                                        required: "Amount is required",
+                                    })}
+                                id="amount"
+                                name="amount"
+                                placeholder='how maney amount will you pay?'
+                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.day
+                                    ? " border-red-400"
+                                    : " border-gray-400"
+                                    }`}
+                            />
+                        </div>}
 
                         <div>
                             {!isLoading ?
