@@ -278,7 +278,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                     Settings
                                 </Link>
                             </li>
-                            {/* <!-- Menu Item Settings --> */}
                         </ul>
                     </div>
 
@@ -399,8 +398,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         <ul className="flex flex-col gap-1.5">
                             <li>
                                 <Link
-                                    href="/agency/dashboard/proposal"
-                                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("proposal") &&
+                                    href="/agency/dashboard/proposals"
+                                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("proposals") &&
                                         "bg-graydark dark:bg-meta-4"
                                         }`}
                                 >
@@ -411,7 +410,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         </ul>
                     </div>
                 </nav>
-                {/* <!-- Sidebar Menu --> */}
             </div>
         </aside>
     )

@@ -3,6 +3,7 @@ import ProposalModal from '@/components/modal/ProposalModal';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
+import { MdModeEdit } from 'react-icons/md';
 
 export default function MyProposal() {
   const [proposals, setProposals] = useState([]);
@@ -24,6 +25,8 @@ export default function MyProposal() {
     setIsOpenProposal(true);
     setProposal(proposals.find((data) => data._id == id))
   }
+
+  console.log(proposals)
   return (
     <>
       {isopenProposal && <ProposalModal
@@ -53,13 +56,14 @@ export default function MyProposal() {
                     <div className="w-1/6">Days</div>
                     <div className="w-1/6">Title</div>
                     <div className="w-1/6">Description</div>
-                    <div className="w-1/6">Status</div>
+                    <div className="ml-30 w-1/6">Amount</div>
+                    <div className="w-1/6">Action</div>
                   </div>
                   <div className='overflow-y-auto h-95'>
 
                     {
                       proposals.map((data, index) => (
-                        <div  key={index} className="bg-slate-600">
+                        <div key={index} className="bg-slate-600">
                           <div className="flex px-5 py-5 border-b border-gray-200 text-sm items-center">
                             <div className="w-1/6 flex items-center">
                               <p>{data._id}</p>
@@ -76,11 +80,21 @@ export default function MyProposal() {
                             <div className="w-1/6">
                               <p className="text-gray-900 whitespace-no-wrap">{data.description}</p>
                             </div>
+                            <div className=" ml-30 w-1/6">
+                              <p className="text-gray-900 whitespace-no-wrap">{
+                                data.status === 'pending'? data.status : data.amount
+                              }</p>
+                            </div>
                             <div className="w-1/6">
-                              <button
-                                onClick={() => handleUpdate(data._id)}
-                                className='bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded-lg ring-2 '
-                              > edit</button>
+                              {data.status === 'pending' ?
+                                <span
+                                  className="font-medium"
+                                  onClick={() => handleUpdate(data._id)}
+                                ><MdModeEdit /></span>
+                                :
+                                <button
+                                  className='bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded-lg ring-2 '
+                                > pay </button>}
                             </div>
                           </div>
                         </div>

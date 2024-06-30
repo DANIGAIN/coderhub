@@ -37,8 +37,6 @@ function servicePage(props) {
         </div>
 
       </div>
-
-
       <Review />
     </div>
   )

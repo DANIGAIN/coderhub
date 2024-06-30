@@ -32,6 +32,7 @@ export default function ProposalModal(props) {
                     setProposals(res.data.data)
                 }
             } else if (req === 'update') {
+                (fieldPermission.includes('amount')) ? data.status = 'accepted' : null
                 const res = await axios.put(`/api/proposals/${proposal._id}`, data);
                 if (res.data.success) {
                     const filterProposal = proposals.filter((data) => data._id !== proposal._id);
@@ -66,7 +67,7 @@ export default function ProposalModal(props) {
                 </div>
                 <div ref={rootRef} id="root">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        {(fieldPermission.includes('title') || req === 'create') && <div>
+                        {(fieldPermission.includes('title')) && <div>
                             {
                                 !errors.title ? (
                                     <label
@@ -102,7 +103,7 @@ export default function ProposalModal(props) {
                                     }`}
                             />
                         </div>}
-                        {(fieldPermission.includes('type') || req === 'create') && <div>
+                        {(fieldPermission.includes('type')) && <div>
                             {
                                 !errors.type ? (
                                     <label
@@ -143,7 +144,7 @@ export default function ProposalModal(props) {
                                 <option value='large' > large </option>
                             </select>
                         </div>}
-                        {(fieldPermission.includes('day') || req === 'create') && <div>
+                        {(fieldPermission.includes('day'))&& <div>
                             {
                                 !errors.day ? (
                                     <label
@@ -179,7 +180,7 @@ export default function ProposalModal(props) {
                                     }`}
                             />
                         </div>}
-                        {(fieldPermission.includes('description') || req === 'create') && <div>
+                        {(fieldPermission.includes('description')) && <div>
                             {
                                 !errors.description ? (
                                     <label
@@ -215,7 +216,7 @@ export default function ProposalModal(props) {
                                     }`}
                             />
                         </div>}
-                        {(fieldPermission.includes('amount') || req === 'create') && <div>
+                        {(fieldPermission.includes('amount') ) && <div>
                             {
                                 !errors.amount ? (
                                     <label

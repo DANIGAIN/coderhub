@@ -10,18 +10,26 @@ const proposalSchema = new mongoose.Schema({
     },
     type: {
         type: String,
+        required:true,
     },
     day: {
         type: Number,
+        required:true,
     },
     title: {
         type: String,
+        required:true,
     },
     description: {
         type: String,
+        required:true
     },
     amount: {
         type: Number,
+    },
+    status: {
+        type: String,
+        default: "pending"
     }
 }, {
     timestamps: true

@@ -7,42 +7,40 @@ import Link from 'next/link';
 
 export default function Section1({ service }) {
     const [isopenProposal, setIsOpenProposal] = useState(false);
-    const {data:section,status} = useSession();
-    const [proposals,setProposals] = useState(null);
+    const { data: section, status } = useSession();
+    const [proposals, setProposals] = useState(null);
     const [price, setPrice] = useState(null);
     const [type, setType] = useState(null);
     const [time, setTime] = useState(null);
+    const fieldPermission = ['type','day','description','title']
     useEffect(() => {
         service.price && setPrice(service.price)
     }, [service])
 
-    useEffect(()=>{
-        if(status == 'authenticated' && service ){
-            ;(async()=>{
+    useEffect(() => {
+        if (status == 'authenticated' && service) {
+            ; (async () => {
                 const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`);
-                if(res.data.success && res.data?.data[0]){
+                if (res.data.success && res.data?.data[0]) {
                     setProposals(res.data.data);
                 }
             })()
         }
-    },[status,service])
+    }, [status, service])
 
     const handlePrice = (value) => {
-        const serviceTime = parseInt(parseFloat(service.time) / 8);
         if (value.time) {
-            setPrice(service.price + Math.max(0, serviceTime - value.time))
+            setPrice(parseInt(service.price / value.time * service.time))
         }
-
         if (value.time) setTime(value.time)
-
         if (value.type) setType(value.type)
-
     }
     return (
         <>
-         {isopenProposal && <ProposalModal
+            {isopenProposal && <ProposalModal
                 req={'create'}
                 service={service}
+                fieldPermission={fieldPermission}
                 isopenProposal={isopenProposal}
                 setIsOpenProposal={setIsOpenProposal}
                 setProposals={setProposals}
@@ -175,12 +173,14 @@ export default function Section1({ service }) {
                                 </div>
                                 <p className="text-gray-500 text-base font-normal mb-5">
                                     {service.category?.description?.length > 100 ?
-                                        service.category?.description.slice(100) :
+                                        service.category?.description.slice(0, 100) :
                                         service.category?.description}
                                     {service.category?.description?.length > 100 ?
-                                        <a href="#" className="text-indigo-600 mt-2">
-                                            More....
-                                        </a> : null}
+                                        <button
+                                            onClick={()=>window.scrollTo(0,250)}
+                                            className="text-indigo-600 mt-2">
+                                            ... more
+                                        </button> : null}
                                 </p>
                                 <ul className="grid gap-y-4 mb-8">
                                     <li className="flex items-center gap-3">
@@ -314,15 +314,15 @@ export default function Section1({ service }) {
                                     </button>
                                     {
                                         !proposals ?
-                                         <button 
-                                        onClick={()=> setIsOpenProposal(true)}
-                                        className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">
-                                        Proposal
-                                    </button>: <Link
-                                        href={'/service/my-proposal'}
-                                        className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">
-                                        My-Proposal
-                                    </Link>}
+                                            <button
+                                                onClick={() => setIsOpenProposal(true)}
+                                                className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">
+                                                Proposal
+                                            </button> : <Link
+                                                href={'/service/my-proposal'}
+                                                className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">
+                                                My-Proposal
+                                            </Link>}
                                 </div>
                             </div>
                         </div>

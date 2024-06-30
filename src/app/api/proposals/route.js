@@ -27,32 +27,29 @@ export async function GET(req) {
         const url = new URL(req.url)
         const uid = url.searchParams.get('uid');
         const service = url.searchParams.get('service');
-        if (!service) {
-            const data = await Porposal.find({ uid }).select('-__v -createdAt  -updatedAt')
-            return NextResponse.json({
-                success: true,
-                data,
-                message: "proposal get  successfuly"
-            }, { status: 200 })
+        let data = null;
+        if (!service && uid) {
+            data = await Porposal.find({ uid })
+                .sort({ 'createdAt': -1 })
+                .select('-__v ')
         } else if (uid && service) {
-            const data = await Porposal.find({
+            data = await Porposal.find({
                 $and: [
                     { uid: uid },
                     { service: service }
                 ]
-            }).select('-__v -createdAt  -updatedAt')
-            return NextResponse.json({
-                success: true,
-                data,
-                message: "proposal get  successfuly"
-            }, { status: 200 })
-
+            })
+                .sort({ 'createdAt': -1 })
+                .select('-__v')
+        } else {
+            data = await Porposal.find()
+                .sort({ 'createdAt': -1 })
+                .select('-__v')
         }
-
         return NextResponse.json({
             success: true,
-            data: null,
-            message: "proposal get  successfuly"
+            data,
+            message: "proposal get  successfully"
         }, { status: 200 })
 
     } catch (error) {
