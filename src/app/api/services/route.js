@@ -28,7 +28,8 @@ export async function GET(req) {
             .sort({'createdAt':-1}) 
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v' },
-                { path: 'uid', select: 'name' }
+                { path: 'uid', select: 'name'},
+                { path:'reviews', select: '_id rating',}
             ])
             .select('-createdAt -updatedAt -__v')
             .exec();
