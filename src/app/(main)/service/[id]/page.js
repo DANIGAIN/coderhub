@@ -37,7 +37,7 @@ function servicePage(props) {
         </div>
 
       </div>
-      <Review />
+      <Review service={service} />
     </div>
   )
 }

@@ -23,10 +23,6 @@ const serviceSchema = new mongoose.Schema({
         ref:'Category',
         required:true
     },
-    love:[{
-        type: mongoose.Types.ObjectId,
-        ref:'User'
-    }],
     reviews:[{
         type: mongoose.Types.ObjectId,
         ref:'Review'

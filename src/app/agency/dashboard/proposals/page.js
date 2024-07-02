@@ -16,7 +16,6 @@ export default function ProposalPage() {
             setProposals(res.data.data)
        })()
     },[])
-
     const fieldPermission = ['amount'];
     return (
         <div>

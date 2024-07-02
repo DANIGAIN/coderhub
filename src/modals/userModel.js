@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     verifyTokenExpiry: { 
         type: Date
     },
-    forgetToken: { 
+    forgetToken: {    
         type: String
     },
     forgetTokenExpiry: { 
