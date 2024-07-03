@@ -10,7 +10,8 @@ export async function GET(req,context) {
         const data = await Service.findOne({_id:id})
         .populate([
             { path: 'category', select: '-createdAt -updatedAt -__v' },
-            { path: 'uid', select: 'name' }
+            { path: 'uid', select: 'name' },
+            {path:'reviews' ,select:'_id rating'}
         ])
         .select('-__v')
         .exec();
