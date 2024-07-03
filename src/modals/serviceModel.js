@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { reviewSchema } from "./reviewModel";
 
 const serviceSchema = new mongoose.Schema({
     uid:{
@@ -22,12 +23,11 @@ const serviceSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:'Category',
         required:true
-    },
-    reviews:[{
+    },   
+    reviews: [{
         type: mongoose.Types.ObjectId,
-        ref:'Review'
+        ref:'Review',
     }]
-  
 }, {
     timestamps: true
 });

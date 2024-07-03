@@ -33,7 +33,6 @@ function servicePage(props) {
               {service?.category?.description}
             </p>
           </div>
-
         </div>
 
       </div>

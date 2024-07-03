@@ -68,7 +68,7 @@ export default function Section1({ service }) {
                                     <h6 className="font-manrope font-semibold text-2xl leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5">
                                         ${price ? ((price) + '-' + (price + 50)) : 0}
                                     </h6>
-                                    <div className="flex items-center gap-2">
+                                    { <div className="flex items-center gap-2">
                                         <div className="flex items-center gap-1">
                                             <svg
                                                 width={20}
@@ -169,7 +169,7 @@ export default function Section1({ service }) {
                                         <span className="pl-2 font-normal leading-7 text-gray-500 text-sm ">
                                             1624 review
                                         </span>
-                                    </div>
+                                    </div>}
                                 </div>
                                 <p className="text-gray-500 text-base font-normal mb-5">
                                     {service.category?.description?.length > 100 ?

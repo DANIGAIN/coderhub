@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
-import Review from '@/components/service/Review';
 
 await connect();
 export async function POST(req) {
@@ -26,11 +25,11 @@ export async function POST(req) {
 export async function GET(req) {
     try {
         const data = await Service.find({})
-            .sort({'createdAt':-1}) 
+            .sort({ 'createdAt': -1 })
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v' },
-                { path: 'uid', select: 'name'},
-                {path: 'reviews', model: 'Review',select:'_id rating'}
+                { path: 'uid', select: 'name' },
+                { path: 'reviews', select: '_id rating' }
             ])
             .select('-createdAt -updatedAt -__v')
             .exec();
