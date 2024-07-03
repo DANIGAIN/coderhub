@@ -14,6 +14,5 @@ const mapingSchema = new mongoose.Schema({
     timestamps:true,
 });
 mapingSchema.index({ component: 1, role: 1 }, { unique: true });
-
 const RC_Maping = mongoose.models.RC_Maping || mongoose.model("RC_Maping", mapingSchema);
-module.exports =  RC_Maping;
+export default RC_Maping;

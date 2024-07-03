@@ -1,38 +1,36 @@
 import mongoose from "mongoose";
 
-const subscriptionSchema = new mongoose.Schema({
-    uid:{
+const paymentSchema = new mongoose.Schema({
+    uid: {
         type: mongoose.Types.ObjectId,
-        ref:'User',
-        required:true
+        ref: 'User',
+        required: true
     },
-    checkout_id:{
-        type:String,
-    },
-    created:{
-        type: String
-    },
-    expires_at:{
-        type: String
-    },
-    payment_status:{
-        type:String
-    },
-    tex:{
-        type: Number
-    },
-    amount_total:{
-        type: String
-    },
-    planId:{
-        type: String 
-    },
-    price:{
+    checkout_id: {
         type: String,
-    }
+        required: true
+    },
+    payment_status: {
+        type: String
+    },
+    amount: {
+        type: String,
+        required: true,
+    },
+    mode: {
+        type: String,
+        require: true,
+    },
+    method: {
+        type: String,
+        required: true,
+    },
+    planId: {
+        type: String
+    },
 }, {
     timestamps: true
 });
 
-const Subscription = mongoose.models.Subscription || mongoose.model("Subscription", subscriptionSchema);
-export default Subscription;
+const Payment = mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
+export default Payment;

@@ -25,7 +25,7 @@ const serviceSchema = new mongoose.Schema({
     },
     reviews:[{
         type: mongoose.Types.ObjectId,
-        ref:'review'
+        ref:'Review'
     }]
   
 }, {

@@ -7,7 +7,6 @@ import User from "@/modals/userModel";
 import bcryptjs from 'bcryptjs'
 import Role from "@/modals/roleModel";
 
-
 await connect();
 
 const authOptions = {
