@@ -3,12 +3,13 @@ import bcryptjs from 'bcryptjs'
 import User from '@/modals/userModel'
 import { connect } from '@/db/dbConfig'
 import Role from '@/modals/roleModel'
+import CustomError from '@/utils/Error'
 
 await connect()
 
-export async function POST(request) {
+export async function POST(req) {
     try {
-        const body = await request.json()
+        const body = await req.json()
         const { password, name, email } = body
 
         //check user exist or not ---> 
@@ -20,24 +21,17 @@ export async function POST(request) {
                 message:"User Alrady exist"
             }, { status:400 })
         }
-
         const solt = await bcryptjs.genSalt(10)
         const hashPassword = await bcryptjs.hash(password, solt)
-        const role =   await Role.findOne({name:"Supper-Admin" ,isActive:true})
-        const data = await User.create({ name, email, password: hashPassword, role})
-        data.password = password;
+        const role =  await Role.findOne({name:"Supper-Admin" ,isActive:true})
+        const data =  await User.create({ name, email, password: hashPassword, role})
         return NextResponse.json({
             success: true,
-            data,
+            data:{_id:data._id},
             message: "User is created successfuly"
-        } , {status:200 })
+        } , {status:201 })
 
-    } catch (err) {
-        return NextResponse.json({
-            success: false,
-            error: err,
-            message: "User can not Created"
-        }, { status: 500 })
-
+    } catch (error) {
+        return NextResponse.json( CustomError.internalServerError(error), { status: 500 })
     }
 }

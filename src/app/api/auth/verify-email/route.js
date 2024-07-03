@@ -49,15 +49,15 @@ export async function GET(req) {
                     verifyToken: null,
                     verifyTokenExpiry: Date.now(),
                 })
-                return NextResponse.redirect(new URL('/home', req.url))
+                return NextResponse.redirect(new URL('/agency/login', req.url))
             }
-            return NextResponse.redirect('/error')
+            return NextResponse.redirect(new URL('/error', req.url))
         } else {
-            return NextResponse.redirect('/error')
+            return NextResponse.redirect(new URL('/error', req.url))
         }
 
     } catch (err) {
-        return NextResponse.json(CustomError.internalServerError(err), { status: 500 })
+        return NextResponse.redirect(new URL(`/error?status=${500}`, req.url))
 
     }
 }

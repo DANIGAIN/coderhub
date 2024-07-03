@@ -3,7 +3,6 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { Loading } from '@/components/loading/dot'
 import { useRouter } from 'next/navigation'
@@ -12,26 +11,22 @@ export default function SignUp() {
     const [isloading, setIsLoading] = useState(false);
     const router = useRouter();
     const onSubmit = async (data) => {
-        setIsLoading(true)
-        axios.post('/api/auth/signup', data)
-            .then(async function (data) {
-                const info = data.data.data
-                const res = await signIn("credentials", {
-                    ...info,
-                    redirect: false
-                });
-                if (res.ok) {
-                    toast.success('account created successfuly and check your email for varification')
-                    await axios.post('/api/auth/verify-email',{id:data.data.data._id})
-                    router.push('/')
-                } 
-                setIsLoading(false)
-
-            }).catch(function (e) {
-                setIsLoading(false)
-                toast.error(e.response?.data?.message)
-            })
-
+        try{
+            setIsLoading(true)
+            const res = await axios.post('/api/auth/signup', data)
+            if(res.data.success){
+                toast.success('User created successfuly and check your email for varification')
+                await axios.post('/api/auth/verify-email',{id:res.data.data._id})
+                router.push('/')
+            }
+        }catch(error){
+            setIsLoading(false)
+            if(error.response?.status === 400 && !error.response.data.success){
+                toast.error(error.response.data.message) 
+            }
+        }finally{
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -399,7 +394,7 @@ export default function SignUp() {
 
                                         >
                                             {`${errors.confirmpwd?.message}`}
-                                            {/* {console.log(errors)} */}
+                    
                                         </label>
                                     )
                             }

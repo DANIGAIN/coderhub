@@ -25,7 +25,6 @@ const authOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const { email, password } = credentials;
-        console.log(credentials)
         try {
           const user = await User.findOne({ email });
           if (!user && !credentials?._id) {
@@ -35,6 +34,10 @@ const authOptions = {
           if (!hashPassword) {
             throw new Error("Invalid password")
           }
+          if(!user.isVerified){
+            throw new Error("Email can not Verified")
+          }
+
           return user
         } catch (error) {
           throw new Error(error.message)
@@ -76,7 +79,6 @@ const authOptions = {
         return existUser
 
       } catch (error) {
-        console.log(error)
         return false;
       }
 
