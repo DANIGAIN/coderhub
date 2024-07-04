@@ -3,6 +3,7 @@ import ProposalModal from '@/components/modal/ProposalModal';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 import { MdModeEdit } from 'react-icons/md';
 
 export default function MyProposal() {
@@ -25,8 +26,22 @@ export default function MyProposal() {
     setIsOpenProposal(true);
     setProposal(proposals.find((data) => data._id == id))
   }
+  const handlepay = async(id , amount) =>{
+    try{
+        const res = await axios.post('/api/payments',{
+          service: id,
+          amount,
+          uid: session.user.id
+        })
+        if(res.data.success){
+          toast.success(res.data.message)
+        }
+      
+    }catch(error){
+      console.log(error)
+    }
+  }
 
-  console.log(proposals)
   return (
     <>
       {isopenProposal && <ProposalModal
@@ -93,7 +108,8 @@ export default function MyProposal() {
                                 ><MdModeEdit /></span>
                                 :
                                 <button
-                                  className='bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded-lg ring-2 '
+                                  onClick={()=> handlepay(data._id , data.amount)}
+                                  className='bg-blue-500 hover:bg-blue-700 px-6 py-2 rounded-lg ring-2 '
                                 > pay </button>}
                             </div>
                           </div>

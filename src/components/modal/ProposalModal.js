@@ -32,7 +32,7 @@ export default function ProposalModal(props) {
                     setProposals(res.data.data)
                 }
             } else if (req === 'update') {
-                (fieldPermission.includes('amount')) ? data.status = 'accepted' : null
+                (fieldPermission.includes('amount')) ? data.status = 'accepted' : data.status ='pending' ;
                 const res = await axios.put(`/api/proposals/${proposal._id}`, data);
                 if (res.data.success) {
                     const filterProposal = proposals.filter((data) => data._id !== proposal._id);

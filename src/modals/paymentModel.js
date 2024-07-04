@@ -6,6 +6,10 @@ const paymentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    service:{
+        type:mongoose.Types.ObjectId,
+        ref:'Service'
+    },
     checkout_id: {
         type: String,
         required: true
@@ -19,7 +23,7 @@ const paymentSchema = new mongoose.Schema({
     },
     mode: {
         type: String,
-        require: true,
+        required: true,
     },
     method: {
         type: String,
@@ -27,7 +31,7 @@ const paymentSchema = new mongoose.Schema({
     },
     planId: {
         type: String
-    },
+    }
 }, {
     timestamps: true
 });

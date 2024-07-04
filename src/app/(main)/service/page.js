@@ -24,7 +24,6 @@ export default function servicePage() {
         }
     }, [section])
     const { services } = useContext(GlobalContext)
-    console.log(services);
     return (
         <div className='bg-slate-900 '>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
