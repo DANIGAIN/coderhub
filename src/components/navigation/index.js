@@ -6,30 +6,12 @@ import React, { useEffect, useState } from 'react'
 import Skeleton from '../loading/Skeleton';
 import { useRouter } from 'next/navigation';
 function Navigation() {
-    const [header, setHeader] = useState(false);
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
-    const router = useRouter();
-    const scrollHeader = () => {
-        if (window.scrollY >= 20) {
-            setHeader(true)
-        } else {
-            setHeader(false)
-        }
-    }
-    useEffect(() => {
-        window.addEventListener("scroll", scrollHeader);
-        return () => {
-            window.removeEventListener("scroll", scrollHeader);
-        }
-    }, []);
-
-    useEffect(() => {
-        setMenuOpen(false)
-    }, [header]);
+    const router = useRouter(); 
     return (
         <div>
-            <div className={header ? 'fixed w-full z-9 text-white' : 'bg-transparent'}>
+            <div className={'fixed z-9 w-full -mt-1'}>
                 <nav className="bg-slate-800 border-gray-200 dark:bg-gray-900">
                     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                         <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">

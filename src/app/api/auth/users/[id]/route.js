@@ -1,6 +1,6 @@
 import { upload } from "@/helpers/upload";
 import About from "@/modals/aboutModal";
-import Subscription from "@/modals/subscriptionModel";
+import Payment from "@/modals/paymentModel";
 import User from "@/modals/userModel";
 import { NextResponse } from "next/server";
 
@@ -54,14 +54,14 @@ export async function PUT(req, context) {
 export async function GET(req, context) {
     try {
         const { id } = context.params;
-        let plan ; 
+        let plan  = null; 
         const  data = await User.findOne({ _id: id })
             .populate({ path: 'about', populate: { path: 'specialist'} })
             .populate('role', '_id name')
             .select('-createdAt -updateAt -__v -password -verifyTokenExpiry -verifyToken -updatedAt');
         
         if(data?.about?.isSubscribe){
-            const subscribe = await Subscription.findOne({uid : id});
+            const subscribe = await Payment.findOne({uid : id});
             plan = subscribe.planId ; 
 
         }

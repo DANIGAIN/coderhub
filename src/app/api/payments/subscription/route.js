@@ -2,7 +2,7 @@ import { connect } from "@/db/dbConfig";
 import CustomError from "@/utils/Error";
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
-import Subscription from "@/modals/subscriptionModel";
+import Payment from "@/modals/paymentModel";
 await connect();
 export async function POST(req) {
     try {
@@ -14,7 +14,7 @@ export async function POST(req) {
               price,
               quantity
             }],
-            mode: "subscription",
+            mode: "Payment",
             automatic_tax: {
               enabled: true,
             },
@@ -40,11 +40,11 @@ export async function POST(req) {
 export async function GET(req,){
   try{
       const search = new URL(req.url).searchParams;
-      const data = await Subscription.findOne({uid:search.get('uid')})
+      const data = await Payment.findOne({uid:search.get('uid')})
       return NextResponse.json({
         success:true,
         data,
-        message:"Get this subscription"
+        message:"Get this Payment"
       })
 
   }catch(error){

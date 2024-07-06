@@ -1,11 +1,11 @@
 "use client"
 import { GlobalContext } from '@/context'
 import Image from 'next/image';
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 export default function teamPage() {
     const { users } = useContext(GlobalContext);
     return (
-        <section >
+        <section className='mt-1' >
             <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10" />
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
                 <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
@@ -20,8 +20,7 @@ export default function teamPage() {
                 <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
 
                     {users.map((data, index) => (
-                        <div key={index} className=" bg-slate-900 items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
-
+                        (data.role.name === 'Admin' || data.role.name === 'Developer') ?<div key={index} className=" bg-slate-900 items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
                             <Image
                                 className=" rounded-lg sm:rounded-none sm:rounded-l-lg w-50 h-50 "
                                 src={data.image}
@@ -35,7 +34,7 @@ export default function teamPage() {
                                     <p >{data.name}</p>
                                 </h3>
                                 <span className="text-gray-500 dark:text-gray-400">
-                                    {data.role.name} &amp; {(data?.about?.specialist?.name)}
+                                    {data.role.name} {data?.about?.specialist?.name ? '&' : null } {(data?.about?.specialist?.name)}
                                 </span>
                                 <p className="mt-3 mb-4 font-light text-gray-500 dark:text-gray-400">
                                     {(data?.about?.bio)}
@@ -51,7 +50,7 @@ export default function teamPage() {
 
                                 </ul>
                             </div>
-                        </div>
+                        </div>:null 
                     ))}
                 </div>
             </div>

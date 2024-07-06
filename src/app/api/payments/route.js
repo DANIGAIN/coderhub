@@ -5,16 +5,16 @@ import { NextResponse } from "next/server";
 await connect();
 export async function POST(req) {
     try {
-        const { service, amount } = await req.json()
+        const {  service ,amount } = await req.json()
         
  
         const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIBE_SECRET_KEY)
         const session = await stripe.checkout.sessions.create({
             line_items: [{
               price,
-              quantity
+              quantity:1
             }],
-            mode: "subscription",
+            mode: "payment",
             automatic_tax: {
               enabled: true,
             },

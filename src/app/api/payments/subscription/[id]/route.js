@@ -1,6 +1,6 @@
 import { connect } from "@/db/dbConfig";
 import CustomError from "@/utils/Error";
-import Subscription from "@/modals/subscriptionModel";
+import Payment from "@/modals/paymentModel";
 import Stripe from "stripe";
 import User from "@/modals/userModel";
 import About from "@/modals/aboutModal";
@@ -29,9 +29,9 @@ export async function POST(req, context) {
         obj.planId = session.metadata.planId;
         obj.price = session.metadata.price;
 
-        let data = await Subscription.findOne({ uid })
+        let data = await Payment.findOne({ uid })
         if (!data && session) {
-            data = await Subscription.create(obj);
+            data = await Payment.create(obj);
             const user = await User.findOne({ _id: uid });
             if (!user.about) {
                 const about = await About.create({ isSubscribe: true });

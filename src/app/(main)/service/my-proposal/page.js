@@ -30,8 +30,7 @@ export default function MyProposal() {
     try{
         const res = await axios.post('/api/payments',{
           service: id,
-          amount,
-          uid: session.user.id
+          amount
         })
         if(res.data.success){
           toast.success(res.data.message)
@@ -53,15 +52,15 @@ export default function MyProposal() {
         proposals={proposals}
         proposal={proposal}
       />}
-      <div className="bg-slate-900 p-8 rounded-md w-full">
-        <div className="flex items-center justify-between pb-6">
+      <div className="bg-slate-900 p-8 rounded-md w-full mt-1">
+        <div className="flex items-center justify-between pb-6 mt-20">
           <div>
             <h2 className="text-gray-600 font-semibold">List of proposals</h2>
             <span className="text-xs">Only for your</span>
           </div>
         </div>
         <div>
-          <div className="overflow-y-auto h-125">
+          <div className="overflow-y-auto h-125 mt-5">
             <div className="px-4 sm:px-8 py-4">
               <div className="min-w-full shadow rounded-lg overflow-hidden">
                 <div className="min-w-full leading-normal">
