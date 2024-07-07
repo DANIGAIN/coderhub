@@ -1,9 +1,38 @@
-import React from 'react';
+"use client"
+import React, { useContext, useEffect } from 'react';
+import { pricingCards } from "@/utils/Constants";
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import { GlobalContext } from '@/context';
+import axios from 'axios';
 
 const SuccessPage = () => {
+    const { data: section, status } = useSession();
+    const { setDiscount } = useContext(GlobalContext);
+    const search = useSearchParams()
+    const checkout_id = search.get('session_id');
 
-    
+    useEffect(() => {
+        if (checkout_id && status === 'authenticated') {
+            ; (async () => {
+                try {
+                    const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
+                    const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
+                    if (res.data.success && res.data.data.payment_status == "paid") {
+                        setDiscount({
+                            priceId: price.id,
+                            amount: price.discount
+                        })
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            })()
+        }
+    }, [section])
+
     return (
         <section>
             <div className="container mx-auto p-4 md:p-12 lg:p-24 mt-1 ">
@@ -14,7 +43,7 @@ const SuccessPage = () => {
                         className="w-24 h-24 mb-4 "
                         height={300}
                         width={300}
-                        
+
                     />
                     <h2 className="text-3xl font-bold mb-4">Payment Successful!</h2>
                     <p className="text-gray-600 text-lg ">

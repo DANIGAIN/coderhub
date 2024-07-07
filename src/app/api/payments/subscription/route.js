@@ -7,14 +7,13 @@ await connect();
 export async function POST(req) {
     try {
         const { price, quantity, planId} = await req.json()
-
         const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIBE_SECRET_KEY)
         const session = await stripe.checkout.sessions.create({
             line_items: [{
               price,
               quantity
             }],
-            mode: "Payment",
+            mode: "subscription",
             automatic_tax: {
               enabled: true,
             },
@@ -22,7 +21,7 @@ export async function POST(req) {
               price,
               planId
             },
-            success_url: `${process.env.DOMAIN}/home?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.DOMAIN}/home`
           });
 

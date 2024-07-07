@@ -13,7 +13,10 @@ export function GlobalState({ children }) {
   const [mapings, setMapings] = useState([]);
   const [roles, setRoles] = useState([]);
   const [users, setUsers] = useState([]);
-
+  const [discount, setDiscount] = useState({
+    priceId:'',
+    amount:0,
+  })
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -116,7 +119,9 @@ export function GlobalState({ children }) {
         components,
         setComponents,
         mapings,
-        setMapings
+        setMapings,
+        discount,
+        setDiscount,
       }}
     >
       {children}
