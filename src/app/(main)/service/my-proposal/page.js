@@ -2,6 +2,7 @@
 import ProposalModal from '@/components/modal/ProposalModal';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { MdModeEdit } from 'react-icons/md';
@@ -11,6 +12,7 @@ export default function MyProposal() {
   const [proposal, setProposal] = useState(null);
   const [isopenProposal, setIsOpenProposal] = useState(false);
   const { data: session, status } = useSession();
+  const router = useRouter();
   const fieldPermission = ['day', 'type', 'title', 'description'];
   useEffect(() => {
     if (status === 'authenticated') {
@@ -33,7 +35,7 @@ export default function MyProposal() {
           amount
         })
         if(res.data.success){
-          toast.success(res.data.message)
+          router.push(res.data.data.url)
         }
       
     }catch(error){

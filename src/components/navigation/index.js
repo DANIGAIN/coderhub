@@ -1,13 +1,36 @@
 'use client'
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { useSession, signOut} from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Skeleton from '../loading/Skeleton';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { GlobalContext } from '@/context';
+import { pricingCards } from '@/utils/Constants';
 function Navigation() {
     const [isMenuOpen, setMenuOpen] = useState(false)
-    const { data: session, status } = useSession()
+    const {data:session, status } = useSession()
+    const {setDiscount} = useContext(GlobalContext)
+     useEffect(() => {
+        if (status === 'authenticated') {
+            ;(async () => {
+                try{
+                    const res = await axios.get(`/api/payments/subscription?uid=${session.user.id}`)
+                    if (res.data.success && res.data.data) {
+                        const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
+                            setDiscount({
+                                priceId: price.id,
+                                amount: price.discount
+                            })
+                    }
+
+                }catch(error){
+                    console.log(error)
+                }
+            })()
+        }     
+     }, [session])
     const router = useRouter(); 
     return (
         <div>

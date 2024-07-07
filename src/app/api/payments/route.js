@@ -7,24 +7,25 @@ export async function POST(req) {
     try {
         const {  service ,amount } = await req.json()
         
- 
         const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIBE_SECRET_KEY)
         const session = await stripe.checkout.sessions.create({
             line_items: [{
-              price,
+              price_data:{
+                currency:'usd',
+                product_data:{
+                  name:'Service'
+                },
+                unit_amount:amount
+              },
               quantity:1
             }],
             mode: "payment",
-            automatic_tax: {
-              enabled: true,
-            },
             metadata:{
                 service,
             },
-            success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/home?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}&mode=payment`,
             cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/home`
           });
-
         return NextResponse.json({
             success: true,
             data: { url: session.url },

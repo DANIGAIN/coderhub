@@ -9,22 +9,8 @@ import {  useContext, useEffect,} from "react";
 import toast from "react-hot-toast";
 const MemberPlan = () => {
     const {data:section, status } = useSession();
-    const {discount,setDiscount} = useContext(GlobalContext)
+    const {discount} = useContext(GlobalContext)
     const router = useRouter();
-     useEffect(() => {
-        if (status === 'authenticated') {
-            ;(async () => {
-                const res = await axios.get(`/api/payments/subscription?uid=${section.user.id}`)
-                if (res.data.success && res.data.data) {
-                    const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
-                        setDiscount({
-                            priceId: price.id,
-                            amount: price.discount
-                        })
-                }
-            })()
-        }
-     }, [section])
     const handleSubmit = async (id) => {
         if(discount.priceId){
             toast(

@@ -6,25 +6,37 @@ import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { GlobalContext } from '@/context';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const SuccessPage = () => {
     const { data: section, status } = useSession();
     const { setDiscount } = useContext(GlobalContext);
     const search = useSearchParams()
     const checkout_id = search.get('session_id');
+    const mode = search.get('mode')
+    console.log(mode)
 
     useEffect(() => {
         if (checkout_id && status === 'authenticated') {
             ; (async () => {
                 try {
-                    const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
-                    const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
-                    if (res.data.success && res.data.data.payment_status == "paid") {
-                        setDiscount({
-                            priceId: price.id,
-                            amount: price.discount
-                        })
+                    if(mode != 'payment'){
+                        const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
+                        const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
+                        if (res.data.success && res.data.data.payment_status == "paid") {
+                            setDiscount({
+                                priceId: price.id,
+                                amount: price.discount
+                            })
+                        }
+                    }else{
+                        const res = await axios.post(`/api/payments/${checkout_id}`, { uid: section.user.id })
+                        if(res.data.success){
+                            toast.success('Payment is compleated successfully')
+                        }
+
                     }
+                 
 
                 } catch (error) {
                     console.log(error)

@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function servicePage() {
     const router = useRouter();
-    const [disount, setDiscount] = useState(null)
+    const [dicount, setDiscount] = useState(0)
     const { data: section, status } = useSession();
     useEffect(() => {
         if (status === 'authenticated') {
@@ -27,7 +27,7 @@ export default function servicePage() {
     return (
         <div className='bg-slate-900 mt-1 '>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
-                <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 mt-16">
+                <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 mt-14">
                     <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
                         <div>
                             <h2 className="mt-3 text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
@@ -40,20 +40,19 @@ export default function servicePage() {
                         {services.map((data, index) => (
                             <div key={index} className="rounded-lg border border-gray-200 bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                 <div className="h-40 w-full">
-                                    <a href="#">
                                         <Image
-                                            className="mx-auto hidden h-full dark:block"
+                                            className="mx-auto hidden h-full dark:block hover:border-2 border-graydark"
                                             src={"/category/" + data.category?.image}
                                             alt=""
                                             height={220}
                                             width={220}
                                         />
-                                    </a>
+
                                 </div>
                                 <div className="pt-6">
                                     <div className="mb-4 flex items-center justify-between gap-4">
                                         <span className="me-2 rounded bg-primary-100 px-2.5 py-0.5 text-xs font-medium text-primary-800 dark:bg-primary-900 dark:text-primary-300">
-                                            You get {disount ? disount : 0}% off{" "}
+                                            You get {dicount} % off{" "}
                                         </span>
                                         <div className="flex items-center justify-end gap-1">
                                             <button
@@ -125,12 +124,12 @@ export default function servicePage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        href={`/service/${data._id}?d=${dicount}`}
                                         className="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white"
                                     >
                                         {data?.category?.name}
-                                    </a>
+                                    </Link>
                                     <p>
                                         {data?.category?.description.substring(0, 50) + '...'}
 
@@ -192,16 +191,13 @@ export default function servicePage() {
                                         </li>
 
                                     </ul>
-                                    <div className="mt-4 flex items-center justify-between gap-4">
+                                    <div className="mt-4">
                                         <p className="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white">
-                                            ${parseInt(data.price) + "-" + (data.price + 50)}
+                                            {parseInt(data.price - (dicount  * data.price /100)) + "-" + parseInt((data.price + 50)-(dicount  * data.price /100))} USD
                                         </p>
-                                        <Link
-                                            href={`/service/${data._id}`}
-                                            className=" bg-slate-500 inline-flex items-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4  focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                        >
-                                            read more
-                                        </Link>
+                                        <p className="text-sm  leading-tight text-gray-900 dark:text-white line-through">
+                                            {parseInt(data.price) + "-" + (data.price + 50)}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

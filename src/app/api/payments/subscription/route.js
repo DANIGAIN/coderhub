@@ -21,7 +21,7 @@ export async function POST(req) {
               price,
               planId
             },
-            success_url: `${process.env.DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}&mode=subscription`,
             cancel_url: `${process.env.DOMAIN}/home`
           });
 
