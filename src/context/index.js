@@ -6,8 +6,11 @@ import { createContext, useContext, useEffect, useState } from "react"
 export const GlobalContext = createContext(null)
 
 export function GlobalState({ children }) {
- 
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState({
+    data:[],
+    loading:true,
+    error:null,
+  });
   const [categories, setCategories] = useState([]);
   const [components, setComponents] = useState([]);
   const [mapings, setMapings] = useState([]);
@@ -94,15 +97,15 @@ export function GlobalState({ children }) {
       try {
         const res = await axios.get('/api/services');
         if (res.data.success) {
-          setServices(res.data?.data);
+          setServices((prev) => ({...prev, data:res.data?.data}));
         }
-
       } catch (error) {
-        console.log(error)
+        setServices((prev) => ({data:[], loading:false, error:error}));
+      }finally{
+        setServices((prev) => ({...prev, loading:false}));
       }
     }
     getServices();
-
   }, [])
 
   return (
