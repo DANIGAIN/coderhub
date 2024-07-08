@@ -4,7 +4,7 @@ import { pricingCards } from "@/utils/Constants";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter} from "next/navigation";
-import {  useContext, useEffect,} from "react";
+import {  useContext} from "react";
 
 import toast from "react-hot-toast";
 const MemberPlan = () => {

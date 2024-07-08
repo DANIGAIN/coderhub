@@ -1,9 +1,10 @@
 'use client'
 import ProposalModal from '@/components/modal/ProposalModal';
+import { GlobalContext } from '@/context';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { MdModeEdit } from 'react-icons/md';
 
@@ -11,6 +12,7 @@ export default function MyProposal() {
   const [proposals, setProposals] = useState([]);
   const [proposal, setProposal] = useState(null);
   const [isopenProposal, setIsOpenProposal] = useState(false);
+  const {discount} = useContext(GlobalContext)
   const { data: session, status } = useSession();
   const router = useRouter();
   const fieldPermission = ['day', 'type', 'title', 'description'];
@@ -32,7 +34,8 @@ export default function MyProposal() {
     try{
         const res = await axios.post('/api/payments',{
           service: id,
-          amount
+          amount,
+          discount
         })
         if(res.data.success){
           router.push(res.data.data.url)

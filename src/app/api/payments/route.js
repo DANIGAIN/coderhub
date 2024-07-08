@@ -5,9 +5,15 @@ import { NextResponse } from "next/server";
 await connect();
 export async function POST(req) {
     try {
-        const {  service ,amount } = await req.json()
+        const {  service ,amount ,discount } = await req.json()
         
         const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIBE_SECRET_KEY)
+        const coupon = await stripe.coupons.create({
+          percent_off: discount.amount,
+          duration: 'once',
+          currency: 'usd'
+        });
+
         const session = await stripe.checkout.sessions.create({
             line_items: [{
               price_data:{
@@ -15,9 +21,12 @@ export async function POST(req) {
                 product_data:{
                   name:'Service'
                 },
-                unit_amount:amount
+                unit_amount:amount*100
               },
               quantity:1
+            }],
+            discounts: [{
+              coupon: coupon.id
             }],
             mode: "payment",
             metadata:{

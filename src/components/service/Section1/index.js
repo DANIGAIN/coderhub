@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
+'use client'
+import React, {  useEffect, useState } from 'react'
 import Image from 'next/image'
 import ProposalModal from '@/components/modal/ProposalModal';
 import { useSession } from 'next-auth/react';
@@ -24,13 +25,18 @@ export default function Section1({ service, loading }) {
     useEffect(() => {
         if (status == 'authenticated' && service) {
             ; (async () => {
-                const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`);
-                if (res.data.success && res.data?.data[0]) {
-                    setProposals(res.data.data);
+                try {
+                    const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`);
+                    if (res.data.success && res.data?.data[0]) {
+                        setProposals(res.data.data);
+                    }
+                }
+                catch (error) {
+                    console.log(error)
                 }
             })()
         }
-    }, [status])
+    }, [status,service])
 
     const handlePrice = (value) => {
         if (value.time) {
@@ -75,11 +81,11 @@ export default function Section1({ service, loading }) {
                         <div className="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0 ">
                             <div className="data w-full max-w-xl mt-20">
                                 <h2 className="font-manrope font-bold text-3xl leading-10 text-gray-900 mb-2 capitalize">
-                                    { loading?  <Skeleton style={{width: 150,height: 30}}/> : service?.category?.name}
+                                    {loading ? <Skeleton style={{ width: 150, height: 30 }} /> : service?.category?.name}
                                 </h2>
-                                { loading?  <Skeleton style={{width: 300,height: 40, marginBottom:40}} /> : <div className="flex flex-col sm:flex-row sm:items-center mb-6">
+                                {loading ? <Skeleton style={{ width: 300, height: 40, marginBottom: 40 }} /> : <div className="flex flex-col sm:flex-row sm:items-center mb-6">
                                     <h6 className=" leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5">
-                                        <span className='font-manrope font-semibold text-2xl'>${price ? (parseInt(price - (price * discount / 100)) + '-' + parseInt((price + 50)-(price * discount / 100))) : 0}</span>
+                                        <span className='font-manrope font-semibold text-2xl'>${price ? (parseInt(price - (price * discount / 100)) + '-' + parseInt((price + 50) - (price * discount / 100))) : 0}</span>
                                         <span className='px-3 line-through'>{price ? ((price) + '-' + (price + 50)) : 0} </span>
                                     </h6>
                                     {service?.reviews?.length && <div className="flex items-center gap-2">
