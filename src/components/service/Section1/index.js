@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
 import ProposalModal from '@/components/modal/ProposalModal';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Link from 'next/link';
+import { GlobalContext } from '@/context';
+import { useSearchParams } from 'next/navigation';
+import Skeleton from 'react-loading-skeleton'
 
-export default function Section1({ service }) {
+export default function Section1({ service, loading }) {
     const [isopenProposal, setIsOpenProposal] = useState(false);
+    const search = useSearchParams();
+    const discount = search.get('d')
     const { data: section, status } = useSession();
     const [proposals, setProposals] = useState(null);
     const [price, setPrice] = useState(null);
-    const [type, setType] = useState(null);
     const [time, setTime] = useState(null);
-    const fieldPermission = ['type','day','description','title']
+    const fieldPermission = ['type', 'day', 'description', 'title']
     useEffect(() => {
-        service.price && setPrice(service.price)
-    }, [service])
+        service?.price && setPrice(service.price)
+    }, [loading])
 
     useEffect(() => {
         if (status == 'authenticated' && service) {
@@ -26,14 +30,13 @@ export default function Section1({ service }) {
                 }
             })()
         }
-    }, [status, service])
+    }, [status])
 
     const handlePrice = (value) => {
         if (value.time) {
             setPrice(parseInt(service.price / value.time * service.time))
         }
         if (value.time) setTime(value.time)
-        if (value.type) setType(value.type)
     }
     return (
         <>
@@ -47,75 +50,97 @@ export default function Section1({ service }) {
             />}
             <section className="relative">
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-0">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mx-auto max-md:px-2 ">
-                        <div className="img mt-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mx-auto max-md:px-2">
+                        <div className="img mt-25">
                             <div className="img-box h-full max-lg:mx-auto ">
-                                <Image
-                                    src={'/category/' + service?.category?.image}
-                                    alt="service image"
-                                    width={600}
-                                    height={600}
-                                    className="max-lg:mx-auto lg:ml-auto h-full"
-                                />
+                                {loading ?
+                                    <div className="lg:ml-70 sm:ml-10  md:mr-10">
+                                        <Skeleton
+                                            style={{
+                                                width: 600,
+                                                height: 570
+                                            }}
+                                        />
+                                    </div>
+                                    :
+                                    <Image
+                                        src={'/category/' + service?.category?.image}
+                                        alt="service image"
+                                        width={600}
+                                        height={600}
+                                        className="max-lg:mx-auto lg:ml-auto h-full"
+                                    />}
                             </div>
                         </div>
-                        <div className="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0">
-                            <div className="data w-full max-w-xl mt-5">
+                        <div className="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0 ">
+                            <div className="data w-full max-w-xl mt-20">
                                 <h2 className="font-manrope font-bold text-3xl leading-10 text-gray-900 mb-2 capitalize">
-                                    {service?.category?.name}
+                                    { loading?  <Skeleton style={{width: 150,height: 30}}/> : service?.category?.name}
                                 </h2>
-                                <div className="flex flex-col sm:flex-row sm:items-center mb-6">
-                                    <h6 className="font-manrope font-semibold text-2xl leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5">
-                                        ${price ? ((price) + '-' + (price + 50)) : 0}
+                                { loading?  <Skeleton style={{width: 300,height: 40, marginBottom:40}} /> : <div className="flex flex-col sm:flex-row sm:items-center mb-6">
+                                    <h6 className=" leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5">
+                                        <span className='font-manrope font-semibold text-2xl'>${price ? (parseInt(price - (price * discount / 100)) + '-' + parseInt((price + 50)-(price * discount / 100))) : 0}</span>
+                                        <span className='px-3 line-through'>{price ? ((price) + '-' + (price + 50)) : 0} </span>
                                     </h6>
                                     {service?.reviews?.length && <div className="flex items-center gap-2">
                                         <div className="flex items-center gap-1">
                                             {
                                                 Array.from(
                                                     {
-                                                        length:parseInt((service?.reviews.reduce((acc, current) => acc + current.rating, 0) /
-                                                        service.reviews.length
-                                                ).toFixed(1))
-                                            }, (_,i)=>(
-                                                    <svg
-                                                    width={20}
-                                                    key={i}
-                                                    height={20}
-                                                    viewBox="0 0 20 20"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <g clipPath="url(#clip0_12029_1640)">
-                                                        <path
-                                                            d="M9.10326 2.31699C9.47008 1.57374 10.5299 1.57374 10.8967 2.31699L12.7063 5.98347C12.8519 6.27862 13.1335 6.48319 13.4592 6.53051L17.5054 7.11846C18.3256 7.23765 18.6531 8.24562 18.0596 8.82416L15.1318 11.6781C14.8961 11.9079 14.7885 12.2389 14.8442 12.5632L15.5353 16.5931C15.6754 17.41 14.818 18.033 14.0844 17.6473L10.4653 15.7446C10.174 15.5915 9.82598 15.5915 9.53466 15.7446L5.91562 17.6473C5.18199 18.033 4.32456 17.41 4.46467 16.5931L5.15585 12.5632C5.21148 12.2389 5.10393 11.9079 4.86825 11.6781L1.94038 8.82416C1.34687 8.24562 1.67438 7.23765 2.4946 7.11846L6.54081 6.53051C6.86652 6.48319 7.14808 6.27862 7.29374 5.98347L9.10326 2.31699Z"
-                                                            fill="#FBBF24"
-                                                        />
-                                                    </g>
-                                                    <defs>
-                                                        <clipPath id="clip0_12029_1640">
-                                                            <rect width={20} height={20} fill="white" />
-                                                        </clipPath>
-                                                    </defs>
-                                                </svg>
-                                                ))
+                                                        length: parseInt((service?.reviews.reduce((acc, current) => acc + current.rating, 0) /
+                                                            service.reviews.length
+                                                        ).toFixed(1))
+                                                    }, (_, i) => (
+                                                        <svg
+                                                            width={20}
+                                                            key={i}
+                                                            height={20}
+                                                            viewBox="0 0 20 20"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <g clipPath="url(#clip0_12029_1640)">
+                                                                <path
+                                                                    d="M9.10326 2.31699C9.47008 1.57374 10.5299 1.57374 10.8967 2.31699L12.7063 5.98347C12.8519 6.27862 13.1335 6.48319 13.4592 6.53051L17.5054 7.11846C18.3256 7.23765 18.6531 8.24562 18.0596 8.82416L15.1318 11.6781C14.8961 11.9079 14.7885 12.2389 14.8442 12.5632L15.5353 16.5931C15.6754 17.41 14.818 18.033 14.0844 17.6473L10.4653 15.7446C10.174 15.5915 9.82598 15.5915 9.53466 15.7446L5.91562 17.6473C5.18199 18.033 4.32456 17.41 4.46467 16.5931L5.15585 12.5632C5.21148 12.2389 5.10393 11.9079 4.86825 11.6781L1.94038 8.82416C1.34687 8.24562 1.67438 7.23765 2.4946 7.11846L6.54081 6.53051C6.86652 6.48319 7.14808 6.27862 7.29374 5.98347L9.10326 2.31699Z"
+                                                                    fill="#FBBF24"
+                                                                />
+                                                            </g>
+                                                            <defs>
+                                                                <clipPath id="clip0_12029_1640">
+                                                                    <rect width={20} height={20} fill="white" />
+                                                                </clipPath>
+                                                            </defs>
+                                                        </svg>
+                                                    ))
                                             }
-                                           
+
                                         </div>
                                         <span className="pl-2 font-normal leading-7 text-gray-500 text-sm ">
-                                           { Math.max(service?.reviews?.length, 0) + '  review'}
+                                            {Math.max(service?.reviews?.length, 0) + '  review'}
                                         </span>
                                     </div>}
-                                </div>
+                                </div>}
                                 <p className="text-gray-500 text-base font-normal mb-5">
-                                    {service.category?.description?.length > 100 ?
-                                        service.category?.description.slice(0, 100) :
-                                        service.category?.description}
-                                    {service.category?.description?.length > 100 ?
-                                        <button
-                                            onClick={()=>window.scrollTo(0,250)}
-                                            className="text-indigo-600 mt-2">
-                                            ... more
-                                        </button> : null}
+                                    {loading ?
+                                        <>
+                                            <Skeleton style={{ width: '90%' }} />
+                                            <Skeleton style={{ width: '50%' }} />
+                                        </>
+                                        :
+                                        (service.category?.description?.length > 100 ?
+                                            <span>
+                                                {service.category?.description.slice(0, 100) + ''}
+                                                <button
+                                                    onClick={() => window.scrollTo(0, 250)}
+                                                    className="text-indigo-600 mt-2"
+                                                >
+                                                    ... more
+                                                </button>
+                                            </span>
+                                            :
+                                            service.category?.description)
+                                    }
+
                                 </p>
                                 <ul className="grid gap-y-4 mb-8">
                                     <li className="flex items-center gap-3">

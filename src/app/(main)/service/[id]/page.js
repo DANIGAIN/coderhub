@@ -1,25 +1,30 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image';
-import axios from 'axios';
+import Skeleton from 'react-loading-skeleton'
 import Section1 from '@/components/service/Section1';
 import Review from '@/components/service/Review';
+import axios from 'axios';
 function servicePage(props) {
-  const [service, setService] = useState('');
-  const { id } = props.params;
-
+  const {id} = props.params;
+  const [service, setService] = useState({ data: null, loading: true, error: null });
   useEffect(() => {
     ; (async () => {
-      const res = await axios.get(`/api/services/${id}`)
-      if (res.data.success) {
-        setService(res.data.data)
+      try {
+        const res = await axios.get(`/api/services/${id}`)
+        if (res.data.success) {
+          setService((perv) => ({ ...perv, data: res.data.data }))
+        }
+      } catch (error) {
+        setService((perv) => ({ ...perv, error, loading: false }))
+      } finally {
+        setService((perv) => ({ ...perv, loading: false }))
       }
     })()
   }, [])
 
   return (
     <div className='bg-slate-900 '>
-      <Section1 service={service} />
+      <Section1 service={service.data} loading={service.loading} />
       <div className='mx-5 sm:mx-10 lg:mx-70 md:50'>
         <div className="mt-20 max-w-4xl ">
           <ul className="flex border-b">
@@ -30,7 +35,8 @@ function servicePage(props) {
           <div className="mt-8">
             <h3 className="text-xl font-bold text-gray-800">Service Description</h3>
             <p className="text-sm text-gray-500 mt-4">
-              {service?.category?.description}
+             {service.loading && <Skeleton count={3}/> }
+             {!service.loading ? service?.data?.category?.description : null }
             </p>
           </div>
         </div>
