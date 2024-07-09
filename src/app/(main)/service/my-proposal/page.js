@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
 import { MdModeEdit } from 'react-icons/md';
 
 export default function MyProposal() {
@@ -105,14 +104,19 @@ export default function MyProposal() {
                               }</p>
                             </div>
                             <div className="w-1/6">
+                            {
+                              console.log(data.status)
+                            }
                               {data.status === 'pending' ?
                                 <span
                                   className="font-medium"
                                   onClick={() => handleUpdate(data._id)}
                                 ><MdModeEdit /></span>
+                                : data.status ==='paid'?
+                                   <span>{data.status}</span>
                                 :
                                 <button
-                                  onClick={()=> handlepay(data._id , data.amount)}
+                                  onClick={()=> handlepay(data.service , data.amount)}
                                   className='bg-blue-500 hover:bg-blue-700 px-6 py-2 rounded-lg ring-2 '
                                 > pay </button>}
                             </div>

@@ -14,14 +14,14 @@ export default function Section1({ service, loading }) {
     const search = useSearchParams();
     const discount = search.get('d')
     const { data: section, status } = useSession();
-    const [proposals, setProposals] = useState(null);
+    const [proposals, setProposals] = useState([]);
     const [price, setPrice] = useState(null);
     const [time, setTime] = useState(null);
     const fieldPermission = ['type', 'day', 'description', 'title']
     useEffect(() => {
         service?.price && setPrice(service.price)
     }, [loading])
-
+    console.log(proposals)
     useEffect(() => {
         if (status == 'authenticated' && service) {
             ; (async () => {

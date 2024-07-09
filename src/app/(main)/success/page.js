@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { GlobalContext } from '@/context';
 import axios from 'axios';
-import toast from 'react-hot-toast';
 
 const SuccessPage = () => {
     const { data: section, status } = useSession();
@@ -14,10 +13,8 @@ const SuccessPage = () => {
     const search = useSearchParams()
     const checkout_id = search.get('session_id');
     const mode = search.get('mode')
-    console.log(mode)
-
     useEffect(() => {
-        if (checkout_id && status === 'authenticated') {
+        if(checkout_id && status === 'authenticated') {
             ; (async () => {
                 try {
                     if(mode != 'payment'){
@@ -31,13 +28,8 @@ const SuccessPage = () => {
                         }
                     }else{
                         const res = await axios.post(`/api/payments/${checkout_id}`, { uid: section.user.id })
-                        if(res.data.success){
-                            toast.success('Payment is compleated successfully')
-                        }
-
+                        console.log(res.data.message)
                     }
-                 
-
                 } catch (error) {
                     console.log(error)
                 }
