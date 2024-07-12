@@ -7,11 +7,17 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import LoginSchema from '@/schemas/loginSchema'
+import ForgetPassowrdSchema from '@/schemas/forgetPasswordSchema'
 
 export default function Login() {
     const [isLoading, setIsLoading] = useState(false)
     const [currentState, SetCurrentState] = useState('sign-up');
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const schema = (currentState =='sign-up') ? LoginSchema : ForgetPassowrdSchema;
+    const { register, handleSubmit, formState: { errors } } = useForm({
+          resolver:zodResolver(schema)
+    })
     const router = useRouter()
     const onSubmit = async (data) => {
         try {
@@ -30,9 +36,7 @@ export default function Login() {
                     toast.success('successfuly login')
                     router.push('/')
                 }
-
             }else{
-              
                 const res = await axios.post('/api/auth/forget-password',{email:data.email})
                 if(res.data.success){
                     router.push('/home')
@@ -41,6 +45,7 @@ export default function Login() {
             }
 
         } catch (error) {
+            console.log(error)
             setIsLoading(false)
         } finally {
             setIsLoading(false)
@@ -348,14 +353,7 @@ export default function Login() {
 
                             <input
                                 type="text"
-                                {...register("email",
-                                    {
-                                        required: "email is required",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: "invalid email address"
-                                        }
-                                    })}
+                                {...register("email")}
                                 id="email"
                                 name="email"
                                 placeholder='Enter your email'
@@ -391,18 +389,7 @@ export default function Login() {
                                 type="password"
                                 id="password"
                                 name="password"
-                                {...register("password",
-                                    {
-                                        required: "password is required",
-                                        maxLength: {
-                                            value: 30,
-                                            message: "cannot exceed more than 30 characters"
-                                        },
-                                        minLength: {
-                                            value: 4,
-                                            message: "should be at least 4 characters"
-                                        }
-                                    })
+                                {...register("password")
                                 }
                                 placeholder="Enter your password"
                                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.password

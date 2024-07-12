@@ -61,7 +61,7 @@ const authOptions = {
     },
     async signIn({ user }) {
       try {
-        const role = await Role.findOne({ name: "Supper-Admin", isActive: true })
+        const role = await Role.findOne({ name: "User", isActive: true })
         const userObj = {
           name: user.name,
           email: user.email,        

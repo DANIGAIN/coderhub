@@ -60,7 +60,7 @@ export const publicDomain =[
     '/service',
     '/team',
     '/contact'
-]
+]    
 
 export const matcherPath = [
   '/',
@@ -70,7 +70,7 @@ export const matcherPath = [
   '/home/:id',
   '/agency/dashboard',
   '/api/categories/:id*',
-  'agency/forget-password'
+  '/agency/forget-password'
 ]
 
 export const modalStyles = {

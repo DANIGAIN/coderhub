@@ -6,29 +6,32 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { Loading } from '@/components/loading/dot'
 import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import SignupSchema from '@/schemas/signupSchema'
 export default function SignUp() {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(SignupSchema)
+    })
     const [isloading, setIsLoading] = useState(false);
     const router = useRouter();
     const onSubmit = async (data) => {
-        try{
+        try {
             setIsLoading(true)
             const res = await axios.post('/api/auth/signup', data)
-            if(res.data.success){
+            if (res.data.success) {
                 toast.success('User created successfuly and check your email for varification')
-                await axios.post('/api/auth/verify-email',{id:res.data.data._id})
+                await axios.post('/api/auth/verify-email', { id: res.data.data._id })
                 router.push('/')
             }
-        }catch(error){
+        } catch (error) {
             setIsLoading(false)
-            if(error.response?.status === 400 && !error.response.data.success){
-                toast.error(error.response.data.message) 
+            if (error.response?.status === 422 && !error.response.data.success) {
+                toast.error(error.response.data.message)
             }
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
-
     return (
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
@@ -279,9 +282,7 @@ export default function SignUp() {
                                 id="name"
                                 name="name"
                                 placeholder='Enter your name'
-                                {...register("name", {
-                                    required: "name is required"
-                                })}
+                                {...register("name")}
                                 className={`block w-full bg-transparent outline-none border-b-2 py-2 px-4  text-gray-700 placeholder-gray-400 focus:border-gray-600 ${errors.name
                                     ? " border-red-400"
                                     : " border-gray-400"
@@ -311,14 +312,7 @@ export default function SignUp() {
 
                             <input
                                 type="text"
-                                {...register("email",
-                                    {
-                                        required: "email is required",
-                                        pattern: {
-                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                            message: "invalid email address"
-                                        }
-                                    })}
+                                {...register("email")}
                                 id="email"
                                 name="email"
                                 placeholder='Enter your email'
@@ -355,18 +349,7 @@ export default function SignUp() {
                                 type="password"
                                 id="password"
                                 name="password"
-                                {...register("password",
-                                    {
-                                        required: "password is required",
-                                        maxLength: {
-                                            value: 30,
-                                            message: "cannot exceed more than 30 characters"
-                                        },
-                                        minLength: {
-                                            value: 4,
-                                            message: "should be at least 4 characters"
-                                        }
-                                    })
+                                {...register("password")
                                 }
                                 placeholder="Enter your password"
                                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.password
@@ -378,10 +361,10 @@ export default function SignUp() {
 
                         <div>
                             {
-                                !errors.confirmpwd ?
+                                !errors.confromPassword ?
                                     (
                                         <label
-                                            htmlFor="confirmpwd"
+                                            htmlFor="confirmPassword"
                                             className="block text-sm font-medium text-gray-700"
 
                                         >
@@ -389,26 +372,24 @@ export default function SignUp() {
                                         </label>
                                     ) : (
                                         <label
-                                            htmlFor="confirmpwd"
+                                            htmlFor="confromPassword"
                                             className="block text-sm font-medium  text-red-700"
 
                                         >
-                                            {`${errors.confirmpwd?.message}`}
-                    
+                                            {`${errors.confromPassword?.message}`}
+
                                         </label>
                                     )
                             }
 
                             <input
                                 type="password"
-                                id="confirmpwd"
-                                name="confirmpwd"
-                                {...register("confirmpwd", {
-                                    required: true,
-                                    validate: (value) => value === watch("password") || "Passwords do not match"
-                                })}
-                                placeholder="Enter conform password"
-                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.confirmpwd
+                                id="confromPassword"
+                                name="confromPassword"
+                                {...register("confromPassword")
+                                }
+                                placeholder="Enter your conform password"
+                                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.password
                                     ? " border-red-400"
                                     : " border-gray-400"
                                     }`}
@@ -424,7 +405,7 @@ export default function SignUp() {
                                 </button> : <Loading />}
                         </div>
                     </form>
-     
+
                     <div className="mt-5 text-sm text-gray-600 text-center">
                         <p>
                             Do you have an account ?

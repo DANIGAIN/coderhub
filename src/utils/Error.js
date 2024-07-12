@@ -41,6 +41,14 @@ class CustomError{
             status:404
         }
     }
+    static validationError(err){
+        return{
+            message: err[0]?.message,
+            success: false ,
+            status:422
+        }
+        
+    }
     static throwError(err){
         const error = new Error(err.message);
         error.status = err.status ;
