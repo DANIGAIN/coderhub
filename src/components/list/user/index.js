@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function Users({ setIsOpenUser, setReq, users, setUser }) {
     const handleUpdate = (id) => {
-        const data = users.find((data) => data._id == id);
+        const data = users.data.find((data) => data._id == id);
         setReq('update');
         setUser(data);
         setIsOpenUser(true);
@@ -41,14 +41,15 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
                 </div>
             </div>
 
-            {users && users.map((data, index) => (
+            { users.data.map((data, index) => (
                 <div
                    className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5 h-full  items-center justify-center"
                     key={index}
                 >
                     <div className="col-span-3 flex items-center">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <Image className='w-13 h-13 rounded-full ring-2 ring-slate-400 mr-5' src={data?.image} alt='no image ' width={50} height={50} />
+                            { data?.image ? <Image className='w-13 h-13 rounded-full ring-2 ring-slate-400 mr-5' src={data?.image} alt='no image ' width={50} height={50} /> :
+                            <Image className='w-13 h-13 rounded-full ring-2 ring-slate-400 mr-5' src={'/images/user/user-06.png'} alt='no image ' width={50} height={50} /> }
                             <div className="h-12.5 w-15 rounded-md">
                                 {data.name}
                             </div>

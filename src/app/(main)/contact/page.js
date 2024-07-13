@@ -1,4 +1,6 @@
 "use client"
+import ContactSchema from '@/schemas/contactSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -10,6 +12,7 @@ export default function ContactPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver:zodResolver(ContactSchema),
     defaultValues: {
       name: '',
     }
@@ -34,6 +37,8 @@ export default function ContactPage() {
           router.push('/')
         }
       } catch (error) {
+        console.log(error)
+        setIsLoading(false)
         // toast.error(error?.message)
       } finally {
         setIsLoading(false)
@@ -45,17 +50,16 @@ export default function ContactPage() {
       <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#161616_1px,transparent_1px),linear-gradient(to_bottom,#161616_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] -z-10 " />
       <section
         id="contact"
-        className="py-12 bg-gray-100 flex justify-center items-center mt-1 "
+        className="py-12 bg-slate-900  flex justify-center items-center mt-1 "
       >
-        <div className="container mx-auto px-4 w-full items-center md:w-2/3 lg:w-1/2 items center mt-15 ">
-          <div className="bg-zinc-700 shadow-md  border-2 border-solid border-gray-600 rounded-lg p-5 ">
+        <div className="container mx-auto px-4 w-full items-center md:w-2/3 lg:w-1/2 items center mt-20 ">
+          <div className="bg-zinc-400 shadow-md  border-2 border-solid border-gray-600 rounded-lg p-5 ">
             <h3 className="text-3xl mb-8 text-gray-400 p-4 justify-center">
               Contact Us
             </h3>
             <form
               onSubmit={handleSubmit(onSubmit)}
               id="contactForm"
-              action="#"
               method="POST"
               className="grid grid-cols-1 sm:grid-cols-2 gap-6"
             >
@@ -69,9 +73,7 @@ export default function ContactPage() {
                   type="text"
                   id="name"
                   {
-                  ...register('name', {
-                    required: 'Please enter your name'
-                  })
+                  ...register('name')
                   }
                   name="name"
                   placeholder="Enter your name"
@@ -83,16 +85,13 @@ export default function ContactPage() {
                 {!errors.subject ?
                   <label htmlFor="subject" className="block font-semibold mb-2" > Subject </label> :
                   <label htmlFor="subject" className="block mb-2" > {errors.subject.message} </label>
-
                 }
 
                 <input
                   type="text"
                   id="subject"
                   {
-                  ...register('subject', {
-                    required: "Please enter Subject"
-                  })
+                  ...register('subject')
                   }
                   name="subject"
                   placeholder="Enter the subject"

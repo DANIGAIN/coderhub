@@ -18,7 +18,7 @@ export default function userPage() {
             isOpenUser={isOpenUser}
             setIsOpenUser={setIsOpenUser}
             user={user}
-            users={users}
+            users={users.data}
             setUsers={setUsers}
         />}
            <Users

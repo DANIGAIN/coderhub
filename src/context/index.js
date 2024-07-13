@@ -6,16 +6,12 @@ import { createContext, useContext, useEffect, useState } from "react"
 export const GlobalContext = createContext(null)
 
 export function GlobalState({ children }) {
-  const [services, setServices] = useState({
-    data:[],
-    loading:true,
-    error:null,
-  });
+  const [services, setServices] = useState({data:[],loading:true,error:null});
   const [categories, setCategories] = useState([]);
   const [components, setComponents] = useState([]);
   const [mapings, setMapings] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState({data:[],loading:true, error:null});
   const [discount, setDiscount] = useState({
     priceId:'',
     amount:0,
@@ -24,14 +20,14 @@ export function GlobalState({ children }) {
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-
         const res = await axios.get('/api/auth/users');
         if (res.data.success) {
-          setUsers(res.data.data);
+          setUsers((perv) => ({...perv , data:res.data.data}));
         }
-
       } catch (error) {
-        console.log(error)
+        setUsers((perv) => ({data:null,loading:false,error}));
+      }finally{
+        setUsers((perv) => ({...perv,loading:false}));
       }
     }
     getAllUsers()

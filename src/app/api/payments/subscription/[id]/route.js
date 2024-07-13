@@ -25,7 +25,7 @@ export async function POST(req, context) {
         obj.mode = session.mode;
         obj.planId =session.metadata.planId;
         obj.method = 'stripe';        
-        let data = await Payment.findOne({ uid })
+        let data = await Payment.findOne({ uid:obj.uid})
         if (!data && session) {
             data = await Payment.create(obj);
             const user = await User.findOne({ _id: uid });

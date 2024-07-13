@@ -38,3 +38,23 @@ export async function POST(req, context) {
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }
+export async function DELETE(req, context) {
+    try {
+        const {id} = context.params;
+        const payment = await Payment.findOne({_id:id});
+        if(!payment){
+            return NextResponse.json({
+                success:false,
+                message: "Requested record can not exist",
+            }, { status: 400});
+        }
+        await Payment.findByIdAndDelete({_id:id})
+        return NextResponse.json({
+            success: true,
+            message: "Record is deleted successfully",
+        }, { status: 200});
+
+    } catch (error) {
+        return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
+    }
+}

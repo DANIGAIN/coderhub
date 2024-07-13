@@ -6,6 +6,7 @@ import { useRef } from "react";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import { FaUserLock } from "react-icons/fa6";
 import { AiOutlineBell } from "react-icons/ai";
+import { FaHandHoldingUsd } from "react-icons/fa";
 
 const { usePathname } = require("next/navigation");
 
@@ -405,6 +406,21 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 >
                                     <AiOutlineBell className="text-current h-5 w-5"/>
                                      Proposals
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul className="flex flex-col gap-1.5">
+                            <li>
+                                <Link
+                                    href="/agency/dashboard/transactions"
+                                    className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("transactions") &&
+                                        "bg-graydark dark:bg-meta-4"
+                                        }`}
+                                >
+                                    <FaHandHoldingUsd className="text-current h-5 w-5"/>
+                                     Transactions
                                 </Link>
                             </li>
                         </ul>

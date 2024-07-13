@@ -2,6 +2,7 @@ import { connect } from "@/db/dbConfig";
 import CustomError from "@/utils/Error";
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import Payment from "@/modals/paymentModel";
 await connect();
 export async function POST(req) {
     try {
@@ -44,5 +45,21 @@ export async function POST(req) {
     } catch (error) {
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
+}
+export async function GET(req) {
+  try {
+      const data = await Payment.find({})
+      .populate({path:'uid', select:'_id name'})
+      .sort({createdAt: -1 })
+      .select('-checkout_id -__v')
+      return NextResponse.json({
+          success: true,
+          data,
+          message: "Get all payments",
+      }, { status: 200 });
+
+  } catch (error) {
+      return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
+  }
 }
 

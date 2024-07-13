@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { GlobalContext } from '@/context';
 import axios from 'axios';
+import Link from 'next/link';
 
 const SuccessPage = () => {
     const { data: section, status } = useSession();
@@ -53,9 +54,9 @@ const SuccessPage = () => {
                     <p className="text-gray-600 text-lg ">
                         Your payment has been successfully processed. Thank you for your business!
                     </p>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-30">
+                    <Link href={'/'} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-30">
                         Return to Home
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>

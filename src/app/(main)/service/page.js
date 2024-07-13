@@ -7,7 +7,6 @@ import Skeleton from 'react-loading-skeleton'
 export default function servicePage() {
     const { discount } = useContext(GlobalContext)
     const { services } = useContext(GlobalContext)
-
     return (
         <div className='bg-slate-900 mt-1 '>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
@@ -25,7 +24,7 @@ export default function servicePage() {
                             services.loading ?
                                 Array.from({ length: 2 }).map((_, index) => (
                                     <div key={index} className="rounded-lg border border-gray-200 bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                        <div className="h-40 w-full">
+                                        <div className="h-45 w-full">
                                             <Skeleton height={220} width={220} /> 
                                         </div>
                                         <div className="pt-6 ">
@@ -40,7 +39,7 @@ export default function servicePage() {
                                 :
                                 services.data.map((data, index) => (
                                     <div key={index} className="rounded-lg border border-gray-200 bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                                        <div className="h-40 w-full">
+                                        <div className="h-45 w-full">
                                             <Image
                                                 className="mx-auto hidden h-full dark:block hover:border-2 border-graydark"
                                                 src={"/category/" + data.category?.image}
