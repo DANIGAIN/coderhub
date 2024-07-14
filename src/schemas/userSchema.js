@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const AccessImageType = ['image/jpg','image/png','image/jpeg']
+const AccessImageType = ['image/jpg', 'image/png', 'image/jpeg']
 
 const CreatUserSchema = z.object({
     name: z
@@ -16,27 +16,26 @@ const CreatUserSchema = z.object({
         .min(6, { message: "Password should be at lest 6 characters" })
         .max(20, { message: "Password should be at max 20 characters" }),
     phone: z
-      .number()
-      .min(10,{message:"Phone number should be at lest 10 characters"})
-      .max(15,{message:"Phone number should be at max 15 characters"})
-      .optional(),
+        .string()
+        .max(12, { message: "Phone number should be at max 12 characters" })
+        .optional(),
     bio: z
-      .string()
-      .max(255,{message:"Bio  should be at max 255 characters"})
-      .optional(),
+        .string()
+        .max(255, { message: "Bio  should be at max 255 characters" })
+        .optional(),
     specialist: z
         .string()
-        .max(255,{message:"Specialist should be at max 255 characters"})
+        .max(255, { message: "Specialist should be at max 255 characters" })
         .optional(),
     skill: z
         .string()
-        .max(255,{message:"Specialist should be at max 255 characters"})
+        .max(255, { message: "Specialist should be at max 255 characters" })
         .optional(),
     image: z
-      .any()
-      .refine((image) => AccessImageType.includes(image[0]?.type),{message:"Image is only accepted as jpg png jpeg"})
-      .refine((image) => image?.size <= 1024 *1024*5,{message:"Image size is at max 5 MB"})
-      .optional()
+        .any()
+        .refine(image => image[0] ? AccessImageType.includes(image[0]?.type) : true, { message: "Image is only accepted as jpg png jpeg" })
+        .refine(image => image[0] ? (image[0].size < 1024 * 1024 * 5): true , { message: "Image size is at max 5 MB" })
+        .optional()
 })
 
 export default CreatUserSchema; 

@@ -7,21 +7,20 @@ import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { GlobalContext } from "@/context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import CreatUserSchema from "@/schemas/createUserSchema";
-export default function UserModal(props) {
+import CreatUserSchema from "@/schemas/userSchema";
+export default  function  UserModal(props){
   const [isLoading, setIsLoading] = useState(false);
   const { users, setUsers, roles, categories } = useContext(GlobalContext)
   const [skills, setSkills] = useState([]);
   const { req, setIsOpenUser, user, isOpenUser } = props;
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
-    // resolver:zodResolver(CreatUserSchema),
+    resolver: zodResolver(CreatUserSchema),
     defaultValues: user ? {
       bio: user?.about?.bio,
       phone: user?.about?.phone,
       role: user.role._id,
     } : {}
   });
-console.log(errors)
   const onSubmit = async (data) => {
     const formData = new FormData();
     data.name && formData.append('name', data.name)
@@ -36,15 +35,12 @@ console.log(errors)
     setIsLoading(true)
     try {
       if (req === 'create') {
-        console.log(data)
-        // const res = await axios.post('/api/auth/users', formData);
-        // console.log(res.data)
-        // if (res.data.success) {
-        //   console.log(res.data)
-        //   setUsers([res.data.data, ...users])
-        //   toast.success(res.data?.message);
-        //   await axios.post('/api/auth/verify-email', { id: res.data.data._id })
-        // }
+        const res = await axios.post('/api/auth/users', formData);
+        if (res.data.success) {
+          setUsers((perv)=> ({...perv , data:[...users.data ,res.data.data]}))
+          toast.success(res.data?.message);
+          await axios.post('/api/auth/verify-email', { id: res.data.data._id })
+        }
       } else if (req === 'update') {
         const res = await axios.put(`/api/auth/users/${user._id}`, formData);
         if (res.data.success) {
@@ -58,7 +54,8 @@ console.log(errors)
       setIsOpenUser(false)
 
     } catch (error) {
-      if (!error.response.success && error.response.status === 400) {
+      console.log(error)
+      if (!error.response?.success && error?.response?.status === 422) {
         reset()
         setIsOpenUser(false)
         toast.error(error.response.data.message)
@@ -190,19 +187,26 @@ console.log(errors)
               />
             </div>}
             <div>
+              {errors.phone ?
+                <label
+                  htmlFor="phone"
+                  className={`block text-bolt  font-medium text-red`}
+                >
+                  {errors.phone?.message}
+                </label> :
+                <label
+                  htmlFor="phone"
+                  className={`block text-sm font-medium text-gray-700 mt-5 sm:mt-0`}
+                >
+                  Phone
+                </label>
+              }
 
-              <label
-                htmlFor="phone"
-                className={`block text-sm font-medium text-gray-700 mt-5 sm:mt-0`}
-              >
-                Phone
-              </label>
               <input
-                type="tel"
-                pattern="[0-9]*"
-                {...register("phone", { valueAsNumber: true })}
+                type="number"
                 id="phone"
                 name="phone"
+                {...register("phone")}
                 placeholder='Enter user phone - (optional)'
                 className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.phone
                   ? " border-red-400"
@@ -212,12 +216,21 @@ console.log(errors)
             </div>
           </div>
           <div>
-            <label
-              htmlFor="bio"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Bio
-            </label>
+            {
+              errors.bio ?
+                <label
+                  htmlFor="bio"
+                  className="block text-medium font-medium text-red"
+                >
+                  {errors.bio?.message}
+                </label> :
+                <label
+                  htmlFor="bio"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Bio
+                </label>
+            }
             <input
               type="text"
               {...register("bio")}
@@ -291,12 +304,20 @@ console.log(errors)
             </div>
           </div>}
           {req === 'update' && <div>
+            {errors.role ?
             <label
-              htmlFor="role"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Role
-            </label>
+            htmlFor="role"
+            className="block text-medium font-medium text-red"
+          >
+            {errors.role?.message}
+          </label>:
+          <label
+          htmlFor="role"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Role
+        </label>
+            }
             <select
               id="role"
               name="role"
@@ -323,9 +344,12 @@ console.log(errors)
             </div>
           </div>}
           <div >
-            <label
-              className="block text-sm font-medium text-gray-700"
-              htmlFor="image">Upload file</label>
+            {errors.image ? <label
+              className="block text-medium font-medium text-red"
+              htmlFor="image">{errors.image?.message}</label> :
+              <label
+                className="block text-sm font-medium text-gray-700"
+                htmlFor="image">Upload file</label>}
             <input
               className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 border-gray-400`}
               id="image"
@@ -354,4 +378,4 @@ console.log(errors)
 
 
   )
-}
+};

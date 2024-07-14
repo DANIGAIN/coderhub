@@ -17,8 +17,8 @@ export const upload = async (file, dir) => {
         if (!mintype.includes(file.type)) {
             throw new Error('only support .jpg .jpeg .png image ')
         }
-        if (file.size > 1e6 + 1e6+ 1e6 ) {
-            throw new Error('only support under 3 mb  file')
+        if (file.size > 1e6 * 5 ) {
+            throw new Error('only support under 5 mb  file')
         }
 
         await fs.writeFile(`${process.cwd()}/public/${dir}/${filename}`, buffer)

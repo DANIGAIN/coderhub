@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { MdModeEdit } from 'react-icons/md';
 import Image from 'next/image';
 
@@ -41,7 +40,7 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
                 </div>
             </div>
 
-            { users.data.map((data, index) => (
+            { users?.data?.map((data, index) => (
                 <div
                    className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5 h-full  items-center justify-center"
                     key={index}

@@ -6,6 +6,7 @@ import { connect } from '@/db/dbConfig'
 import Role from '@/modals/roleModel'
 import CustomError from '@/utils/Error'
 import { upload } from '@/helpers/upload'
+import CreatUserSchema from '@/schemas/userSchema'
 
 await connect()
 
@@ -32,9 +33,14 @@ export async function POST(req) {
     try {
         const body = await req.formData()
         const obj = {};
+        const response = CreatUserSchema.safeParse(Object.fromEntries(body));
+        if (!response.success) {
+            const { errors } = response.error;
+            return NextResponse.json(CustomError.validationError(errors), { status: 422 })
+        }
         const exist  =  await User.findOne({email:body.get('email')})
         if(exist){
-            return NextResponse.json(CustomError.badRequestError({message:"user alrady exsit"}),{status:400})
+            return NextResponse.json(CustomError.badRequestError({message:"user alrady exsit"}),{status:422})
         }
         body.get('phone') ? obj.phone = body.get('phone') : null
         body.get('specialist') ? obj.specialist = body.get('specialist'): null ;
@@ -68,7 +74,6 @@ export async function POST(req) {
             .populate({ path: 'about', populate: { path: 'specialist' } })
             .populate('role')
             .select('-createdAt -updateAt -__v -password');
-        
         return NextResponse.json({
             success: true,
             data,
