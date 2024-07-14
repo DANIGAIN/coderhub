@@ -6,20 +6,22 @@ import { modalStyles } from "@/utils/Constants";
 import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { GlobalContext } from "@/context";
+import { zodResolver } from "@hookform/resolvers/zod";
+import CreatUserSchema from "@/schemas/createUserSchema";
 export default function UserModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { users, setUsers, roles, categories } = useContext(GlobalContext)
   const [skills, setSkills] = useState([]);
   const { req, setIsOpenUser, user, isOpenUser } = props;
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
+    // resolver:zodResolver(CreatUserSchema),
     defaultValues: user ? {
       bio: user?.about?.bio,
       phone: user?.about?.phone,
       role: user.role._id,
     } : {}
   });
-
-
+console.log(errors)
   const onSubmit = async (data) => {
     const formData = new FormData();
     data.name && formData.append('name', data.name)
@@ -34,14 +36,15 @@ export default function UserModal(props) {
     setIsLoading(true)
     try {
       if (req === 'create') {
-        const res = await axios.post('/api/auth/users', formData);
-        console.log(res.data)
-        if (res.data.success) {
-          console.log(res.data)
-          setUsers([res.data.data, ...users])
-          toast.success(res.data?.message);
-          await axios.post('/api/auth/verify-email', { id: res.data.data._id })
-        }
+        console.log(data)
+        // const res = await axios.post('/api/auth/users', formData);
+        // console.log(res.data)
+        // if (res.data.success) {
+        //   console.log(res.data)
+        //   setUsers([res.data.data, ...users])
+        //   toast.success(res.data?.message);
+        //   await axios.post('/api/auth/verify-email', { id: res.data.data._id })
+        // }
       } else if (req === 'update') {
         const res = await axios.put(`/api/auth/users/${user._id}`, formData);
         if (res.data.success) {
@@ -108,10 +111,7 @@ export default function UserModal(props) {
 
               <input
                 type="text"
-                {...register("name",
-                  {
-                    required: "Name is required"
-                  })}
+                {...register("name")}
                 id="name"
                 name="name"
                 placeholder='Enter your name'
@@ -144,10 +144,7 @@ export default function UserModal(props) {
 
               <input
                 type="email"
-                {...register("email",
-                  {
-                    required: "Email is required"
-                  })}
+                {...register("email")}
                 id="email"
                 name="email"
                 placeholder='Enter user email'
@@ -182,10 +179,7 @@ export default function UserModal(props) {
 
               <input
                 type="password"
-                {...register("password",
-                  {
-                    required: "Password is required"
-                  })}
+                {...register("password")}
                 id="password"
                 name="password"
                 placeholder='Enter user passowrd'
@@ -204,12 +198,13 @@ export default function UserModal(props) {
                 Phone
               </label>
               <input
-                type="number"
-                {...register("phone")}
+                type="tel"
+                pattern="[0-9]*"
+                {...register("phone", { valueAsNumber: true })}
                 id="phone"
                 name="phone"
                 placeholder='Enter user phone - (optional)'
-                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.email
+                className={`text-gray-700 block w-full bg-transparent outline-none border-b-2 py-2 px-4  placeholder-gray-400 focus:border-gray-600 ${errors.phone
                   ? " border-red-400"
                   : " border-gray-400"
                   }`}
