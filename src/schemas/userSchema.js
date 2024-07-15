@@ -34,8 +34,27 @@ const CreatUserSchema = z.object({
     image: z
         .any()
         .refine(image => image[0] ? AccessImageType.includes(image[0]?.type) : true, { message: "Image is only accepted as jpg png jpeg" })
-        .refine(image => image[0] ? (image[0].size < 1024 * 1024 * 5): true , { message: "Image size is at max 5 MB" })
+        .refine(image => image[0] ? (image[0].size < 1024 * 1024 * 5) : true, { message: "Image size is at max 5 MB" })
+        .optional()
+})
+const UpdateUserSchema = z.object({
+    phone: z
+        .string()
+        .max(12, { message: "Phone number should be at max 12 characters" })
+        .optional(),
+    bio: z
+        .string()
+        .max(255, { message: "Bio  should be at max 255 characters" })
+        .optional(),
+    role: z
+        .string()
+        .max(255, { message: "Role should be at max 255 characters" })
+        .optional(),
+    image: z
+        .any()
+        .refine(image => image[0] ? AccessImageType.includes(image[0]?.type) : true, { message: "Image is only accepted as jpg png jpeg" })
+        .refine(image => image[0] ? (image[0].size < 1024 * 1024 * 5) : true, { message: "Image size is at max 5 MB" })
         .optional()
 })
 
-export default CreatUserSchema; 
+export { CreatUserSchema ,UpdateUserSchema }; 

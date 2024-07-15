@@ -31,7 +31,6 @@ export default function RolePage() {
                setRole={setRole}
                role={role}
                setIsOpenRole ={setIsOpenRole}
-
             />
         </DefaultLayout>
     </div>

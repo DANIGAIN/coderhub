@@ -1,15 +1,19 @@
 'use client'
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { modalStyles } from "@/utils/Constants";
 import toast from "react-hot-toast";
 import Modal from 'react-modal'
+import { CreateComponentSchema, UpdateComponentSchema } from "@/schemas/componentSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ComponentModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { req, setIsOpenComponent, component,setComponents, components, isOpenComponent} = props;
+  const schema = component ? UpdateComponentSchema : CreateComponentSchema ;
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver:zodResolver(schema),
     defaultValues: component ? {
       name: component.name,
       isActive: component.isActive,
@@ -22,15 +26,15 @@ export default function ComponentModal(props) {
         if (req === 'create') {
             const res = await axios.post('/api/components', data);
             if (res.data.success) {
-                setComponents([res.data.data, ...components])
+                setComponents((prev) => ({...prev , data:[res.data.data, ...components.data]}))
                 toast.success(res.data?.message);
             }
         } else if (req === 'update') {
             const res = await axios.put(`/api/components/${component._id}`, data);
             if (res.data.success) {
-                const filderComponent = components.filter((data) => data._id !== component._id);
+                const filderComponent = components.data.filter((data) => data._id !== component._id);
                 data._id = component._id;
-                setComponents([data, ...filderComponent]);
+                setComponents((prev) => ({...prev , data:[data, ...filderComponent]}))
                 toast.success(res.data?.message);
             }
         }
@@ -38,8 +42,12 @@ export default function ComponentModal(props) {
         setIsOpenComponent(false)
 
     } catch (error) {
-        console.log(error);
-        setIsLoading(false)
+      setIsLoading(false)
+      if (!error.response.success && (error.response.status === 422 || error.response.status === 400)) {
+        reset()
+        setIsOpenComponent(false)
+        toast.error(error.response.data.message)
+      }
     } finally {
         setIsLoading(false)
     }
@@ -51,6 +59,7 @@ export default function ComponentModal(props) {
         isOpen={isOpenComponent}
         style={modalStyles}
         contentLabel="Component Modal"
+        ariaHideApp={false}
         onRequestClose={() => setIsOpenComponent(false)}
       >
         <div className="flex justify-between">
@@ -84,10 +93,7 @@ export default function ComponentModal(props) {
 
             <input
               type="text"
-              {...register("name",
-                {
-                  required: "Name is required"
-                })}
+              {...register("name")}
               id="name"
               name="name"
               placeholder='Enter your name'

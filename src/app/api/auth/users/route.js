@@ -6,7 +6,7 @@ import { connect } from '@/db/dbConfig'
 import Role from '@/modals/roleModel'
 import CustomError from '@/utils/Error'
 import { upload } from '@/helpers/upload'
-import CreatUserSchema from '@/schemas/userSchema'
+import {CreatUserSchema} from '@/schemas/userSchema'
 
 await connect()
 

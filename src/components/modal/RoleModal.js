@@ -6,12 +6,16 @@ import { modalStyles } from "@/utils/Constants";
 import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { GlobalContext } from "@/context";
+import { CreateRoleSchema, UpdateRoleSchema } from "@/schemas/roleSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function RoleModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { roles, setRoles } = useContext(GlobalContext)
   const { req, setIsOpenRole, role, isOpenRole } = props;
+  const schema = !role ?  CreateRoleSchema  : UpdateRoleSchema;
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver:zodResolver(schema),
     defaultValues: role ? {
       name: role.name,
       isActive: role.isActive,
@@ -24,15 +28,15 @@ export default function RoleModal(props) {
       if (req === 'create') {
         const res = await axios.post('/api/roles', data);
         if (res.data.success) {
-          setRoles([res.data.data, ...roles])
+          setRoles((prev) => ({...prev , data:[res.data.data, ...roles.data]}))
           toast.success(res.data?.message);
         }
       } else if (req === 'update') {
         const res = await axios.put(`/api/roles/${role._id}`, data);
         if (res.data.success) {
-          const filderRole = roles.filter((data) => data._id !== role._id);
+          const filderRole = roles.data.filter((data) => data._id !== role._id);
           data._id = role._id;
-          setRoles([data, ...filderRole]);
+          setRoles((prev) => ({...prev , data:[data, ...filderRole]}))
           toast.success(res.data?.message);
         }
       }
@@ -40,9 +44,9 @@ export default function RoleModal(props) {
       setIsOpenRole(false)
 
     } catch (error) {
-      if (!error.response.success && error.response.status === 400) {
+      if (!error.response.success && (error.response.status === 422 || error.response.status === 400)) {
         reset()
-        setIsOpenMaping(false)
+        setIsOpenRole(false)
         toast.error(error.response.data.message)
       }
       // console.log(error);
@@ -58,6 +62,7 @@ export default function RoleModal(props) {
       isOpen={isOpenRole}
       style={modalStyles}
       contentLabel="Role Modal"
+      ariaHideApp={false}
       onRequestClose={() => setIsOpenRole(false)}
     >
       <div className="flex justify-between">
@@ -91,10 +96,7 @@ export default function RoleModal(props) {
 
           <input
             type="text"
-            {...register("name",
-              {
-                required: "Name is required"
-              })}
+            {...register("name")}
             id="name"
             name="name"
             placeholder='Enter your name'

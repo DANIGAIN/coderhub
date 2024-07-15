@@ -7,14 +7,15 @@ import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { GlobalContext } from "@/context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import CreatUserSchema from "@/schemas/userSchema";
+import {CreatUserSchema, UpdateUserSchema} from "@/schemas/userSchema";
 export default  function  UserModal(props){
   const [isLoading, setIsLoading] = useState(false);
   const { users, setUsers, roles, categories } = useContext(GlobalContext)
   const [skills, setSkills] = useState([]);
   const { req, setIsOpenUser, user, isOpenUser } = props;
+  const schema = user ? UpdateUserSchema : CreatUserSchema ;
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
-    resolver: zodResolver(CreatUserSchema),
+    resolver: zodResolver(schema),
     defaultValues: user ? {
       bio: user?.about?.bio,
       phone: user?.about?.phone,
@@ -44,9 +45,9 @@ export default  function  UserModal(props){
       } else if (req === 'update') {
         const res = await axios.put(`/api/auth/users/${user._id}`, formData);
         if (res.data.success) {
-          const filderUser = users.filter((data) => data._id !== user._id);
+          const filderUser = users.data.filter((data) => data._id !== user._id);
           data._id = user._id;
-          setUsers([res.data.data, ...filderUser]);
+          setUsers((perv)=> ({...perv , data:[res.data.data, ...filderUser]}))
           toast.success(res.data?.message);
         }
       }
