@@ -1,11 +1,10 @@
 'use client'
 import axios from "axios";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { modalStyles } from "@/utils/Constants";
 import toast from "react-hot-toast";
 import Modal from 'react-modal'
-import { GlobalContext } from "@/context";
 
 export default function MapingModal(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,14 +23,14 @@ export default function MapingModal(props) {
             const res = await axios.post('/api/mapings', data);
             if (res.data.success) {
             
-                setMapings([res.data.data, ...mapings])
+                setMapings((perv) => ({...perv , data:[res.data.data, ...mapings.data]}))
                 toast.success(res.data?.message);
             }
         } else if (req === 'update') {
             const res = await axios.put(`/api/mapings/${maping._id}`, data);
             if (res.data.success) {
-                const filderMaping = mapings.filter((data) => data._id !== maping._id);
-                setMapings([ ...filderMaping]);
+                const filderMaping = mapings.data.filter((data) => data._id !== maping._id);
+                setMapings((perv) => ({...perv , data:filderMaping}))
                 toast.success(res.data?.message);
             }
         }
@@ -55,11 +54,11 @@ export default function MapingModal(props) {
                 isOpen={isOpenMaping}
                 style={modalStyles}
                 contentLabel="User Maping"
-                appElement={document.getElementById('root')}
+                ariaHideApp={false}
                 onRequestClose={() => setIsOpenMaping(false)}
             >
                 <div className="flex flex-row">
-                    <p className="text-xl font-medium mb-4">{req} Component</p>
+                    <p className="text-xl font-medium mb-4">{req} Maping</p>
                     <span className="text-lg  pl-40 hover:text-red-600 "
                         onClick={() => setIsOpenMaping(false)}
                     >X</span>
@@ -102,7 +101,7 @@ export default function MapingModal(props) {
                                 }`}
                         >
                             <option value='' disabled > Enter user role</option>
-                            {roles.map((role, index) => (
+                            {roles.data.map((role, index) => (
                                 role.isActive  && <option key={index} value={role._id}>{role.name}</option>
                             ))}
                         </select>
@@ -143,7 +142,7 @@ export default function MapingModal(props) {
                                 }`}
                         >
                             <option value='' disabled > Enter compoment </option>
-                            {components.map((component, index) => (
+                            {components.data.map((component, index) => (
                                 component.isActive && <option key={index} value={component._id}>{component.name}</option>
                             ))}
                         </select>

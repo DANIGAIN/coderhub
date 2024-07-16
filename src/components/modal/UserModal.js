@@ -18,7 +18,7 @@ export default  function  UserModal(props){
     resolver: zodResolver(schema),
     defaultValues: user ? {
       bio: user?.about?.bio,
-      phone: user?.about?.phone,
+      phone: JSON.stringify(user?.about?.phone),
       role: user.role._id,
     } : {}
   });
@@ -331,7 +331,7 @@ export default  function  UserModal(props){
             >
               <option disabled value="" hidden >Enter user role</option>
               {
-                roles.map((data, index) => (
+                roles.data.map((data, index) => (
                   <option key={index} value={data._id}>{data.name}</option>
                 ))
               }

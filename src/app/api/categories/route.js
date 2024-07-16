@@ -3,6 +3,7 @@ import { connect } from '@/db/dbConfig'
 import { upload } from '@/helpers/upload'
 import Category from '@/modals/categoryModel'
 import CustomError from '@/utils/Error'
+import { CreateCategorySchema } from '@/schemas/categorySchema'
 
 await connect()
 
@@ -10,6 +11,11 @@ export async function POST(req) {
   try {
     const formData = await req.formData()
     const obj = {}
+    const response = CreateCategorySchema.safeParse(Object.fromEntries(formData));
+        if (!response.success) {
+            const { errors } = response.error;
+            return NextResponse.json(CustomError.validationError(errors), { status: 422 })
+    }
     if (formData.get('image')) {
       const img = await upload(formData.get('image') || null, 'category')
       if (!img.image) {
@@ -17,7 +23,6 @@ export async function POST(req) {
       }
       obj.image = img.image
     }
-
     if (formData.get('logo')) {
       const logo = await upload(formData.get('logo') || null, 'category')
       if (!logo.image) {

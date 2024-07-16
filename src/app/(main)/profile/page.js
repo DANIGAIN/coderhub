@@ -6,8 +6,10 @@ import { CiCamera } from "react-icons/ci";
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+
+import Skeleton from 'react-loading-skeleton';
 export default function Profile() {
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState(null);
     const [plan, setPaln] = useState(null)
     const [image ,setImage] = useState(null);
     const { data: session, status } = useSession();
@@ -17,6 +19,7 @@ export default function Profile() {
                 try {
                     const res = await axios.get(`/api/auth/users/${session.user.id}`)
                     if (res.data.success) {
+                        session.user.image = res.data.data.image ;
                         setUser(res.data.data)
                         if (res.data.plan) {
                             const planName = pricingCards.find((data) => data.id === parseInt(res.data.plan))
@@ -45,16 +48,13 @@ export default function Profile() {
         }
         }catch(error){
             console.log(error)
-        }
-    
-        
+        }    
     }
-
 
     return (
         <div className="mx-auto max-w-242.5 flex-1 overflow-y-auto p-4">
             <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ">
-                <div className="relative h-35 md:h-65">
+                <div className="relative md:h-65 mt-14">
                     <Image
                         src={"/images/cover/cover-01.png"}
                         alt="profile cover"
@@ -72,14 +72,14 @@ export default function Profile() {
                     <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-34 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
                         <div className="relative drop-shadow-2">
                             <Image
-                                src={user.image}
+                                src={user?.image}
                                 className='rounded-full'
                                 width={160}
                                 height={160}
                                 alt="profile"
                             />
-                            {user?.image && (
-                                <label htmlFor="profile" className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2">
+                            {
+                             <label htmlFor="profile" className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2">
                                     <span onClick={() => document.getElementById('image').click()}>
                                         <CiCamera />
                                     </span>
@@ -90,18 +90,18 @@ export default function Profile() {
                                         className="hidden"
                                         onChange={(e) => handleImage(e)}
                                     />
-                                </label>
-                            )}
+                             </label>
+                            }
                         </div>
                     </div>
                     <div className="mt-4">
                         <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-                            {status === 'authenticated' ? session.user.name : null}
+                            {status === 'authenticated' ? session.user.name : <Skeleton width={100}/>}
                         </h3>
                         <p className="font-medium">{user?.about?.specialist?.name}</p>
                         <div className="mx-auto mb-5.5 mt-4.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
                             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-                                {user.isVerified ?
+                                {user?.isVerified ?
                                     <span className="font-semibold text-black dark:text-white ">Verified</span> :
                                     <span className="font-semibold text-black dark:text-white ">Unverified</span>
                                 }
@@ -112,7 +112,7 @@ export default function Profile() {
                             </div>
                             <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                                 {user && <span className="font-semibold text-black dark:text-white">
-                                    {user.role.name}
+                                    {user.role.name }
                                 </span>}
                                 <span className="text-sm"> Role</span>
                             </div>

@@ -4,6 +4,7 @@ import CustomError from '@/utils/Error'
 import Role from '@/modals/roleModel';
 import RC_Maping from '@/modals/mapingModal';
 import { UpdateRoleSchema } from '@/schemas/roleSchema';
+import { staticRole } from '@/utils/Constants';
 
 await connect();
 export async function GET(req, context) {
@@ -56,6 +57,9 @@ export async function DELETE(req, context) {
     const { id } = context.params;
     try {
         const role = await Role.findOne({ _id: id })
+        if(staticRole.includes(role.name)){
+            return NextResponse.json(CustomError.badRequestError({ message: `${role.name} can not be deleted ! that is a static role` }), { status: 400 })
+        }
         if (!role) {
             return NextResponse.json(CustomError.badRequestError({ message: "Requested role was not found " }), { status: 400 })
         }

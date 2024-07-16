@@ -62,7 +62,7 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
                         </div>
                         <div className="hidden sm:block  col-span-1  items-center">
                             <p className="text-sm text-black dark:text-white">
-                                {data.role.name}
+                                {data.role?.name}
                             </p>
                         </div>
                         <div className="hidden sm:block  col-span-1 items-center">

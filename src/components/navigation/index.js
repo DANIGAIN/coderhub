@@ -1,37 +1,52 @@
 'use client'
-import { useSession, signOut} from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Skeleton from '../loading/Skeleton';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { GlobalContext } from '@/context';
+import { useAppContext } from '@/context';
 import { pricingCards } from '@/utils/Constants';
 function Navigation() {
     const [isMenuOpen, setMenuOpen] = useState(false)
-    const {data:session, status } = useSession()
-    const {setDiscount} = useContext(GlobalContext)
-     useEffect(() => {
+    const { data: session, status } = useSession()
+    const { setDiscount } = useAppContext();
+    const [userRole, setUserRole] = useState(null);
+    const router = useRouter();
+    useEffect(() => {
         if (status === 'authenticated') {
-            ;(async () => {
-                try{
+            ; (async () => {
+                try {
                     const res = await axios.get(`/api/payments/subscription?uid=${session.user.id}`)
                     if (res.data.success && res.data.data) {
                         const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
-                            setDiscount({
-                                priceId: price.id,
-                                amount: price.discount
-                            })
+                        setDiscount({
+                            priceId: price.id,
+                            amount: price.discount
+                        })
                     }
-
-                }catch(error){
+                } catch (error) {
                     console.log(error)
                 }
             })()
-        }     
-     }, [session])
-    const router = useRouter(); 
+        }
+    }, [session])
+    useEffect(() => {
+        if (status === 'authenticated') {
+            ; (async () => {
+                try {
+                    const res = await axios.get(`/api/roles/${session.user.role}`)
+                    if (res.data.success && res.data.data.isActive) {
+                        setUserRole(res.data.data.name)
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            })()
+        }
+    }, [session])
+
     return (
         <div>
             <div className={'fixed z-9 w-full -mt-1'}>
@@ -46,7 +61,7 @@ function Navigation() {
                                 <span className="sr-only">Open user menu</span>
                                 {session.user?.image ?
                                     <Image className="rounded-full" src={session.user?.image} alt="user photo" height={35} width={35} />
-                                
+
                                     :
                                     <Skeleton />
                                 }
@@ -63,24 +78,23 @@ function Navigation() {
                                         <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{`${session?.user?.email}`}</span>
                                     </div>
                                     <ul className="py-2" aria-labelledby="user-menu-button">
-                                        <li>
-                                            <button 
-                                            onClick={()=> router.push('/agency/dashboard')} 
-                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                            >Dashboaed</button>
-                                        </li>
+                                        {
+                                            userRole != 'User' &&
+                                            <li>
+                                                <button
+                                                    onClick={() => router.push('/agency/dashboard')}
+                                                    className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                                                >Dashboaed</button>
+                                            </li>
+                                        }
                                         <li>
                                             <button
-                                             onClick={()=> router.push('/profile')} 
-                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                            
+                                                onClick={() => router.push('/profile')}
+                                                className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+
                                             >profile</button>
                                         </li>
-                                        <li>
-                                            <button 
-                                            className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                            >setting</button>
-                                        </li>
+
                                         <li>
                                             <button onClick={() => signOut()} href='/' className=" hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
                                         </li>

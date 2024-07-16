@@ -2,15 +2,19 @@
 import DefaultLayout from '@/components/dashboardLayout'
 import { useForm } from 'react-hook-form';
 import React, { useState } from 'react'
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateCategorySchema } from '@/schemas/categorySchema';
 
 function AddCategory() {
     const [subcategoris, setSubcategories] = useState([]);
     const [enabled, setEnabled] = useState(false);
     const router = useRouter()
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(CreateCategorySchema)
+    })
     const handleKeyDown = (e) => {
         if (e.key == 'Enter') {
             if (subcategoris.length < 5 && !subcategoris.includes(e.target.value)) {
@@ -23,30 +27,29 @@ function AddCategory() {
     const removeSubcategory = (ind) => {
         setSubcategories(subcategoris.filter((d) => d !== subcategoris[ind]))
     }
-    const onSubmit = async(d)=>{
-        
+    const onSubmit = async (d) => {
         const data = new FormData()
-        d.image.length && data.append('image' , d.image?.[0])
+        d.image.length && data.append('image', d.image?.[0])
         d.logo.length && data.append('logo', d.logo?.[0])
-        data.append('name' , d.name)
-        data.append('description' , d.description)
-        data.append('status' , d.status)
-        subcategoris && data.append('subcategoris',subcategoris)
-        d.slug && data.append('slug' ,d.slug)
-    
-        try{
-          const res  = await axios.post('/api/categories' , data )
-          if(res.data.success){
-            toast.success(res.data.message)
-            router.push('/agency/dashboard/category')
-          }
-        
-        }catch(error){
-             console.log(error.response.data)
+        data.append('name', d.name)
+        data.append('description', d.description)
+        data.append('status', d.status)
+        subcategoris && data.append('subcategoris', subcategoris)
+        d.slug && data.append('slug', d.slug)
+
+        try {
+            const res = await axios.post('/api/categories', data)
+            if (res.data.success) {
+                toast.success(res.data.message)
+                router.push('/agency/dashboard/category')
+            }
+
+        } catch (error) {
+            console.log(error.response.data)
 
         }
     }
-    return (         
+    return (
         <DefaultLayout>
             <div className="grid  gap-9 ">
                 <div className="flex flex-col gap-9">
@@ -59,15 +62,13 @@ function AddCategory() {
                             </div>
                             <div className="flex flex-col gap-5.5 p-6.5">
                                 <div>
-                                    {(!errors.name)? <label className="mb-3 block text-sm font-medium text-black dark:text-white">Name</label>:
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">{errors.name.message}</label>}
+                                    {(!errors.name) ? <label className="mb-3 block text-sm font-medium text-black dark:text-white">Name</label> :
+                                        <label className="mb-3 block text-sm font-medium text-black dark:text-red">{errors.name.message}</label>}
                                     <input
                                         type="text"
                                         name='name'
                                         {
-                                            ...register('name',{
-                                                required:'Please fill the name field'
-                                            })
+                                        ...register('name')
                                         }
                                         placeholder="Input category name"
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -75,14 +76,20 @@ function AddCategory() {
                                 </div>
 
                                 <div>
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                        slug
-                                    </label>
+                                    {errors.slug ?
+                                        <label className="mb-3 block text-sm font-medium text-black dark:text-red">
+                                            {errors?.slug?.message}
+                                        </label> :
+                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                            slug
+                                        </label>
+
+                                    }
                                     <input
                                         type="text"
                                         name='slug'
                                         {
-                                            ...register('slug')
+                                        ...register('slug')
                                         }
                                         placeholder="Input slug"
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -90,15 +97,22 @@ function AddCategory() {
                                 </div>
 
                                 <div>
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                        subcatagory
-                                    </label>
+                                    {
+                                        errors.subcatagory ?
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-red">
+                                                {errors.subcatagory?.message}
+                                            </label> :
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                subcatagory
+                                            </label>
+                                    }
+
                                     <input
                                         type="text"
                                         placeholder="input subcategory"
                                         name='subcatagory'
                                         {
-                                            ...register('subcatagory')
+                                        ...register('subcatagory')
                                         }
                                         onKeyDown={handleKeyDown}
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
@@ -139,14 +153,19 @@ function AddCategory() {
                                 </div>
                                 <div className="flex flex-col gap-5.5 ">
                                     <div>
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                          Image
-                                        </label>
+                                        {errors.image ?
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-red">
+                                                {errors.image.message}
+                                            </label> :
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                Image
+                                            </label>
+                                        }
                                         <input
                                             type="file"
                                             name='image'
                                             {
-                                                ...register('image')
+                                            ...register('image')
                                             }
                                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                                         />
@@ -155,14 +174,19 @@ function AddCategory() {
                                 </div>
                                 <div className="flex flex-col gap-5.5 ">
                                     <div>
-                                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                            logo
-                                        </label>
+                                        {errors.logo ?
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-red">
+                                                {errors.logo.message}
+                                            </label> :
+                                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                                logo
+                                            </label>
+                                        }
                                         <input
                                             type="file"
                                             name='logo'
                                             {
-                                                ...register('logo')
+                                            ...register('logo')
                                             }
                                             className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
                                         />
@@ -172,18 +196,18 @@ function AddCategory() {
 
 
                                 <div>
-                                    {!(errors.description)?<label className="mb-3 block text-sm font-medium text-black dark:text-white">Description</label> :
-                                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">{errors.description.message}</label>
+                                    {!(errors.description) ? <label className="mb-3 block text-sm font-medium text-black dark:text-white">Description</label> :
+                                        <label className="mb-3 block text-sm font-medium text-black dark:text-red">{errors.description.message}</label>
                                     }
-                                    
+
                                     <textarea
                                         rows={6}
                                         name='description'
                                         placeholder="Description of the category"
                                         {
-                                            ...register('description',{
-                                                required:"Please fill some catagory info"
-                                            })
+                                        ...register('description', {
+                                            required: "Please fill some catagory info"
+                                        })
                                         }
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
                                     ></textarea>
@@ -205,7 +229,7 @@ function AddCategory() {
                                                     type="checkbox"
                                                     className="sr-only"
                                                     {
-                                                        ...register('status')
+                                                    ...register('status')
                                                     }
                                                     onChange={() => {
                                                         setEnabled(!enabled);

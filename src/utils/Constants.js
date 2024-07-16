@@ -45,12 +45,12 @@ export const pricingCards = [
     },
   ]
 
-export const adminUser = [
-  'danigain1234@gmail.com',
-  'x@gmail.com',
-  'y@gmail.com',
-  'z@gmail.com'
+export const staticRole = [
+  'Admin',
+  'User',
+  'Supper-Admin'
 ]
+
 export const publicDomain =[
     '/team-condition',
     '/',
