@@ -30,12 +30,24 @@ export async function POST(req) {
 }
 export async function GET(req) {
     try {
-        const data = await RC_Maping.find()
+        const url = new URL(req.url);
+        const role = url.searchParams.get('role')|| null;
+        let data = null ;
+        if(role){
+            data = await RC_Maping.find({role})
+                .populate([{path:'component', select:'_id name'},{path:'role', select:'_id name'}])
+                .select('-createdAt -updatedAt -__v')
+                .exec();
+
+        }else{
+            data = await RC_Maping.find()
             .sort({'createdAt':-1})
             .populate('role','_id name')
             .populate('component','_id name')
             .select('-createdAt -updatedAt -__v')
             .exec();
+        }
+       
         return NextResponse.json({
             success: true,
             data,

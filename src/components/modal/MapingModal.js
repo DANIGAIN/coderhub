@@ -100,7 +100,7 @@ export default function MapingModal(props) {
                                 : " border-gray-400"
                                 }`}
                         >
-                            <option value='' disabled > Enter user role</option>
+                            <option value='' disabled  hidden> Enter user role</option>
                             {roles.data.map((role, index) => (
                                 role.isActive  && <option key={index} value={role._id}>{role.name}</option>
                             ))}
@@ -141,7 +141,7 @@ export default function MapingModal(props) {
                                 : " border-gray-400"
                                 }`}
                         >
-                            <option value='' disabled > Enter compoment </option>
+                            <option value='' disabled hidden > Enter compoment </option>
                             {components.data.map((component, index) => (
                                 component.isActive && <option key={index} value={component._id}>{component.name}</option>
                             ))}

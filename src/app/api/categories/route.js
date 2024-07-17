@@ -16,17 +16,22 @@ export async function POST(req) {
             const { errors } = response.error;
             return NextResponse.json(CustomError.validationError(errors), { status: 422 })
     }
+
+    const exist = await Category.findOne({name:formData.get('name')});
+    if(exist){
+      return NextResponse.json(CustomError.badRequestError({message:"Exist this category"}), { status: 400 })
+    }
     if (formData.get('image')) {
       const img = await upload(formData.get('image') || null, 'category')
       if (!img.image) {
-        return NextResponse.json(CustomError.notFoundError(img.error), { status: 404 })
+        return NextResponse.json(CustomError.validationError(img.error), { status: 422 })
       }
       obj.image = img.image
     }
     if (formData.get('logo')) {
       const logo = await upload(formData.get('logo') || null, 'category')
       if (!logo.image) {
-        return NextResponse.json(CustomError.notFoundError(logo.error), { status: 404 })
+        return NextResponse.json(CustomError.validationError(logo.error), { status:422 })
       }
       obj.logo = logo.image
     }
@@ -34,17 +39,18 @@ export async function POST(req) {
     obj.description = formData.get('description') || null;
 
     if (!obj.name || !obj.description) {
-      return NextResponse.json(CustomError.badRequestError({ message: "Name and description are required fields" }), { status: 400 })
+      return NextResponse.json(CustomError.badRequestError({ message: "Name and description are required fields" }), { status: 422 })
     }
     if (formData.get('slug')) {
       obj.slug = formData.get('slug')
     }
-    obj.status = formData.get('status')
+    obj.status = formData.get('status');
     const sub = formData.get('subcategoris').split(',')
     if (sub.length && sub[0].length) {
       obj.subcategoris = formData.get('subcategoris').split(',')
     }
-    const data = await Category.create(obj)
+
+    const data = await Category.create(obj);
     return NextResponse.json({
       success: true,
       data,

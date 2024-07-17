@@ -45,8 +45,9 @@ function AddCategory() {
             }
 
         } catch (error) {
-            console.log(error.response.data)
-
+           if(!error.response.data?.success && (error.response.data?.status === 422 || error.response.data?.status === 400)){
+               toast.error(error.response.data.message)
+           } 
         }
     }
     return (

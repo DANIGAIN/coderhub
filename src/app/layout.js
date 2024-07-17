@@ -15,11 +15,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" >
       <body className={inter.className} suppressHydrationWarning={true}>
+        <AuthProvider>
           <GlobalState>
-            <AuthProvider>
               {children}
-            </AuthProvider>
           </GlobalState>
+          </AuthProvider>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>

@@ -1,17 +1,38 @@
 "use client"
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react"
+import { useSession } from 'next-auth/react';
 export const GlobalContext = createContext(null)
 
 export function GlobalState({ children }) {
+  const { data: session, status } = useSession();
   const [services, setServices] = useState({ data: [], loading: true, error: null });
   const [categories, setCategories] = useState({ data: [], loading: true, error: null });
   const [components, setComponents] = useState({ data: [], loading: true, error: null });
   const [mapings, setMapings] = useState({ data: [], loading: true, error: null });
   const [roles, setRoles] = useState({ data: [], loading: true, error: null });
   const [users, setUsers] = useState({ data: [], loading: true, error: null });
+  const [permissions, setPermissions] = useState({ data: [], loading: true, error: null });
   const [discount, setDiscount] = useState({ priceId: '', amount: 0 })
-
+  useEffect(()=>{
+     const getPermissions = async() =>{
+      try{
+         if(status === 'authenticated'){
+           const res = await axios.get(`/api/mapings?role=${session.user.role}`)
+           if(res.data.success){
+             const a = [];
+             for(let i = 0 ;i< res.data.data.length ; i++){
+              a.push(res.data.data[i].component.name)
+            }
+            setPermissions((prev) => ({...prev, loading:false ,data:a }))
+           } 
+         }
+      }catch(error){
+        setPermissions((perv) => ({loading:false , ...perv ,error}))
+      }
+     }
+     getPermissions()
+  },[status]) 
   useEffect(() => {
     const getAllUsers = async () => {
       try {
@@ -115,6 +136,7 @@ export function GlobalState({ children }) {
         setMapings,
         discount,
         setDiscount,
+        permissions
       }}
     >
       {children}
