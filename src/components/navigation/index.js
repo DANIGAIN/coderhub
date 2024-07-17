@@ -11,8 +11,7 @@ import { pricingCards } from '@/utils/Constants';
 function Navigation() {
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
-    const { setDiscount } = useAppContext();
-    const [userRole, setUserRole] = useState(null);
+    const { setDiscount , permissions } = useAppContext();
     const router = useRouter();
     useEffect(() => {
         if (status === 'authenticated') {
@@ -32,21 +31,7 @@ function Navigation() {
             })()
         }
     }, [session])
-    useEffect(() => {
-        if (status === 'authenticated') {
-            ; (async () => {
-                try {
-                    const res = await axios.get(`/api/roles/${session.user.role}`)
-                    if (res.data.success && res.data.data.isActive) {
-                        setUserRole(res.data.data.name)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            })()
-        }
-    }, [session])
-
+ 
     return (
         <div>
             <div className={'fixed z-9 w-full -mt-1'}>
@@ -79,13 +64,13 @@ function Navigation() {
                                     </div>
                                     <ul className="py-2" aria-labelledby="user-menu-button">
                                         {
-                                            userRole != 'User' &&
+                                           permissions.data.includes('dashboard')?
                                             <li>
                                                 <button
                                                     onClick={() => router.push('/agency/dashboard')}
                                                     className="hover:bg-sky-300 text-left w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                                                 >Dashboaed</button>
-                                            </li>
+                                            </li>:null
                                         }
                                         <li>
                                             <button
