@@ -11,15 +11,19 @@ export async function POST(req) {
   try {
     const formData = await req.formData()
     const obj = {}
-    const response = CreateCategorySchema.safeParse(Object.fromEntries(formData));
-        if (!response.success) {
-            const { errors } = response.error;
-            return NextResponse.json(CustomError.validationError(errors), { status: 422 })
+    const body = {
+      ...Object.fromEntries(formData),
+      status: Object.fromEntries(formData).status === 'true' ? true : false
+    }
+    const response = CreateCategorySchema.safeParse(body);
+    if (!response.success) {
+      const { errors } = response.error;
+      return NextResponse.json(CustomError.validationError(errors), { status: 422 })
     }
 
-    const exist = await Category.findOne({name:formData.get('name')});
-    if(exist){
-      return NextResponse.json(CustomError.badRequestError({message:"Exist this category"}), { status: 400 })
+    const exist = await Category.findOne({ name: formData.get('name') });
+    if (exist) {
+      return NextResponse.json(CustomError.badRequestError({ message: "Exist this category" }), { status: 400 })
     }
     if (formData.get('image')) {
       const img = await upload(formData.get('image') || null, 'category')
@@ -31,7 +35,7 @@ export async function POST(req) {
     if (formData.get('logo')) {
       const logo = await upload(formData.get('logo') || null, 'category')
       if (!logo.image) {
-        return NextResponse.json(CustomError.validationError(logo.error), { status:422 })
+        return NextResponse.json(CustomError.validationError(logo.error), { status: 422 })
       }
       obj.logo = logo.image
     }
@@ -68,7 +72,7 @@ export async function GET(req, res) {
       { $match: { name: { $regex: name, $options: 'i' } } },
       { $addFields: { id: { $toString: '$_id' }, links: { self: "/agency/dashboard/category" } } },
       { $project: { __v: 0, _id: 0 } }
-    ]).sort({'createdAt':-1}).exec()
+    ]).sort({ 'createdAt': -1 }).exec()
     return NextResponse.json({
       message: "catagory founed",
       data,

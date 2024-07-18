@@ -1,25 +1,28 @@
 'use client'
-import { AiFillEye } from "react-icons/ai";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { useAppContext } from "@/context";
 import axios from "axios";
 import Image from "next/image";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ListSkeleton from "@/components/loading/ListSkeleton";
+import toast from "react-hot-toast";
 const Categorys = () => {
     const router = useRouter()
     const { categories, setCategories } = useAppContext();
     const handelDelete = async (id) => {
         try {
-            await axios.delete(`/api/categories/${id}`)
-            const newCategoryData = categories.data.filter((data) => data.id != id)
-            setCategories((prev) => ({...prev, data: newCategoryData}))
-
+            const res = await axios.delete(`/api/categories/${id}`)
+            if(res.data.success){
+                const newCategoryData = categories.data.filter((data) => data.id != id)
+                setCategories((prev) => ({...prev, data: newCategoryData}))
+                toast.success(res.data.message)
+            }
         } catch (error) {
-            console.log(error)
+            if(!error.response.data?.success && (error.response.data?.status === 422 || error.response.data?.status === 400)){
+                toast.error(error.response.data.message)
+            } 
         }
     }
     if(categories.loading){
@@ -112,7 +115,7 @@ const Categorys = () => {
                                 <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
                                     <MdDelete />
                                 </button>
-                                <button onClick={() => router.push(`/agency/dashboard/category/${category.id}`)} className="hover:text-primary">
+                                <button onClick={() => router.push(`/agency/dashboard/categories/${category.id}?name=${category.name}&slug=${category.slug}&description=${category.description}&subcategoris=${category.subcategoris}&status=${category.status}`)} className="hover:text-primary">
                                     < MdModeEdit />
                                 </button>
                             </div>

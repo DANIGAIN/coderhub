@@ -3,6 +3,7 @@ import { connect } from '@/db/dbConfig'
 import Category from '@/modals/categoryModel'
 import CustomError from '@/utils/Error'
 import mongoose from 'mongoose'
+import Service from '@/modals/serviceModel'
 
 await connect()
 
@@ -53,7 +54,11 @@ export async function DELETE(req, context) {
     const {id} = context.params;
     const data = Category.find({_id:id})
     if(!data){
-      return NextResponse.json(CustomError.notFoundError({message:"Not found! The requested resounce wes not found"}), { status: 404 })
+      return NextResponse.json(CustomError.badRequestError({message:"Not found! The requested resounce wes not found"}), { status: 400 })
+    }
+    const exsit = await Service.findOne({category:id})
+    if(exsit){
+      return NextResponse.json(CustomError.badRequestError({message:"This category can not be delete ! exist service collection"}), { status: 400 })
     }
     await Category.deleteOne({_id:id})
 

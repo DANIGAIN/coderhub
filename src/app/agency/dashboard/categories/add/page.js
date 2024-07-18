@@ -7,9 +7,12 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateCategorySchema } from '@/schemas/categorySchema';
+import { useAppContext } from '@/context';
 
 function AddCategory() {
     const [subcategoris, setSubcategories] = useState([]);
+    const {setCategories ,categories} = useAppContext();
+    const [loading , setLoading] = useState(false);
     const [enabled, setEnabled] = useState(false);
     const router = useRouter()
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -38,16 +41,20 @@ function AddCategory() {
         d.slug && data.append('slug', d.slug)
 
         try {
+            setLoading(true);
             const res = await axios.post('/api/categories', data)
             if (res.data.success) {
                 toast.success(res.data.message)
-                router.push('/agency/dashboard/category')
+                setCategories((prev) =>({...prev , data:[res.data.data , ...categories.data]}))
+                setLoading(true)
+                router.push('/agency/dashboard/categories')
             }
 
         } catch (error) {
            if(!error.response.data?.success && (error.response.data?.status === 422 || error.response.data?.status === 400)){
                toast.error(error.response.data.message)
            } 
+           setLoading(false)
         }
     }
     return (
@@ -206,9 +213,7 @@ function AddCategory() {
                                         name='description'
                                         placeholder="Description of the category"
                                         {
-                                        ...register('description', {
-                                            required: "Please fill some catagory info"
-                                        })
+                                        ...register('description')
                                         }
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
                                     ></textarea>
@@ -251,11 +256,20 @@ function AddCategory() {
                         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
 
                             <div className="flex flex-col gap-5.5 p-2">
-                                <button type='button' onClick={handleSubmit(onSubmit)} className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
+                               {
+                                 loading ?
+                                 <button type='button' className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
+                                    <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-blue-500 rounded-full group-hover:w-full group-hover:h-56"></span>
+                                    <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+                                    <span className="relative"> .....</span>
+                                </button>
+                                 :
+                                 <button type='button' onClick={handleSubmit(onSubmit)} className="relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group">
                                     <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-blue-500 rounded-full group-hover:w-full group-hover:h-56"></span>
                                     <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
                                     <span className="relative">Submit</span>
                                 </button>
+                               } 
                             </div>
                         </div>
                     </form>

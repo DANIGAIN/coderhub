@@ -30,8 +30,31 @@ const CreateCategorySchema = z.object({
     description: z
         .string({ required_error: "Description is required" })
         .min(1, { message: "Description should be required" })
+        .max(2055, { message: "Length should ba at max 255 characters" })
+
+})
+const UpdateCategorySchema = z.object({
+    name: z
+        .string({ required_error: "Name should be required" })
+        .min(1, { message: "Name should be required" })
         .max(255, { message: "Length should ba at max 255 characters" })
+        .transform((value) => value.toLowerCase())
+        .transform((value) => value.trim()),
+    slug: z
+        .string()
+        .max(255, { message: "Length should ba at max 255 characters" })
+        .optional(),
+    subcatagory: z
+        .string()
+        .max(255, { message: "Length should ba at max 255 characters" })
+        .optional(),
+    status: z
+        .boolean(),
+    description: z
+        .string({ required_error: "Description is required" })
+        .min(1, { message: "Description should be required" })
+        .max(2055, { message: "Length should ba at max 255 characters" })
 
 })
 
-export {CreateCategorySchema}
+export {CreateCategorySchema ,UpdateCategorySchema}
