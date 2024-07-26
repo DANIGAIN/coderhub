@@ -2,14 +2,30 @@ import { NextResponse } from 'next/server'
 import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
+import { CreateServiceSchema } from '@/schemas/serviceSchema';
+import Category from '@/modals/categoryModel';
 
 await connect();
 export async function POST(req) {
     try {
         const body = await req.json()
+        const response = CreateServiceSchema.safeParse(body);
+        if(!response.success){
+            const {errors} = response.error;
+            return NextResponse.json(CustomError.validationError(errors),{status:422})
+        }
         body.price = parseInt(body.price);
         body.time = parseInt(body.time);
-        
+
+        const exist = await Service.findOne({
+            $and:[
+                {uid:body.uid},
+                {category:body.category}
+            ]
+        })
+        if(exist){
+            return NextResponse.json(CustomError.badRequestError({message:"This service alrady exist "}),{status:400})
+        }
         const service = await Service.create(body)
         body._id = service._id;
         return NextResponse.json({
@@ -19,6 +35,7 @@ export async function POST(req) {
         }, { status: 201 });
 
     } catch (error) {
+        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }

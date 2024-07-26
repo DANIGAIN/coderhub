@@ -1,40 +1,36 @@
 'use client'
 import DefaultLayout from '@/components/dashboardLayout'
+import { useAppContext } from '@/context';
+import { CreateServiceSchema } from '@/schemas/serviceSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 function AddService() {
-    const [categories, setCategories] = useState([])
-    const { data: session, status } = useSession()
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const {categories, setServices, services} = useAppContext()
+    const{data:session} = useSession();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver:zodResolver(CreateServiceSchema)
+    })
     const router = useRouter()
-    const getCategory = async () => {
-        try {
-            const res = await axios.get('/api/categories')
-            if (res.data.success) {
-                setCategories(res.data.data)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => { getCategory() }, [])
-
     const onSubmit = async(data) => {
-        if(status == 'authenticated')data.uid = session.user.id
+        data.uid = session.user.id;
         try{
             const res = await axios.post('/api/services',data)
             if(res.data.success){
-                router.push('/agency/dashboard/service')
+                setServices((prev) =>({...prev,data:[res.data.data,...services.data]}))
+                router.push('/agency/dashboard/services')
                 toast.success(res.data.message);
             }
+            
         }catch(error){
-            console.log(error)
+            if (!error.response.success && (error.response.status === 422  ||error.response.status === 400)) {
+                toast.error(error.response.data.message)
+              }
         }
     }
                 
@@ -61,18 +57,14 @@ function AddService() {
                                         name='category'
                                         defaultValue={''}
                                         {
-                                            ...register('category',{
-                                               required:"Please choice a category name" 
-                                            })
-                                            
+                                            ...register('category')  
                                         }
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                                       
                                     >
                                         <option value={''} hidden disabled>Choose a category name</option>
-                                        {categories.length &&
-                                            categories.map((data, ind) => {
-                                                return <option key={ind} value={data.id}>{data.name}</option>;
+                                        {categories.data.length &&
+                                            categories.data.map((data, ind) => {
+                                                return <option key={ind} value={data._id}>{data.name}</option>;
                                             })}
                                     </select>
                                 </div>
@@ -87,12 +79,9 @@ function AddService() {
                                         type="number"
                                         name='price'
                                         {
-                                            ...register('price',{
-                                                required:'Please put service price'
-                                            })
+                                            ...register('price')
                                             
                                         }
-                                        // onChange={(e) => setService((prev) => ({ ...prev, price: e.target.value }))}
                                         placeholder="Input price"
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                     />
@@ -107,12 +96,9 @@ function AddService() {
                                         type="number"
                                         name='time'
                                         {
-                                            ...register('time',{
-                                                required:'Time is required'
-                                            })
+                                            ...register('time')
                                             
                                         }
-                                        // onChange={(e) => setService((prev) => ({ ...prev, price: e.target.value }))}
                                         placeholder="how many day for this ?"
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                     />
@@ -127,10 +113,7 @@ function AddService() {
                                         id="categoryId"
                                         defaultValue={''}
                                         {
-                                            ...register('type',{
-                                               required:"Type is required" 
-                                            })
-                                            
+                                            ...register('type') 
                                         }
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                        
