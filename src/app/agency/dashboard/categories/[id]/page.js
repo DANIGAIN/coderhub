@@ -1,65 +1,60 @@
 "use client"
 import DefaultLayout from '@/components/dashboardLayout';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { UpdateCategorySchema } from '@/schemas/categorySchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAppContext } from '@/context';
 
 function UpdateCategory({ params }) {
     const id = params.id;
     const search = useSearchParams();
-    const [subcategoris, setSubcategories] = useState(search.get('subcategoris').split(','));
+    const [subcategoris, setSubcategories] = useState(search.get('subcategoris') ? search.get('subcategoris').split(','):[]);
     const [loading, setLoading] = useState(false);
-    const [enabled, setEnabled] = useState();
     const router = useRouter()
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit,watch, reset, formState: { errors } } = useForm({
         resolver: zodResolver(UpdateCategorySchema),
         defaultValues:{
             name:search.get('name'),
             slug:search.get('slug'),
             description:search.get('description'),
-            status:search.get('status') === "true" ? true :false 
+            status: search.get('status') =='true'? true :false,
         }
     })
-    console.log(search.get('status') === "true" )
- 
     const handleKeyDown = (e) => {
-        // if (e.key == 'Enter') {
-        //     if (subcategoris.length < 5 && !subcategoris.includes(e.target.value)) {
-        //         const newList = [...subcategoris, e.target.value]
-        //         setSubcategories(newList)
-        //         setCategories((prev) => ({ ...prev, subcategoris: newList }))
-        //     }
-        //     e.target.value = ''
-        // }
+        if (e.key == 'Enter') {
+            if (subcategoris.length < 5 && !subcategoris.includes(e.target.value) && e.target.value != '') {
+                const newList = [...subcategoris, e.target.value];
+                setSubcategories(newList)
+            }
+            reset({subcatagory:''})
+        }
 
     }
 
-    // const removeSubcategory = (ind) => {
+    const removeSubcategory = (ind) => {
+        const newList = subcategoris.filter((d) => d !== subcategoris[ind])
+        setSubcategories(newList)
+    }
+    const onSubmit = async (data) => {
 
-    //     const newList = subcategoris.filter((d) => d !== subcategoris[ind])
-    //     setCategories((prev) => ({ ...prev, subcategoris: newList }))
-    //     setSubcategories(newList)
-
-    // }
-    const onSubmit = async (ind) => {
+        console.log(data)
+        // data.subcatagory = subcategoris.includes(data.subcatagory)|| data.subcatagory == '' ? subcategoris:[...subcategoris,data.subcatagory];
         // try {
-        //     setLoading(false)
-        //     const res = await axios.put(`/api/categories/${id}`, categories)
+        //     setLoading(true)
+        //     const res = await axios.put(`/api/categories/${id}`, data)
         //     if (res.data.success) {
         //         toast.success(res.data.message)
         //         setLoading(false)
         //         router.push('/agency/dashboard/categories')
         //     }
-
         // } catch (error) {
         //     setLoading(false)
-        //     console.log(error.response.data)
-
+        //     if (!error.response.success && (error.response.status === 422 )) {
+        //         toast.error(error.response.data.message)
+        //       }
         // }
     }
 
@@ -126,7 +121,7 @@ function UpdateCategory({ params }) {
                                         placeholder="input subcategory"
                                         name='subcatagory'
                                         {
-                                        ...register('subcatagory')
+                                        ...register('subcatagory.0')
                                         }
                                         onKeyDown={handleKeyDown}
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"
@@ -199,13 +194,10 @@ function UpdateCategory({ params }) {
                                                     {
                                                     ...register('status')
                                                     }
-                                                    onChange={() => {
-                                                        setEnabled(!enabled);
-                                                    }}
                                                 />
                                                 <div className="h-5 w-14 rounded-full bg-meta-9 shadow-inner dark:bg-[#5A616B]"></div>
                                                 <div
-                                                    className={`dot absolute -top-1 left-0 h-7 w-7 rounded-full bg-white shadow-switch-1 transition ${enabled && "!right-0 !translate-x-full !bg-primary dark:!bg-white"}`}
+                                                    className={`dot absolute -top-1 left-0 h-7 w-7 rounded-full bg-white shadow-switch-1 transition ${watch('status') && "!right-0 !translate-x-full !bg-primary dark:!bg-white"}`}
                                                 ></div>
                                             </div>
                                         </label>

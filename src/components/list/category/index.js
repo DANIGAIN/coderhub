@@ -83,22 +83,17 @@ const Categorys = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="hidden sm:block  col-span-1  items-center">
+                        <div className="hidden sm:block  col-span-2  items-center">
                             <p className="text-sm text-black dark:text-white">
                                 {category.slug || null}
-    
                             </p>
                         </div>
                         <div className="hidden sm:block  col-span-1 items-center">
-                            <p className="text-sm text-black dark:text-white">
-    
-                            </p>
-                        </div>
-                        <div className="hidden sm:block  col-span-1 items-center">
-                            <p className="text-sm text-white">
+                            <div className="text-sm text-white">
                                 {Object.keys(category.subcategoris).map((key, index) => (
                                     <p key={index}>{category.subcategoris[key]}</p>
-                                ))}</p>
+                                ))}
+                            </div>
                         </div>
                         <div className="border-b border-[#eee] px-4 py-5 dark:border-strokedark ">
                             <p
@@ -115,9 +110,9 @@ const Categorys = () => {
                                 <button onClick={() => handelDelete(category.id)} className="hover:text-primary">
                                     <MdDelete />
                                 </button>
-                                <button onClick={() => router.push(`/agency/dashboard/categories/${category.id}?name=${category.name}&slug=${category.slug}&description=${category.description}&subcategoris=${category.subcategoris}&status=${category.status}`)} className="hover:text-primary">
-                                    < MdModeEdit />
-                                </button>
+                                <Link className="hover:text-primary" href={`/agency/dashboard/categories/${category.id}?name=${category.name ||''}&slug=${category.slug ||''}&description=${category.description }&subcategoris=${category.subcategoris||''}&status=${category.status}`} >
+                                   < MdModeEdit />
+                                </Link>
                             </div>
                         </div>
     

@@ -4,6 +4,7 @@ import Category from '@/modals/categoryModel'
 import CustomError from '@/utils/Error'
 import mongoose from 'mongoose'
 import Service from '@/modals/serviceModel'
+import { UpdateCategorySchema } from '@/schemas/categorySchema'
 
 await connect()
 
@@ -32,6 +33,11 @@ export async function PUT(req, context) {
   try {
     const {id} = context.params;
     const body  = await req.json()
+    const response = UpdateCategorySchema.safeParse(body);
+    if(!response.success){
+      const {errors} = response.error;
+      return NextResponse.json(CustomError.validationError(errors), { status: 422 })
+    }
     await Category.updateOne({ _id: id },{ $set: body });
     const data = await Category.aggregate([
       {$match: { _id: new mongoose.Types.ObjectId(id)}},

@@ -45,8 +45,8 @@ const UpdateCategorySchema = z.object({
         .max(255, { message: "Length should ba at max 255 characters" })
         .optional(),
     subcatagory: z
-        .string()
-        .max(255, { message: "Length should ba at max 255 characters" })
+        .array()
+        .max(5, { message: "Length should ba at max 5 characters" })
         .optional(),
     status: z
         .boolean(),
