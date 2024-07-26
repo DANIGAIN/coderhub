@@ -33,25 +33,19 @@ export async function PUT(req, context) {
   try {
     const {id} = context.params;
     const body  = await req.json()
-    const response = UpdateCategorySchema.safeParse(body);
+    const response = UpdateCategorySchema.safeParse(body);    
     if(!response.success){
       const {errors} = response.error;
       return NextResponse.json(CustomError.validationError(errors), { status: 422 })
     }
     await Category.updateOne({ _id: id },{ $set: body });
-    const data = await Category.aggregate([
-      {$match: { _id: new mongoose.Types.ObjectId(id)}},
-      { $addFields: { id: '$_id', links: { self: "/agency/dashboard/category" } } },
-      { $project: { _id: 0, __v: 0 } }
-    ]).exec();
-
     return NextResponse.json({     
       message: "catagory updateed successfully",
-      data,
       success: true
     })
 
   } catch (error) {
+    console.log(error)
     return NextResponse.json(CustomError.internalServerError(error), { status: 500 })
   }
 }

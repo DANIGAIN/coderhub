@@ -7,29 +7,31 @@ import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { UpdateCategorySchema } from '@/schemas/categorySchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAppContext } from '@/context';
 
 function UpdateCategory({ params }) {
     const id = params.id;
     const search = useSearchParams();
-    const [subcategoris, setSubcategories] = useState(search.get('subcategoris') ? search.get('subcategoris').split(','):[]);
+    const { categories, setCategories } = useAppContext();
+    const [subcategoris, setSubcategories] = useState(search.get('subcategoris') ? search.get('subcategoris').split(',') : []);
     const [loading, setLoading] = useState(false);
     const router = useRouter()
-    const { register, handleSubmit,watch, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: zodResolver(UpdateCategorySchema),
-        defaultValues:{
-            name:search.get('name'),
-            slug:search.get('slug'),
-            description:search.get('description'),
-            status: search.get('status') =='true'? true :false,
+        defaultValues: {
+            name: search.get('name'),
+            slug: search.get('slug'),
+            description: search.get('description'),
+            status: search.get('status') == 'true' ? true : false,
         }
     })
+
     const handleKeyDown = (e) => {
         if (e.key == 'Enter') {
             if (subcategoris.length < 5 && !subcategoris.includes(e.target.value) && e.target.value != '') {
-                const newList = [...subcategoris, e.target.value];
-                setSubcategories(newList)
+                setSubcategories([...subcategoris, e.target.value])
             }
-            reset({subcatagory:''})
+            e.target.value = ''
         }
 
     }
@@ -39,23 +41,25 @@ function UpdateCategory({ params }) {
         setSubcategories(newList)
     }
     const onSubmit = async (data) => {
-
-        console.log(data)
-        // data.subcatagory = subcategoris.includes(data.subcatagory)|| data.subcatagory == '' ? subcategoris:[...subcategoris,data.subcatagory];
-        // try {
-        //     setLoading(true)
-        //     const res = await axios.put(`/api/categories/${id}`, data)
-        //     if (res.data.success) {
-        //         toast.success(res.data.message)
-        //         setLoading(false)
-        //         router.push('/agency/dashboard/categories')
-        //     }
-        // } catch (error) {
-        //     setLoading(false)
-        //     if (!error.response.success && (error.response.status === 422 )) {
-        //         toast.error(error.response.data.message)
-        //       }
-        // }
+        data.subcategoris = !subcategoris.includes(data.subcatagory) || data.subcatagory == '' ? subcategoris : [...subcategoris, data.subcatagory];
+        try {
+            setLoading(true)
+            const res = await axios.put(`/api/categories/${id}`, data)
+            if (res.data.success) {
+                const filteredCategories = categories.data.filter((data)=> data._id != id);
+                data._id = id ;
+                data.logo = categories.data.find((data)=> data._id == id).logo;
+                setCategories((prev) => ({ ...prev, data: [data, ...filteredCategories] }))
+                toast.success(res.data.message)
+                setLoading(false)      
+                router.push('/agency/dashboard/categories')
+            }
+        } catch (error) {
+            setLoading(false)
+            if (!error.response.success && (error.response.status === 422)) {
+                toast.error(error.response.data.message)
+            }
+        }
     }
 
     return (
@@ -107,12 +111,12 @@ function UpdateCategory({ params }) {
 
                                 <div>
                                     {
-                                        errors.subcatagory ?
+                                        errors.subcetagory ?
                                             <label className="mb-3 block text-sm font-medium text-black dark:text-red">
-                                                {errors.subcatagory?.message}
+                                                {errors.subcetagory?.message}
                                             </label> :
                                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                                subcatagory
+                                                subcetagory
                                             </label>
                                     }
 
@@ -121,7 +125,7 @@ function UpdateCategory({ params }) {
                                         placeholder="input subcategory"
                                         name='subcatagory'
                                         {
-                                        ...register('subcatagory.0')
+                                        ...register('subcatagory')
                                         }
                                         onKeyDown={handleKeyDown}
                                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary dark:disabled:bg-black"

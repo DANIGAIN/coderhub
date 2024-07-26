@@ -70,11 +70,9 @@ export async function GET(req, res) {
     const name = url.searchParams.get('search') || '';
     const data = await Category.aggregate([
       { $match: { name: { $regex: name, $options: 'i' } } },
-      { $addFields: { id: { $toString: '$_id' }, links: { self: "/agency/dashboard/category" } } },
-      { $project: { __v: 0, _id: 0 } }
     ]).sort({ 'createdAt': -1 }).exec()
     return NextResponse.json({
-      message: "catagory founed",
+      message: "All categoirs find successfully",
       data,
       success: true
     })

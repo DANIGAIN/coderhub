@@ -12,7 +12,7 @@ export async function POST(req) {
         if(!response.success){
             const {errors} = response.error;
             return NextResponse.json(CustomError.validationError(errors),{status:422})
-        }
+        }        
         const component = await Component.findOne({name:body.name});
         if(component){
             return NextResponse.json(CustomError.badRequestError({message:"Role is alrady exist"}),{status:400})
