@@ -3,7 +3,6 @@ import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
 import { CreateServiceSchema } from '@/schemas/serviceSchema';
-import Category from '@/modals/categoryModel';
 
 await connect();
 export async function POST(req) {
