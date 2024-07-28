@@ -38,8 +38,9 @@ export async function PUT(req, context) {
       const {errors} = response.error;
       return NextResponse.json(CustomError.validationError(errors), { status: 422 })
     }
-    await Category.updateOne({ _id: id },{ $set: body });
-    return NextResponse.json({     
+    const data = await Category.findByIdAndUpdate({ _id: id },{ $set: {...body,updatedAt: new Date()} },{new:true});
+    return NextResponse.json({
+      data,     
       message: "catagory updateed successfully",
       success: true
     })

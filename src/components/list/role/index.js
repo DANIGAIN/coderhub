@@ -46,26 +46,26 @@ export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles
           </div>
         </div>
   
-        <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-          <div className="col-span-3 flex items-center">
+        <div className="grid grid-cols-3 border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5">
+          <div className="col-span-1 items-center">
             <p className="font-medium"> name </p>
           </div>
-          <div className="hidden sm:block  col-span-2  items-center">
+          <div className="col-span-1 items-center">
             <p className="font-medium"> status </p>
           </div>
   
   
-          <div className="ml-auto col-span-2  items-center">
+          <div className="col-span-1 ml-auto pr-10 items-cente">
             <p className="font-medium"> Action</p>
           </div>
         </div>
   
         {roles.data.map((data, ind) => (
           <div
-            className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+            className="grid grid-cols-3 border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
             key={ind}
           >
-            <div className="col-span-3 flex items-center">
+            <div className="col-span-1 items-center">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <p className="text-sm text-black dark:text-white">
                   {data?.name}
@@ -73,7 +73,7 @@ export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles
               </div>
             </div>
   
-            <div className="hidden sm:block py-5">
+            <div className="col-span-1 items-cente">
               <p
                 className={`inline-flex rounded-full bg-opacity-10 px-3  text-sm font-medium ${data.isActive === false
                   ? "bg-warning text-warning"
@@ -83,7 +83,7 @@ export default function Roles({ setReq, setIsOpenRole, setRole ,roles , setRoles
                 {data?.isActive ? "Active " : "Unactive"}
               </p>
             </div>
-            <div className="ml-auto col-span-3  items-center mr-15 sm:mr-0 space-x-3">
+            <div className="col-span-1 ml-auto pr-10 items-cente space-x-3">
               <button onClick={() => handleDelete(data._id)} className="hover:text-primary text-xl">
                 <MdDelete />
               </button>

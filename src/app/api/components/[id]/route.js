@@ -9,9 +9,9 @@ await connect();
 
 export async function PUT(req, context) {
     const { id } = context.params;
-    const data = await req.json();
+    const body = await req.json();
     try {
-        const response = UpdateComponentSchema.safeParse(data);
+        const response = UpdateComponentSchema.safeParse(body);
         if(!response.success){
             const {errors} = response.error;
             return NextResponse.json(CustomError.validationError(errors),{status:422})
@@ -20,20 +20,20 @@ export async function PUT(req, context) {
         if (!component) {
             return NextResponse.json(CustomError.badRequestError({ message: "This component not found" }), { status: 400 })
         }
-        const com = await Component.findOne({name: data.name})
-        console.log(data)
-        if (com.name === data.name  && com.isActive === data.isActive) {
-            return NextResponse.json(CustomError.badRequestError({ message: "This component is alrady exist" }), { status: 400 })
+        const com = await Component.findOne({name: body.name})
+        if(com){
+            if (com.name === body.name  && com.isActive === body.isActive) {
+                return NextResponse.json(CustomError.badRequestError({ message: "This component is alrady exist" }), { status: 400 })
+            }
         }
-        await Component.findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
-
+        const data = await Component.findByIdAndUpdate({ _id: id }, { $set: {...body, updatedAt:new Date()} }, { new: true })
         return NextResponse.json({
             success: true,
+            data,
             message: "The component is updated successfully",
         }, { status: 200 });
 
     } catch (error) {
-        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }

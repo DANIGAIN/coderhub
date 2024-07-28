@@ -30,7 +30,7 @@ export default function MapingModal(props) {
             const res = await axios.put(`/api/mapings/${maping._id}`, data);
             if (res.data.success) {
                 const filderMaping = mapings.data.filter((data) => data._id !== maping._id);
-                setMapings((perv) => ({...perv , data:filderMaping}))
+                setMapings((perv) => ({...perv , data:[res.data.data,...filderMaping]}))
                 toast.success(res.data?.message);
             }
         }

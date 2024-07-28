@@ -5,7 +5,7 @@ import ListSkeleton from '@/components/loading/ListSkeleton';
 
 export default function Users({ setIsOpenUser, setReq, users, setUser }) {
     const handleUpdate = (id) => {
-        const data = users.data.find((data) => data._id == id);
+        const data = users.data.find((data) => data._id === id);
         setReq('update');
         setUser(data);
         setIsOpenUser(true);
@@ -25,31 +25,31 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
                     </div>
                 </div>
     
-                <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-                    <div className="col-span-3 flex items-center">
+                <div className="grid sm:grid-cols-6 gap-4 grid-cols-4 border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5">
+                    <div className="col-span-2 items-center">
                         <p className="font-medium">Name </p>
                     </div>
-                    <div className="hidden sm:block  col-span-2  items-center">
+                    <div className="col-span-1 items-center">
                         <p className="font-medium">Role</p>
                     </div>
                     <div className="hidden sm:block  col-span-1 items-center ">
                         <p className="font-medium"> specialist </p>
                     </div>
-                    <div className="hidden sm:block  col-span-1  items-center ">
+                    <div className="hidden sm:block col-span-1  items-center ">
                         <p className="font-medium">is_Verified </p>
                     </div>
     
-                    <div className="ml-15 sm:ml-0 float-right sm:float-right col-span-1 flex items-center pl-5">
+                    <div className="col-span-1 items-center ml-auto mr-5 sm:mr-10">
                         <p className="font-medium">Action</p>
                     </div>
                 </div>
     
                 {users?.data?.map((data, index) => (
                     <div
-                        className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5 h-full  items-center justify-center"
+                        className="grid sm:grid-cols-6 gap-4 grid-cols-4  border-t border-stroke px-4 py-4.5 dark:border-strokedark  md:px-6 2xl:px-7.5 h-full  items-center justify-center"
                         key={index}
                     >
-                        <div className="col-span-3 flex items-center">
+                        <div className="col-span-2 items-center">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                 {data?.image ? <Image className='w-13 h-13 rounded-full ring-2 ring-slate-400 mr-5' src={data?.image} alt='no image ' width={50} height={50} /> :
                                     <Image className='w-13 h-13 rounded-full ring-2 ring-slate-400 mr-5' src={'/images/user/user-06.png'} alt='no image ' width={50} height={50} />}
@@ -60,23 +60,17 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
     
                             </div>
                         </div>
-                        <div className="hidden sm:block  col-span-1  items-center">
+                        <div className="col-span-1 items-center">
                             <p className="text-sm text-black dark:text-white">
                                 {data.role?.name}
                             </p>
                         </div>
                         <div className="hidden sm:block  col-span-1 items-center">
-                            <p className="text-sm text-black dark:text-white">
-    
-                            </p>
-                        </div>
-                        <div className="hidden sm:block  col-span-1 items-center">
                             <p className="inline-flex text-sm text-white">
                                 {data.about?.specialist?.name}
-    
                             </p>
                         </div>
-                        <div className="px-4 py-5  hidden sm:block ">
+                        <div className="hidden sm:block col-span-1  items-center  ">
                             <p
                                 className={`inline-flex rounded-full bg-opacity-10 py-1 text-sm font-medium ${data.isVerified === false
                                     ? "bg-warning text-warning" : "bg-success text-success"
@@ -86,7 +80,7 @@ export default function Users({ setIsOpenUser, setReq, users, setUser }) {
                             </p>
                         </div>
     
-                        <div className="px-25 sm:px-10 py-2 ">
+                        <div className="col-span-1 items-center ml-auto mr-5 sm:mr-10 ">
                             <div className="flex items-center ">
                                 {/* <button className="hover:text-primary">
                                     <ShowIcon/>

@@ -35,8 +35,7 @@ export default function RoleModal(props) {
         const res = await axios.put(`/api/roles/${role._id}`, data);
         if (res.data.success) {
           const filderRole = roles.data.filter((data) => data._id !== role._id);
-          data._id = role._id;
-          setRoles((prev) => ({...prev , data:[data, ...filderRole]}))
+          setRoles((prev) => ({...prev , data:[res.data.data, ...filderRole]}))
           toast.success(res.data?.message);
         }
       }

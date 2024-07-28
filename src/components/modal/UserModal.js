@@ -46,7 +46,6 @@ export default  function  UserModal(props){
         const res = await axios.put(`/api/auth/users/${user._id}`, formData);
         if (res.data.success) {
           const filderUser = users.data.filter((data) => data._id !== user._id);
-          data._id = user._id;
           setUsers((perv)=> ({...perv , data:[res.data.data, ...filderUser]}))
           toast.success(res.data?.message);
         }

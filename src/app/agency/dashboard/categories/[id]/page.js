@@ -47,9 +47,7 @@ function UpdateCategory({ params }) {
             const res = await axios.put(`/api/categories/${id}`, data)
             if (res.data.success) {
                 const filteredCategories = categories.data.filter((data)=> data._id != id);
-                data._id = id ;
-                data.logo = categories.data.find((data)=> data._id == id).logo;
-                setCategories((prev) => ({ ...prev, data: [data, ...filteredCategories] }))
+                setCategories((prev) => ({ ...prev, data: [res.data.data, ...filteredCategories]}))
                 toast.success(res.data.message)
                 setLoading(false)      
                 router.push('/agency/dashboard/categories')

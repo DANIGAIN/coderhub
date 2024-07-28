@@ -28,9 +28,9 @@ export async function GET(req, context) {
 }
 export async function PUT(req, context) {
     const { id } = context.params;
-    const data = await req.json();
+    const body = await req.json();
     try {
-        const response = UpdateRoleSchema.safeParse(data);
+        const response = UpdateRoleSchema.safeParse(body);
         if(!response.success){
             const {errors} = response.error;
             return NextResponse.json(CustomError.validationError(errors),{status:422})
@@ -39,13 +39,13 @@ export async function PUT(req, context) {
         if (!role) {
             return NextResponse.json(CustomError.badRequestError({ message: "This role not found" }), { status: 400 })
         }
-        if (role.name  === data.name && role.isActive  === data.isActive) {
+        if (role.name  === body.name && role.isActive  === body.isActive) {
             return NextResponse.json(CustomError.badRequestError({ message: "This role is alrady exist" }), { status: 400 })
         }
-        await Role.findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
-
+        const data = await Role.findByIdAndUpdate({ _id: id }, { $set:{...body , updatedAt:new Date()}}, { new: true })
         return NextResponse.json({
             success: true,
+            data,
             message: "The role is updated successfully",
         }, { status: 200 });
 

@@ -33,8 +33,7 @@ export default function ComponentModal(props) {
             const res = await axios.put(`/api/components/${component._id}`, data);
             if (res.data.success) {
                 const filderComponent = components.data.filter((data) => data._id !== component._id);
-                data._id = component._id;
-                setComponents((prev) => ({...prev , data:[data, ...filderComponent]}))
+                setComponents((prev) => ({...prev , data:[res.data.data, ...filderComponent]}))
                 toast.success(res.data?.message);
             }
         }

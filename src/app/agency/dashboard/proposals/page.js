@@ -7,13 +7,17 @@ import axios from 'axios';
 import React, {  useEffect, useState } from 'react'
 
 export default function ProposalPage() {
-    const [proposals, setProposals] = useState([]);
+    const [proposals, setProposals] = useState({data:[],error:null, loading:true});
     const [proposal, setProposal] = useState(null);
     const [isopenProposal, setIsOpenProposal] = useState(false);
     useEffect(()=>{
        ;(async()=>{
+           try{
             const res = await axios.get('/api/proposals');
-            setProposals(res.data.data)
+            setProposals((prev) =>({...prev, data: res.data.data , loading:false}))
+           }catch(error){
+            setProposals((prev) =>({...prev, error, loading:false}))
+           }
        })()
     },[])
     const fieldPermission = ['amount'];

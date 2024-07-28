@@ -95,7 +95,7 @@ const Categorys = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="border-b border-[#eee] px-4 py-5 dark:border-strokedark ">
+                        <div >
                             <p
                                 className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${category.status === false
                                     ? "bg-warning text-warning" : "bg-success text-success"
@@ -105,7 +105,7 @@ const Categorys = () => {
                             </p>
                         </div>
 
-                        <div className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                        <div>
                             <div className="flex items-center space-x-3.5 ml-10 sm:ml-0">
                                 <Link className="hover:text-primary" href={`/agency/dashboard/categories/${category._id}?name=${category.name || ''}&slug=${category.slug || ''}&description=${category.description}&subcategoris=${category.subcategoris || ''}&status=${category.status}`} >
                                     < MdModeEdit />

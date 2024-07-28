@@ -14,14 +14,18 @@ export async function PUT(req, context) {
         if (!map) {
             return NextResponse.json(CustomError.notFoundError({ message: "This map not found" }), { status: 404 })
         }
-        const maping = await RC_Maping.findOne({role:data.role,component: data.component})
-        if(maping){
-            return NextResponse.json(CustomError.badRequestError({message:"This map alrady exist"}), { status: 400 });
+        const maping = await RC_Maping.findOne({ role: data.role, component: data.component })
+        if (maping) {
+            return NextResponse.json(CustomError.badRequestError({ message: "This map alrady exist" }), { status: 400 });
         }
-       const res =  await RC_Maping.findByIdAndUpdate({ _id: id }, { $set: data }, { new: true })
+        const res = await RC_Maping.findByIdAndUpdate({ _id: id }, { $set: { ...data, updatedAt: new Date() } }, { new: true })
+            .populate([{ path: 'component', select: '_id name' }, { path: 'role', select: '_id name' }])
+            .select('-createdAt -updatedAt -__v')
+            .exec();
 
         return NextResponse.json({
             success: true,
+            data:res,
             message: "This user updated successfully",
         }, { status: 200 });
 
