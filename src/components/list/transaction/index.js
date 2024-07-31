@@ -36,7 +36,7 @@ const Transactions = () => {
         return <ListSkeletonOnly />
     else
         return (
-            <div className="rounded-sm border  shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark  dark:bg-boxdark">
                 <div className="grid grid-cols-6  sm:grid-cols-8  border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5">
                     <div className="col-span-2 sm:col-span-3 items-center">
                         <p className="font-medium"> Customer </p>
@@ -96,7 +96,7 @@ const Transactions = () => {
                             </p>
                         </div>
                         <div className="col-span-1 items-center ml-5 sm:ml-0">
-                            <p className="font-medium">{new Date(data.createdAt).toDateString()}</p>
+                            <p className="text-sm">{new Date(data.createdAt).toDateString()}</p>
                         </div>
                         <div className="col-span-1 ml-auto  sm:mr-10 items-cente">
                             <div className="flex items-center ml-5">

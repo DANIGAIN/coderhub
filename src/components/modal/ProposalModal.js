@@ -1,17 +1,21 @@
 'use client'
 import axios from "axios";
-import React, { createRef, useState } from "react";
+import React, {  useState } from "react";
 import { useForm } from "react-hook-form";
 import { modalStyles } from "@/utils/Constants";
 import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { useSession } from "next-auth/react";
+import { CreateProposalAdminSchema, CreateProposalUserSchema } from "@/schemas/proposalSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ProposalModal(props) {
     const { data: section, status } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const { req, isopenProposal, setIsOpenProposal, service, setProposals, fieldPermission = [], proposal, proposals} = props;
+    const schema = !fieldPermission.includes('amount') && !proposal ? CreateProposalUserSchema : !proposal ? CreateProposalAdminSchema:null;
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        resolver:zodResolver(schema),
         defaultValues: proposal ? {
             title: proposal.title,
             day: proposal.day,
@@ -19,7 +23,6 @@ export default function ProposalModal(props) {
             description: proposal.description
         } : {}
     });
-    const rootRef = createRef();
     const onSubmit = async (data) => {
         setIsLoading(true)
         try {
@@ -56,7 +59,7 @@ export default function ProposalModal(props) {
                 isOpen={isopenProposal}
                 style={modalStyles}
                 contentLabel="Proposal Modal"
-                appElement={rootRef.current}
+                ariaHideApp={false}
                 onRequestClose={() => setIsOpenProposal(false)}
             >
                 <div className="flex flex-row">
@@ -65,7 +68,7 @@ export default function ProposalModal(props) {
                         onClick={() => setIsOpenProposal(false)}
                     >X</span>
                 </div>
-                <div ref={rootRef} id="root">
+                <div  id="root">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         {(fieldPermission.includes('title')) && <div>
                             {
@@ -90,10 +93,7 @@ export default function ProposalModal(props) {
 
                             <input
                                 type="text"
-                                {...register("title",
-                                    {
-                                        required: "Title is required"
-                                    })}
+                                {...register("title")}
                                 id="title"
                                 name="title"
                                 placeholder='Enter your job title'
@@ -117,7 +117,7 @@ export default function ProposalModal(props) {
 
                                     <label
                                         htmlFor="type"
-                                        className="block text-sm font-medium text-red-700"
+                                        className="block text-medium text-bolt font-medium text-red text-"
                                     >
                                         {errors.type?.message}
                                     </label>
@@ -126,10 +126,7 @@ export default function ProposalModal(props) {
 
                             <select
                                 type="text"
-                                {...register("type",
-                                    {
-                                        required: "Type is required",
-                                    })}
+                                {...register("type")}
                                 id="type"
                                 name="type"
                                 defaultValue={''}
@@ -167,10 +164,7 @@ export default function ProposalModal(props) {
 
                             <input
                                 type="number"
-                                {...register("day",
-                                    {
-                                        required: "Days is required",
-                                    })}
+                                {...register("day",{setValueAs: (value) => Number(value)})}
                                 id="day"
                                 name="day"
                                 placeholder='how maney days will you pay for this ?'
@@ -203,10 +197,7 @@ export default function ProposalModal(props) {
 
                             <textarea
                                 type="text"
-                                {...register("description",
-                                    {
-                                        required: "Description is required",
-                                    })}
+                                {...register("description")}
                                 id="description"
                                 name="description"
                                 placeholder='Over all describe of your project'
@@ -239,10 +230,7 @@ export default function ProposalModal(props) {
 
                             <input
                                 type="number"
-                                {...register("amount",
-                                    {
-                                        required: "Amount is required",
-                                    })}
+                                {...register("amount")}
                                 id="amount"
                                 name="amount"
                                 placeholder='how maney amount will you pay?'

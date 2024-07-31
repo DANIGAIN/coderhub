@@ -8,7 +8,7 @@ import React from 'react'
 import ListSkeleton from '@/components/loading/ListSkeleton';
 import toast from 'react-hot-toast';
 
-export default function Components({ setReq, setIsOpenComponent, setComponent, components,setComponents }) {
+export default function Components({ setReq, setIsOpenComponent, setComponent, components, setComponents }) {
   const handleUpdate = async (id) => {
     const data = components.data.find((data) => data._id == id);
     setReq('update');

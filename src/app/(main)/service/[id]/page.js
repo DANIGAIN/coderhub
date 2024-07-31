@@ -5,7 +5,7 @@ import Section1 from '@/components/service/Section1';
 import Review from '@/components/service/Review';
 import axios from 'axios';
 function servicePage(props) {
-  const {id} = props.params;
+  const { id } = props.params;
   const [service, setService] = useState({ data: null, loading: true, error: null });
   useEffect(() => {
     ; (async () => {
@@ -23,7 +23,7 @@ function servicePage(props) {
   }, [])
 
   return (
-    <div className='bg-slate-900 '>
+    <div className='dark:bg-slate-900 '>
       <Section1 service={service.data} loading={service.loading} />
       <div className='mx-5 sm:mx-10 lg:mx-70 md:50'>
         <div className="mt-20 max-w-4xl ">
@@ -33,11 +33,29 @@ function servicePage(props) {
             </li>
           </ul>
           <div className="mt-8">
-            <h3 className="text-xl font-bold text-gray-800">Service Description</h3>
-            <p className="text-sm text-gray-500 mt-4">
-             {service.loading && <Skeleton count={3}/> }
-             {!service.loading ? service?.data?.category?.description : null }
-            </p>
+
+            {service.loading ?
+              <>
+                <div className='mb-5 '>
+                     <div className="h-6 w-50 rounded-full bg-slate-300"></div>
+                </div>
+
+                <div className="max-w-full animate-pulse space-y-2">
+                  {
+                    Array.from({ length: 20 }).map((_, i) => (
+                      <div key={i} className="h-3 rounded-full bg-slate-300"></div>
+                    ))
+                  }
+                </div>
+              </>
+              :
+              <>
+                <h3 className="text-xl font-bold text-gray-800">Service Description</h3>
+                <p className="text-sm text-gray-500 mt-4">
+                  {service?.data?.category?.description}
+                </p>
+              </>
+            }
           </div>
         </div>
 

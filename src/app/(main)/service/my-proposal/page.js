@@ -8,10 +8,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import { MdModeEdit } from 'react-icons/md';
 
 export default function MyProposal() {
-  const [proposals, setProposals] = useState([]);
+  const [proposals, setProposals] = useState({ data: [], loading: true, error: null });
   const [proposal, setProposal] = useState(null);
   const [isopenProposal, setIsOpenProposal] = useState(false);
-  const {discount} = useContext(GlobalContext)
+  const { discount } = useContext(GlobalContext)
   const { data: session, status } = useSession();
   const router = useRouter();
   const fieldPermission = ['day', 'type', 'title', 'description'];
@@ -20,7 +20,7 @@ export default function MyProposal() {
       ; (async () => {
         const res = await axios.get(`/api/proposals?uid=${session.user.id}`)
         if (res.data.success) {
-          setProposals(res.data.data)
+          setProposals((prev) => ({ ...prev, data: res.data.data, loading: false }))
         }
       })()
     }
@@ -29,18 +29,18 @@ export default function MyProposal() {
     setIsOpenProposal(true);
     setProposal(proposals.find((data) => data._id == id))
   }
-  const handlepay = async(id , amount) =>{
-    try{
-        const res = await axios.post('/api/payments',{
-          service: id,
-          amount,
-          discount
-        })
-        if(res.data.success){
-          router.push(res.data.data.url)
-        }
-      
-    }catch(error){
+  const handlepay = async (id, amount) => {
+    try {
+      const res = await axios.post('/api/payments', {
+        service: id,
+        amount,
+        discount
+      })
+      if (res.data.success) {
+        router.push(res.data.data.url)
+      }
+
+    } catch (error) {
       console.log(error)
     }
   }
@@ -56,79 +56,70 @@ export default function MyProposal() {
         proposals={proposals}
         proposal={proposal}
       />}
-      <div className="bg-slate-900 p-8 rounded-md w-full mt-1">
+      <div className="dark:bg-slate-900 p-8 rounded-md w-full mt-1 h-screen">
         <div className="flex items-center justify-between pb-6 mt-20">
           <div>
             <h2 className="text-gray-600 font-semibold">List of proposals</h2>
             <span className="text-xs">Only for your</span>
           </div>
         </div>
-        <div>
-          <div className="overflow-y-auto h-125 mt-5">
-            <div className="px-4 sm:px-8 py-4">
-              <div className="min-w-full shadow rounded-lg overflow-hidden">
-                <div className="min-w-full leading-normal">
-                  <div className="flex px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    <div className="w-1/6">SR</div>
-                    <div className="w-1/6">Type</div>
-                    <div className="w-1/6">Days</div>
-                    <div className="w-1/6">Title</div>
-                    <div className="w-1/6">Description</div>
-                    <div className="ml-30 w-1/6">Amount</div>
-                    <div className="w-1/6">Action</div>
-                  </div>
-                  <div className='overflow-y-auto h-95'>
+        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          <div className="grid grid-cols-6 sm:grid-cols-10 gap-5 border-t border-stroke px-4 py-4.5 dark:border-strokedark  md:px-6 2xl:px-7.5">
+            <div className="col-span-1 items-center">
+              <p className="font-medium"> SR </p>
+            </div>
+            <div className=" col-span-1 sm:col-span-2 items-center">
+              <p className="font-medium"> Title </p>
+            </div>
+            <div className="hidden sm:block  col-span-1 items-center">
+              <p className="font-medium"> Days </p>
+            </div>
+            <div className="col-span-1 items-center ">
+              <p className="font-medium"> Types </p>
+            </div>
+            <div className="hidden sm:block col-span-3  items-center">
+              <p className="font-medium">Description </p>
+            </div>
+            <div className="col-span-1  items-center ">
+              <p className="font-medium"> Amount </p>
+            </div>
 
-                    {
-                      proposals.map((data, index) => (
-                        <div key={index} className="bg-slate-600">
-                          <div className="flex px-5 py-5 border-b border-gray-200 text-sm items-center">
-                            <div className="w-1/6 flex items-center">
-                              <p>{data._id}</p>
-                            </div>
-                            <div className="w-1/6">
-                              <p className="text-gray-900 whitespace-no-wrap">{data.type}</p>
-                            </div>
-                            <div className="w-1/6">
-                              <p className="text-gray-900 whitespace-no-wrap">{data.day}</p>
-                            </div>
-                            <div className="w-1/6">
-                              <p className="text-gray-900 whitespace-no-wrap">{data.title}</p>
-                            </div>
-                            <div className="w-1/6">
-                              <p className="text-gray-900 whitespace-no-wrap">{data.description}</p>
-                            </div>
-                            <div className=" ml-30 w-1/6">
-                              <p className="text-gray-900 whitespace-no-wrap">{
-                                data.status === 'pending'? data.status : data.amount
-                              }</p>
-                            </div>
-                            <div className="w-1/6">
-                            {
-                              console.log(data.status)
-                            }
-                              {data.status === 'pending' ?
-                                <span
-                                  className="font-medium"
-                                  onClick={() => handleUpdate(data._id)}
-                                ><MdModeEdit /></span>
-                                : data.status ==='paid'?
-                                   <span>{data.status}</span>
-                                :
-                                <button
-                                  onClick={()=> handlepay(data.service , data.amount)}
-                                  className='bg-blue-500 hover:bg-blue-700 px-6 py-2 rounded-lg ring-2 '
-                                > pay </button>}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-              </div>
+            <div className="col-span-1  items-center ml-auto">
+              <p className="font-medium">Action</p>
             </div>
           </div>
+          {proposals.data.map((data, ind) => (
+            <div
+              className="grid grid-cols-6 sm:grid-cols-10 gap-5border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
+              key={ind}
+            >
+              <div className="col-span-1 items-center">
+                <p className="font-medium"> {data._id.slice(0, 6)} </p>
+              </div>
+              <div className="col-span-1 sm:col-span-2 items-center ">
+                <p className="font-medium"> {data.title} </p>
+              </div>
+              <div className="hidden sm:block  col-span-1 items-center ">
+                <p className="font-medium"> {data.day} </p>
+              </div>
+              <div className="col-span-1 items-center">
+                <p className="font-medium"> {data.type} </p>
+              </div>
+              <div className="hidden sm:block col-span-3  items-center">
+                <p className="font-medium">{data.description} </p>
+              </div>
+              <div className="col-span-1  items-center">
+                <p className="font-medium">{(data.status != 'pending') ? data.amount : data.status} </p>
+              </div>
+              <div className="col-span-1  items-center ml-auto">
+                <span
+                  className="font-medium"
+                  onClick={() => handleUpdate(data._id)}
+                ><MdModeEdit /></span>
+              </div>
+
+            </div>
+          ))}
         </div>
       </div>
 

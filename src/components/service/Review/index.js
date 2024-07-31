@@ -230,7 +230,7 @@ export default function Review({ service }) {
                     <div className="mt-6 divide-y divide-gray-200 dark:divide-gray-700">
                         {
                             reviews.map((data, index) => (
-                                <div key={index} className="gap-3 py-6 sm:flex sm:items-start">
+                                <div key={index} className="gap-3 py-6 bg-stone-200 dark:bg-slate-800 rounded-lg p-2 sm:flex sm:items-start">
                                     <div className="shrink-0 space-y-2 sm:w-48 md:w-72">
                                         <div className="flex items-center gap-0.5">
                                             {

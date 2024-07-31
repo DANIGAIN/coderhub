@@ -3,6 +3,7 @@ import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
 import { UpdateServiceSchema } from '@/schemas/serviceSchema';
+import Porposal from '@/modals/proposalModal';
 
 await connect();
 export async function GET(req, context) {
@@ -32,6 +33,15 @@ export async function DELETE(req, context) {
         const service = await Service.findOne({ _id: id })
         if (!service) {
             return NextResponse.json(CustomError.badRequestError({ message: "Requested service was not found " }), { status: 400 })
+        }
+
+        const payment = await Service.findOne({service:id})
+        if(payment){
+            return NextResponse.json(CustomError.badRequestError({ message: "This service can not deleted ! have a transection" }), { status: 400 })
+        }
+        const proposal = await Porposal.findOne({service:id});
+        if(proposal){
+            return NextResponse.json(CustomError.badRequestError({ message: "This service can not deleted ! someone proposed" }), { status: 400 })
         }
         await Service.deleteOne({ _id: id })
         return NextResponse.json({

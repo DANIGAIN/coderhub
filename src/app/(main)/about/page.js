@@ -4,7 +4,7 @@ import React from 'react'
 export default function aboutPage() {
     return (
         <div  className='mt-1'>
-            <div className="bg-slate-900 w-auto min-h-fit sm:flex items-center">
+            <div className=" dark:bg-slate-900 w-auto min-h-fit sm:flex items-center">
                 <div className="sm:w-1/2 p-10 hidden sm:block mt-10">
                     <div className="image object-center text-center">
                         <Image alt='no image ' width={500} height={500} src="https://i.imgur.com/WbQnbas.png" />

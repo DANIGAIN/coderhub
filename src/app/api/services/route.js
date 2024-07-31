@@ -26,10 +26,17 @@ export async function POST(req) {
             return NextResponse.json(CustomError.badRequestError({message:"This service alrady exist "}),{status:400})
         }
         const service = await Service.create(body)
-        body._id = service._id;
+        const data = await Service.findOne({ _id: service._id })
+            .populate([
+                { path: 'category', select: '-createdAt -updatedAt -__v' },
+                { path: 'uid', select: 'name' },
+                { path: 'reviews', select: '_id rating' }
+            ])
+            .select('-__v')
+            .exec();
         return NextResponse.json({
             success: true,
-            data: body,
+            data,
             message: "create a new service",
         }, { status: 201 });
 

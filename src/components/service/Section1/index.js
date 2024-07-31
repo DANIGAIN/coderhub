@@ -5,45 +5,47 @@ import ProposalModal from '@/components/modal/ProposalModal';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Link from 'next/link';
-import { GlobalContext } from '@/context';
 import { useSearchParams } from 'next/navigation';
-import Skeleton from 'react-loading-skeleton'
+import ServiceSkeletion from '@/components/loading/ServiceSkeletion';
 
 export default function Section1({ service, loading }) {
     const [isopenProposal, setIsOpenProposal] = useState(false);
+    const [proposals, setProposals] = useState({data:[],error:null ,loading:true});
+    const [time, setTime] = useState(null);
     const search = useSearchParams();
     const discount = search.get('d')
     const { data: section, status } = useSession();
-    const [proposals, setProposals] = useState([]);
     const [price, setPrice] = useState(null);
-    const [time, setTime] = useState(null);
     const fieldPermission = ['type', 'day', 'description', 'title']
     useEffect(() => {
         service?.price && setPrice(service.price)
     }, [loading])
-    console.log(proposals)
     useEffect(() => {
         if (status == 'authenticated' && service) {
             ; (async () => {
                 try {
-                    const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`);
+                    const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`)
+                    console.log(res.data)
                     if (res.data.success && res.data?.data[0]) {
-                        setProposals(res.data.data);
+                        setProposals((prev) =>({...prev,data:res.data.data , loading:false}));
                     }
                 }
                 catch (error) {
-                    console.log(error)
+                    setProposals((prev) =>({...prev,error,loading:false}));
                 }
             })()
         }
     }, [status,service])
-
     const handlePrice = (value) => {
         if (value.time) {
             setPrice(parseInt(service.price / value.time * service.time))
         }
         if (value.time) setTime(value.time)
     }
+
+    if(loading)
+      return <ServiceSkeletion/>
+    else
     return (
         <>
             {isopenProposal && <ProposalModal
@@ -54,41 +56,32 @@ export default function Section1({ service, loading }) {
                 setIsOpenProposal={setIsOpenProposal}
                 setProposals={setProposals}
             />}
-            <section className="relative">
-                <div className="w-full mx-auto px-4 sm:px-6 lg:px-0">
+            <section className="relative space-y-6 px-20 sm:px-0 py-30 sm:py-0 sm:ml-10 ">
+                <div className="w-full mx-auto sm:px-4 md:px-6 lg:px-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mx-auto max-md:px-2">
-                        <div className="img mt-25">
+                        <div className="img sm:mt-25">
                             <div className="img-box h-full max-lg:mx-auto ">
-                                {loading ?
-                                    <div className="lg:ml-70 sm:ml-10  md:mr-10">
-                                        <Skeleton
-                                            style={{
-                                                width: 600,
-                                                height: 570
-                                            }}
-                                        />
-                                    </div>
-                                    :
                                     <Image
                                         src={'/category/' + service?.category?.image}
                                         alt="service image"
                                         width={600}
                                         height={600}
                                         className="max-lg:mx-auto lg:ml-auto h-full"
-                                    />}
+                                    />
                             </div>
                         </div>
                         <div className="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0 ">
                             <div className="data w-full max-w-xl mt-20">
                                 <h2 className="font-manrope font-bold text-3xl leading-10 text-gray-900 mb-2 capitalize">
-                                    {loading ? <Skeleton style={{ width: 150, height: 30 }} /> : service?.category?.name}
+                                    {service?.category?.name}
                                 </h2>
-                                {loading ? <Skeleton style={{ width: 300, height: 40, marginBottom: 40 }} /> : <div className="flex flex-col sm:flex-row sm:items-center mb-6">
-                                    <h6 className=" leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5">
+                                 <div className="flex flex-col sm:flex-row sm:items-center mb-6">
+                                    <h6 className={`leading-9 text-gray-900 pr-5 ${service?.reviews?.length ? 'sm:border-r': null } border-gray-200 mr-5`}>
                                         <span className='font-manrope font-semibold text-2xl'>${price ? (parseInt(price - (price * discount / 100)) + '-' + parseInt((price + 50) - (price * discount / 100))) : 0}</span>
                                         <span className='px-3 line-through'>{price ? ((price) + '-' + (price + 50)) : 0} </span>
                                     </h6>
-                                    {service?.reviews?.length && <div className="flex items-center gap-2">
+                                
+                                    {service?.reviews?.length ? <div className="flex items-center gap-2">
                                         <div className="flex items-center gap-1">
                                             {
                                                 Array.from(
@@ -124,15 +117,10 @@ export default function Section1({ service, loading }) {
                                         <span className="pl-2 font-normal leading-7 text-gray-500 text-sm ">
                                             {Math.max(service?.reviews?.length, 0) + '  review'}
                                         </span>
-                                    </div>}
-                                </div>}
+                                    </div>:null}
+                                </div>
                                 <p className="text-gray-500 text-base font-normal mb-5">
-                                    {loading ?
-                                        <>
-                                            <Skeleton style={{ width: '90%' }} />
-                                            <Skeleton style={{ width: '50%' }} />
-                                        </>
-                                        :
+                                    {
                                         (service.category?.description?.length > 100 ?
                                             <span>
                                                 {service.category?.description.slice(0, 100) + ''}
@@ -242,17 +230,17 @@ export default function Section1({ service, loading }) {
 
                                         <button
                                             onClick={() => handlePrice({ time: 5 })}
-                                            className={`${time === 5 ? 'bg-sky-500 ' : 'bg-slate-500 '}  text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
+                                            className={`${time === 5 ? 'bg-sky-500 ' : 'bg-stone-100 dark:bg-slate-500 '}  text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
                                             5
                                         </button>
                                         <button
                                             onClick={() => handlePrice({ time: 7 })}
-                                            className={`${time === 7 ? 'bg-sky-500 ' : 'bg-slate-500 '}text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
+                                            className={`${time === 7 ? 'bg-sky-500 ' : 'bg-stone-100 dark:bg-slate-500 '}text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
                                             7
                                         </button>
                                         <button
                                             onClick={() => handlePrice({ time: 14 })}
-                                            className={`${time === 14 ? 'bg-sky-500 ' : 'bg-slate-500 '}text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
+                                            className={`${time === 14 ? 'bg-sky-500 ' : 'bg-stone-100 dark:bg-slate-500 '}text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 visited:border-gray-300 visited:bg-gray-50`}>
                                             14
                                         </button>
                                     </div>
@@ -279,7 +267,7 @@ export default function Section1({ service, loading }) {
                                         </svg>
                                     </button>
                                     {
-                                        !proposals ?
+                                        !proposals.data[0] ?
                                             <button
                                                 onClick={() => setIsOpenProposal(true)}
                                                 className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400">

@@ -2,6 +2,7 @@ import { connect } from "@/db/dbConfig";
 import Porposal from "@/modals/proposalModal";
 import CustomError from "@/utils/Error";
 import { NextResponse } from "next/server";
+import { date } from "zod";
 
 await connect();
 
@@ -49,11 +50,10 @@ export async function GET(req) {
         return NextResponse.json({
             success: true,
             data,
-            message: "proposal get  successfully"
+            message: "Proposal get  successfully"
         }, { status: 200 })
 
     } catch (error) {
-        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 })
 
     }

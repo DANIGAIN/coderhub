@@ -35,7 +35,7 @@ function Navigation() {
     return (
         <div>
             <div className={'fixed z-9 w-full -mt-1'}>
-                <nav className="bg-slate-800 border-gray-200 dark:bg-gray-900">
+                <nav className="bg-white border-gray-200 dark:bg-slate-800">
                     <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                         <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
                             <Image src="/assets/agency-logo.svg" height={35} width={35} alt="Flowbite Logo" />
@@ -57,7 +57,7 @@ function Navigation() {
 
                             }
                             <div className={`relative ${!isMenuOpen ? 'hidden' : ''}`}>
-                                <div className="z-50 absolute my-4 text-base list-none bg-slate-500 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                                <div className="z-50 absolute my-4 text-base list-none bg-gray-2 dark:bg-slate-500 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
                                     <div className="px-4 py-3">
                                         <span className="block text-sm text-gray-900 dark:text-white">{`${session?.user?.name}`}</span>
                                         <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{`${session?.user?.email}`}</span>

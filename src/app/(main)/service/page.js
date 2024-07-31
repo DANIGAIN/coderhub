@@ -3,12 +3,11 @@ import Link from 'next/link';
 import Image from 'next/image'
 import { GlobalContext } from '@/context';
 import React, { useContext } from 'react'
-import Skeleton from 'react-loading-skeleton'
 export default function servicePage() {
     const { discount } = useContext(GlobalContext)
     const { services } = useContext(GlobalContext)
     return (
-        <div className='bg-slate-900 mt-1 '>
+        <div className='dark:bg-slate-900 mt-1 '>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 mt-14">
                     <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
@@ -23,25 +22,35 @@ export default function servicePage() {
                         {
                             services.loading ?
                                 Array.from({ length: 2 }).map((_, index) => (
-                                    <div key={index} className="rounded-lg border border-gray-200 bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                    
+                                    <div key={index} className="rounded-lg border border-gray-200 dark:bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                         <div className="h-45 w-full">
-                                            <Skeleton height={220} width={220} /> 
+                                            <div className="flex animate-pulse items-center justify-center h-50 w-65 bg-slate-300 rounded  dark:bg-gray-700">
+                                                <svg className="w-10 h-10 text-gray-2 dark:text-graydark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                                </svg>
+                                            </div>
                                         </div>
-                                        <div className="pt-6 ">
-                                            <Skeleton className='mt-21' /> 
-                                            <Skeleton count={5} className='mt-2' /> 
-                                            
+                                        <div className="w-full mt-15">
+                                            <div className="h-3 rounded-full bg-slate-300  w-48 mb-4"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-w-[480px] mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-30 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-35 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-40 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-48 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-48 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-48 mb-2.5"></div>
+                                            <div className="h-3 rounded-full bg-slate-300 max-w-[360px]"></div>
                                         </div>
-                                     
-                        
                                     </div>
                                 ))
                                 :
                                 services.data.map((data, index) => (
-                                    <div key={index} className="rounded-lg border border-gray-200 bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                    <div key={index} className="ransition ease-in-out delay-15 hover:-translate-y-1 hover:scale-110 duration-300 rounded-lg border border-gray-200 bg-slate-200 dark:bg-slate-600 p-6 ">
                                         <div className="h-45 w-full">
                                             <Image
-                                                className="mx-auto hidden h-full dark:block hover:border-2 border-graydark"
+                                                className="mx-auto  h-full dark:block hover:border-2 border-yellow-50 dark:border-graydark"
                                                 src={"/category/" + data.category?.image}
                                                 alt=""
                                                 height={220}
