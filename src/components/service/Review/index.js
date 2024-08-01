@@ -1,20 +1,39 @@
 "use client"
 import ReviewModal from '@/components/modal/ReviewModal';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 
 
-export default function Review({ service }) {
+export default function Review({ service ,proposals}) {
     const [isopenReview, setIsOpenReview] = useState(false);
-    const [reviews, setReviews] = useState([]);
+    const { data: section, status } = useSession();
+    const [exists , setexists] = useState(true);
+    const [reviews, setReviews] = useState({data:[], error:null ,loading:true});
+    
     useEffect(() => {
         (async () => {
-            const res = await axios.get('/api/reviews');
-            if (res.data.success) {
-                setReviews(res.data.data);
+            try{
+                const res = await axios.get('/api/reviews');
+                if (res.data.success) {
+                    setReviews((prev) => ({...prev,data:res.data.data , loading:true}));
+                }
+            }catch(error){
+                setReviews((prev) => ({...prev , error , loading:true}));
             }
+            
         })();
     }, [])
+    useEffect(()=>{
+        (async()=>{
+            if(status === 'authenticated' &&  !service.loading  && !proposals.loading){
+              const findReview = service.data.reviews.find((data) => data.uid === section.user.id);
+              if(!findReview && proposals.data[0].status === 'paid'){
+                setexists(false)
+              }
+            }  
+        })();
+    },[status,proposals.loading])
     return (
         <>
             {isopenReview && <ReviewModal
@@ -24,7 +43,7 @@ export default function Review({ service }) {
                 setReviews={setReviews}
             />}
 
-            <section className=" py-8 antialiased dark:bg-gray-900 md:py-16">
+            <section className="p-8 antialiased dark:bg-gray-900 md:py-16">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
                     <div className="flex items-center gap-2">
                         <h2 className="text-2xl font-semibold text-gray-900 ">
@@ -35,8 +54,8 @@ export default function Review({ service }) {
                                 {
                                     Array.from({
                                         length: parseInt((
-                                            reviews.reduce((acc, current) => acc + current.rating, 0) /
-                                            reviews.length
+                                            reviews.data.reduce((acc, current) => acc + current.rating, 0) /
+                                            reviews.data.length
                                         ).toFixed(1))
                                     }, (_, i) => (
                                         <svg
@@ -56,15 +75,15 @@ export default function Review({ service }) {
                             </div>
                             <p className="text-sm font-medium leading-none text-gray-500 dark:text-gray-400">
                                 {(
-                                    reviews.reduce((acc, current) => acc + current.rating, 0) /
-                                    reviews.length
+                                    reviews.data.reduce((acc, current) => acc + current.rating, 0) /
+                                    reviews.data.length
                                 ).toFixed(1)}
                             </p>
                             <a
                                 href="#"
                                 className="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
                             >
-                                {reviews.length} Reviews
+                                {reviews.data.length} Reviews
                             </a>
                         </div>
                     </div>
@@ -72,17 +91,21 @@ export default function Review({ service }) {
                         <div className="shrink-0 space-y-4">
                             <p className="text-2xl font-semibold leading-none text-gray-900 dark:text-white">
                                 {(
-                                    reviews.reduce((acc, current) => acc + current.rating, 0) /
-                                    reviews.length
+                                    reviews.data.reduce((acc, current) => acc + current.rating, 0) /
+                                    reviews.data.length
                                 ).toFixed(1)} out of 5
                             </p>
-                            <button
-                                type="button"
-                                onClick={() => setIsOpenReview(true)}
-                                className="mb-2 me-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            >
-                                Write a review
-                            </button>
+                        
+                            { status == 'authenticated' && !exists ?
+                                <button
+                                    type="button"
+                                    onClick={() => setIsOpenReview(true)}
+                                    className="mb-2 me-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                >
+                                    Write a review
+                                </button> : null
+                            }
+
                         </div>
                         <div className="mt-6 min-w-0 flex-1 space-y-3 sm:mt-0">
                             <div className="flex items-center gap-2">
@@ -110,7 +133,7 @@ export default function Review({ service }) {
                                     href="#"
                                     className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
                                 >
-                                    {reviews.filter((data) => data.rating === 5).length} <span className="hidden sm:inline">reviews</span>
+                                    {reviews.data.filter((data) => data.rating === 5).length} <span className="hidden sm:inline">reviews</span>
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -138,7 +161,7 @@ export default function Review({ service }) {
                                     href="#"
                                     className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
                                 >
-                                    {reviews.filter((data) => data.rating === 4).length} <span className="hidden sm:inline">reviews</span>
+                                    {reviews.data.filter((data) => data.rating === 4).length} <span className="hidden sm:inline">reviews</span>
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -166,7 +189,7 @@ export default function Review({ service }) {
                                     href="#"
                                     className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
                                 >
-                                    {reviews.filter((data) => data.rating === 3).length} <span className="hidden sm:inline">reviews</span>
+                                    {reviews.data.filter((data) => data.rating === 3).length} <span className="hidden sm:inline">reviews</span>
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -194,7 +217,7 @@ export default function Review({ service }) {
                                     href="#"
                                     className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
                                 >
-                                    {reviews.filter((data) => data.rating === 2).length}  <span className="hidden sm:inline">reviews</span>
+                                    {reviews.data.filter((data) => data.rating === 2).length}  <span className="hidden sm:inline">reviews</span>
                                 </a>
                             </div>
                             <div className="flex items-center gap-2">
@@ -222,14 +245,14 @@ export default function Review({ service }) {
                                     href="#"
                                     className="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
                                 >
-                                    {reviews.filter((data) => data.rating === 1).length}  <span className="hidden sm:inline">reviews</span>
+                                    {reviews.data.filter((data) => data.rating === 1).length}  <span className="hidden sm:inline">reviews</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div className="mt-6 divide-y divide-gray-200 dark:divide-gray-700">
                         {
-                            reviews.map((data, index) => (
+                            reviews.data.map((data, index) => (
                                 <div key={index} className="gap-3 py-6 bg-stone-200 dark:bg-slate-800 rounded-lg p-2 sm:flex sm:items-start">
                                     <div className="shrink-0 space-y-2 sm:w-48 md:w-72">
                                         <div className="flex items-center gap-0.5">

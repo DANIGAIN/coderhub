@@ -54,9 +54,12 @@ const SuccessPage = () => {
                     <p className="text-gray-600 text-lg ">
                         Your payment has been successfully processed. Thank you for your business!
                     </p>
+                    {mode === 'payment'? <Link href={'/service/my-proposal'} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-30 mb-45">
+                        Go to Proposal
+                    </Link>:
                     <Link href={'/'} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-30 mb-45">
-                        Return to Home
-                    </Link>
+                        Go to Home
+                    </Link>}
                 </div>
             </div>
         </section>

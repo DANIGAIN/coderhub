@@ -2,39 +2,21 @@
 import React, {  useEffect, useState } from 'react'
 import Image from 'next/image'
 import ProposalModal from '@/components/modal/ProposalModal';
-import { useSession } from 'next-auth/react';
-import axios from 'axios';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import ServiceSkeletion from '@/components/loading/ServiceSkeletion';
 
-export default function Section1({ service, loading }) {
+export default function Section1({ service, loading , proposals, setProposals}) {
     const [isopenProposal, setIsOpenProposal] = useState(false);
-    const [proposals, setProposals] = useState({data:[],error:null ,loading:true});
     const [time, setTime] = useState(null);
     const search = useSearchParams();
     const discount = search.get('d')
-    const { data: section, status } = useSession();
     const [price, setPrice] = useState(null);
     const fieldPermission = ['type', 'day', 'description', 'title']
     useEffect(() => {
         service?.price && setPrice(service.price)
     }, [loading])
-    useEffect(() => {
-        if (status == 'authenticated' && service) {
-            ; (async () => {
-                try {
-                    const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`)
-                    if (res.data.success && res.data?.data[0]) {
-                        setProposals((prev) =>({...prev,data:res.data.data , loading:false}));
-                    }
-                }
-                catch (error) {
-                    setProposals((prev) =>({...prev,error,loading:false}));
-                }
-            })()
-        }
-    }, [status,service])
+   
     const handlePrice = (value) => {
         if (value.time) {
             setPrice(parseInt(service.price / value.time * service.time))

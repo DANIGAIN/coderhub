@@ -8,9 +8,13 @@ await connect();
 
 export async function POST(req) {
     try {
-        const { service, uid, comment, rating } = await req.json();
+        const body = await req.json();
+        const { service, uid, comment, rating } = body ;
         const data = await Review.create({ uid, comment, rating });
-        const res = await Service.findByIdAndUpdate({_id:service}, { $push: { reviews: data._id } })
+        await Service.findByIdAndUpdate({_id:service}, {
+            $push: { reviews: data._id },
+            $set:{updatedAt:new Date()}
+         },{new:true})
         return NextResponse.json({
             success: true,
             data,

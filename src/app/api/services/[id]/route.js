@@ -13,7 +13,7 @@ export async function GET(req, context) {
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v' },
                 { path: 'uid', select: 'name' },
-                { path: 'reviews', select: '_id rating' }
+                { path: 'reviews', select: '_id rating comment uid' }
             ])
             .select('-__v')
             .exec();

@@ -64,8 +64,8 @@ export default function servicePage() {
                                                     You get {discount.amount} % off{" "}
                                                 </span>
                                                 <div className="flex items-center justify-end gap-1">
-                                                    <button
-                                                        type="button"
+                                                    <Link
+                                                        href={`/service/${data._id}?d=${discount.amount}`}
                                                         data-tooltip-target="tooltip-quick-look"
                                                         className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                                                     >
@@ -90,7 +90,7 @@ export default function servicePage() {
                                                                 d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                                                             />
                                                         </svg>
-                                                    </button>
+                                                    </Link>
                                                     <div
                                                         id="tooltip-quick-look"
                                                         role="tooltip"

@@ -7,22 +7,26 @@ import toast from "react-hot-toast";
 import Modal from 'react-modal'
 import { IoMdStar } from "react-icons/io";
 import { useSession } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateReviewSchema } from "@/schemas/reviewSchema";
 
 export default function ReviewModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
   const { setIsOpenReview, service, isopenReview, setReviews } = props;
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
-
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver:zodResolver(CreateReviewSchema)
+  }
+  );
   const onSubmit = async (data) => {
-    setIsLoading(true)
+     setIsLoading(true)
     try {
       if (status === 'authenticated') {
         data.uid = session.user.id;
-        data.service = service._id;
+        data.service = service.data._id;
         const res = await axios.post('/api/reviews', data);
         if (res.data.success) {
-          setReviews((prev) => ([res.data.data, ...prev]))
+          setReviews((prev) => ({...prev , data:[...prev.reviews.data ,res.data.data]}))
           toast.success(res.data?.message);
         }
       } else {
@@ -44,6 +48,7 @@ export default function ReviewModal(props) {
       isOpen={isopenReview}
       style={modalStyles}
       contentLabel="Role Modal"
+      ariaHideApp={false}
       onRequestClose={() => setIsOpenReview(false)}
     >
       <div className="flex justify-between">
@@ -77,10 +82,7 @@ export default function ReviewModal(props) {
 
           <input
             type="text"
-            {...register("comment",
-              {
-                required: "Comment is required"
-              })}
+            {...register("comment")}
             id="comment"
             name="comment"
             placeholder='Enter your message'
@@ -105,10 +107,10 @@ export default function ReviewModal(props) {
                   id="rating"
                   name="rating"
                   type="radio"
+                   defaultValue="4"
                   {
-                  ...register('rating', { required: "Rating is required" })
+                  ...register('rating')
                   }
-                  defaultValue="5"
                   className="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-600 "
                 />
                 <label
@@ -131,7 +133,7 @@ export default function ReviewModal(props) {
                   id="rating"
                   name="rating"
                   {
-                  ...register('rating', { required: "Rating is required" })
+                    ...register('rating')
                   }
                   type="radio"
                   defaultValue="4"
@@ -157,7 +159,7 @@ export default function ReviewModal(props) {
                   name="rating"
                   type="radio"
                   {
-                  ...register('rating', { required: "Rating is required" })
+                    ...register('rating')
                   }
                   defaultValue="3"
                   className="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-600 "
@@ -181,7 +183,7 @@ export default function ReviewModal(props) {
                   name="rating"
                   type="radio"
                   {
-                  ...register('rating', { required: "Rating is required" })
+                    ...register('rating')
                   }
                   defaultValue="2"
                   className="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-600 "
@@ -204,7 +206,7 @@ export default function ReviewModal(props) {
                   name="rating"
                   type="radio"
                   {
-                  ...register('rating', { required: "Rating is required" })
+                    ...register('rating')
                   }
                   defaultValue="1"
                   className="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-600 "
