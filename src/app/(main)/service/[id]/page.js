@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import Section1 from '@/components/service/Section1';
 import Review from '@/components/service/Review';
 import axios from 'axios';

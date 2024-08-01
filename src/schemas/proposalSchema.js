@@ -18,14 +18,15 @@ const CreateProposalUserSchema = z.object({
         .string({ required_error: "Description should be required" })
         .min(1, { message: "Description should be required" })
         .max(4096, { message: "Description should be at max 4096" }),
-    status: z
-        .enum(['painding', 'paid', 'approved'], { message: "status should be painding | paid approved" })
 })
 
 const CreateProposalAdminSchema = z.object({
-    amount: z
-        .number({ required_error: "Amount should be required" })
-        .nonnegative(),
+    amount:z.number({
+        required_error: "Amount should be required",
+        invalid_type_error: "Amount should be a number",
+    })
+    .min(3, { message: "Amount should be at least 3 USD" })
 })
 
-export { CreateProposalUserSchema, CreateProposalAdminSchema }; 
+
+export { CreateProposalUserSchema,CreateProposalAdminSchema }; 

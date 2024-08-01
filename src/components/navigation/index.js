@@ -15,10 +15,10 @@ function Navigation() {
     const router = useRouter();
     useEffect(() => {
         if (status === 'authenticated') {
-            ; (async () => {
+            ;(async () => {
                 try {
                     const res = await axios.get(`/api/payments/subscription?uid=${session.user.id}`)
-                    if (res.data.success && res.data.data) {
+                    if (res.data.success && res.data.data && res.data.data.mode != 'payment') {
                         const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
                         setDiscount({
                             priceId: price.id,

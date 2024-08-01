@@ -13,9 +13,9 @@ export default function RoleModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { roles, setRoles } = useContext(GlobalContext)
   const { req, setIsOpenRole, role, isOpenRole } = props;
-  const schema = !role ?  CreateRoleSchema  : UpdateRoleSchema;
+  const schema = !role ? CreateRoleSchema : UpdateRoleSchema;
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    resolver:zodResolver(schema),
+    resolver: zodResolver(schema),
     defaultValues: role ? {
       name: role.name,
       isActive: role.isActive,
@@ -28,14 +28,14 @@ export default function RoleModal(props) {
       if (req === 'create') {
         const res = await axios.post('/api/roles', data);
         if (res.data.success) {
-          setRoles((prev) => ({...prev , data:[res.data.data, ...roles.data]}))
+          setRoles((prev) => ({ ...prev, data: [res.data.data, ...roles.data] }))
           toast.success(res.data?.message);
         }
       } else if (req === 'update') {
         const res = await axios.put(`/api/roles/${role._id}`, data);
         if (res.data.success) {
           const filderRole = roles.data.filter((data) => data._id !== role._id);
-          setRoles((prev) => ({...prev , data:[res.data.data, ...filderRole]}))
+          setRoles((prev) => ({ ...prev, data: [res.data.data, ...filderRole] }))
           toast.success(res.data?.message);
         }
       }
@@ -132,8 +132,6 @@ export default function RoleModal(props) {
             </button>}
         </div>
       </form>
-
-
     </Modal>
   )
 }

@@ -61,10 +61,15 @@ export default function Proposals({ setIsOpenProposal, proposals, setProposal })
               <p className="font-medium">{(data.status != 'pending') ? data.amount : data.status} </p>
             </div>
             <div className="col-span-1  items-center ml-auto">
-              <span
-                className="font-medium"
-                onClick={() => handleUpdate(data._id)}
-              ><MdModeEdit /></span>
+              {data.amount ? 
+              <p> {data.status}</p>
+              : <span
+              className="font-medium"
+              onClick={() => handleUpdate(data._id)}
+            ><MdModeEdit /></span>
+              
+            }
+             
             </div>
 
           </div>

@@ -25,7 +25,6 @@ export default function Section1({ service, loading }) {
             ; (async () => {
                 try {
                     const res = await axios.get(`/api/proposals?uid=${section.user.id}&service=${service._id}`)
-                    console.log(res.data)
                     if (res.data.success && res.data?.data[0]) {
                         setProposals((prev) =>({...prev,data:res.data.data , loading:false}));
                     }
@@ -55,6 +54,7 @@ export default function Section1({ service, loading }) {
                 isopenProposal={isopenProposal}
                 setIsOpenProposal={setIsOpenProposal}
                 setProposals={setProposals}
+                proposals={proposals}
             />}
             <section className="relative space-y-6 px-20 sm:px-0 py-30 sm:py-0 sm:ml-10 ">
                 <div className="w-full mx-auto sm:px-4 md:px-6 lg:px-0">
@@ -218,13 +218,10 @@ export default function Section1({ service, loading }) {
                                             work par day 8 hours
                                         </span>
                                     </li>
-
                                 </ul>
                                 <p className="text-gray-900 text-lg leading-8 font-medium mb-4">
                                     Days
                                 </p>
-
-
                                 <div className="w-full pb-8 flex-wrap">
                                     <div className="grid grid-cols-3 min-[400px]:grid-cols-5 gap-3 max-w-md">
 

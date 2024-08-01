@@ -1,4 +1,5 @@
 'use client'
+import ListSkeletonOnly from '@/components/loading/ListSkeletonOnly';
 import ProposalModal from '@/components/modal/ProposalModal';
 import { GlobalContext } from '@/context';
 import axios from 'axios';
@@ -27,7 +28,7 @@ export default function MyProposal() {
   }, [status])
   const handleUpdate = (id) => {
     setIsOpenProposal(true);
-    setProposal(proposals.find((data) => data._id == id))
+    setProposal(proposals.data.find((data) => data._id === id))
   }
   const handlepay = async (id, amount) => {
     try {
@@ -56,6 +57,7 @@ export default function MyProposal() {
         proposals={proposals}
         proposal={proposal}
       />}
+
       <div className="dark:bg-slate-900 p-8 rounded-md w-full mt-1 h-screen">
         <div className="flex items-center justify-between pb-6 mt-20">
           <div>
@@ -63,65 +65,78 @@ export default function MyProposal() {
             <span className="text-xs">Only for your</span>
           </div>
         </div>
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-          <div className="grid grid-cols-6 sm:grid-cols-10 gap-5 border-t border-stroke px-4 py-4.5 dark:border-strokedark  md:px-6 2xl:px-7.5">
-            <div className="col-span-1 items-center">
-              <p className="font-medium"> SR </p>
-            </div>
-            <div className=" col-span-1 sm:col-span-2 items-center">
-              <p className="font-medium"> Title </p>
-            </div>
-            <div className="hidden sm:block  col-span-1 items-center">
-              <p className="font-medium"> Days </p>
-            </div>
-            <div className="col-span-1 items-center ">
-              <p className="font-medium"> Types </p>
-            </div>
-            <div className="hidden sm:block col-span-3  items-center">
-              <p className="font-medium">Description </p>
-            </div>
-            <div className="col-span-1  items-center ">
-              <p className="font-medium"> Amount </p>
-            </div>
+        {
+          proposals.loading ? <ListSkeletonOnly /> :
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="grid grid-cols-6 sm:grid-cols-10 gap-5 border-t border-stroke px-4 py-4.5 dark:border-strokedark  md:px-6 2xl:px-7.5">
+                <div className="col-span-1 items-center">
+                  <p className="font-medium"> SR </p>
+                </div>
+                <div className=" col-span-1 sm:col-span-2 items-center">
+                  <p className="font-medium"> Title </p>
+                </div>
+                <div className="hidden sm:block  col-span-1 items-center">
+                  <p className="font-medium"> Days </p>
+                </div>
+                <div className="col-span-1 items-center ">
+                  <p className="font-medium"> Types </p>
+                </div>
+                <div className="hidden sm:block col-span-3  items-center">
+                  <p className="font-medium">Description </p>
+                </div>
+                <div className="col-span-1  items-center ">
+                  <p className="font-medium"> Amount </p>
+                </div>
 
-            <div className="col-span-1  items-center ml-auto">
-              <p className="font-medium">Action</p>
-            </div>
-          </div>
-          {proposals.data.map((data, ind) => (
-            <div
-              className="grid grid-cols-6 sm:grid-cols-10 gap-5border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
-              key={ind}
-            >
-              <div className="col-span-1 items-center">
-                <p className="font-medium"> {data._id.slice(0, 6)} </p>
+                <div className="col-span-1  items-center ml-auto">
+                  <p className="font-medium">Action</p>
+                </div>
               </div>
-              <div className="col-span-1 sm:col-span-2 items-center ">
-                <p className="font-medium"> {data.title} </p>
-              </div>
-              <div className="hidden sm:block  col-span-1 items-center ">
-                <p className="font-medium"> {data.day} </p>
-              </div>
-              <div className="col-span-1 items-center">
-                <p className="font-medium"> {data.type} </p>
-              </div>
-              <div className="hidden sm:block col-span-3  items-center">
-                <p className="font-medium">{data.description} </p>
-              </div>
-              <div className="col-span-1  items-center">
-                <p className="font-medium">{(data.status != 'pending') ? data.amount : data.status} </p>
-              </div>
-              <div className="col-span-1  items-center ml-auto">
-                <span
-                  className="font-medium"
-                  onClick={() => handleUpdate(data._id)}
-                ><MdModeEdit /></span>
-              </div>
-
-            </div>
-          ))}
-        </div>
+              {proposals.data.map((data, ind) => (
+                <div
+                  className="grid grid-cols-6 sm:grid-cols-10 gap-5border-t border-stroke px-4 py-4.5 dark:border-strokedark md:px-6 2xl:px-7.5"
+                  key={ind}
+                >
+                  <div className="col-span-1 items-center">
+                    <p className="font-medium"> {data._id.slice(0, 6)} </p>
+                  </div>
+                  <div className="col-span-1 sm:col-span-2 items-center ">
+                    <p className="font-medium"> {data.title} </p>
+                  </div>
+                  <div className="hidden sm:block  col-span-1 items-center ">
+                    <p className="font-medium"> {data.day} </p>
+                  </div>
+                  <div className="col-span-1 items-center">
+                    <p className="font-medium"> {data.type} </p>
+                  </div>
+                  <div className="hidden sm:block col-span-3  items-center">
+                    <p className="font-medium">{data.description} </p>
+                  </div>
+                  <div className="col-span-1  items-center">
+                    <p className="font-medium">{(data.status != 'pending') ? data.amount : data.status} </p>
+                  </div>
+                  <div className="col-span-1  items-center ml-auto">
+                    {
+                      (data.status === 'pending') ?
+                        <span
+                          className="font-medium"
+                          onClick={() => handleUpdate(data._id)}
+                        ><MdModeEdit /></span> :
+                        (data.status === 'accepted') ? <button
+                          className="font-medium bg-sky-600 hover:bg-sky-800 p-2 rounded-lg px-6"
+                          onClick={() => handlepay(data.service, data.amount)}
+                        >pay</button> :
+                          <span
+                            className="font-medium"
+                          >{data.status}</span>
+                    }
+                  </div>
+                </div>
+              ))}
+            </div>}
       </div>
+
+
 
     </>
 

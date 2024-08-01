@@ -21,13 +21,15 @@ export async function POST(req, context) {
         obj.service = session.metadata.service;
         obj.mode = session.mode;
         obj.method = 'stripe'; 
-        let data = await Payment.findOne({ checkout_id:session.id })   
+        let data = await Payment.findOne({ checkout_id:session.id })  
         if (!data && session) {
             data = await Payment.create(obj);
             if(data){
-               await Porposal.findOneAndUpdate({service:obj.service},{$set:{status:'paid'}},{new:true})
+                
+                await Porposal.findOneAndUpdate({service:obj.service},{$set:{status:'paid', updatedAt:new Date()}},{new:true})
             }
         }
+        console.log(data); 
         return NextResponse.json({
             success: true,
             data,

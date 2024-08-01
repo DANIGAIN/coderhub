@@ -1,15 +1,19 @@
 import { connect } from "@/db/dbConfig";
 import Porposal from "@/modals/proposalModal";
+import { CreateProposalUserSchema } from "@/schemas/proposalSchema";
 import CustomError from "@/utils/Error";
 import { NextResponse } from "next/server";
-import { date } from "zod";
 
 await connect();
 
 export async function POST(req) {
     try {
         const body = await req.json();
-        body.day = parseInt(body.day)
+        const response = CreateProposalUserSchema.safeParse(body);
+        if(!response.success){
+            const {errors} = response.error;
+            return NextResponse.json(CustomError.validationError(errors),{status:422})
+        }
 
         const data = await Porposal.create(body);
         return NextResponse.json({
@@ -18,6 +22,7 @@ export async function POST(req) {
             message: "proposal is created successfuly"
         }, { status: 201 })
     } catch (err) {
+        console.log(err)
         return NextResponse.json(CustomError.internalServerError({ message: "proposal can not be created successfuly" }), { status: 500 })
 
     }
