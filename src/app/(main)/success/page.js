@@ -21,6 +21,7 @@ const SuccessPage = () => {
                     if(mode != 'payment'){
                         const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
                         const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
+                        console.log(res.data.data)
                         if (res.data.success && res.data.data.payment_status == "paid") {
                             setDiscount({
                                 priceId: price.id,
@@ -29,7 +30,6 @@ const SuccessPage = () => {
                         }
                     }else{
                         const res = await axios.post(`/api/payments/${checkout_id}`, { uid: section.user.id })
-                        console.log(res.data.message)
                     }
                 } catch (error) {
                     console.log(error)

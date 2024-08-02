@@ -1,6 +1,7 @@
 "use client"
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react"
+import { pricingCards } from "@/utils/Constants";
 import { useSession } from 'next-auth/react';
 export const GlobalContext = createContext(null)
 
@@ -118,6 +119,25 @@ export function GlobalState({ children }) {
     }
     getServices();
   }, [])
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+        ;(async () => {
+            try {
+                const res = await axios.get(`/api/payments/subscription?uid=${session.user.id}`)
+                if (res.data.success && res.data.data && res.data.data.mode != 'payment') {
+                    const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
+                    setDiscount({
+                        priceId: price.id,
+                        amount: price.discount
+                    })
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }
+}, [session])
 
   return (
     <GlobalContext.Provider

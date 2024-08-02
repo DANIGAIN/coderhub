@@ -2,7 +2,6 @@
 import { GlobalContext } from '@/context'
 import Image from 'next/image';
 import React, { useContext } from 'react'
-import Skeleton from 'react-loading-skeleton'
 export default function teamPage() {
     const { users } = useContext(GlobalContext);
     return (

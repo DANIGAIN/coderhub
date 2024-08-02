@@ -2,36 +2,15 @@
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, {useState } from 'react'
 import Skeleton from '../loading/Skeleton';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { useAppContext } from '@/context';
-import { pricingCards } from '@/utils/Constants';
 function Navigation() {
     const [isMenuOpen, setMenuOpen] = useState(false)
     const { data: session, status } = useSession()
-    const { setDiscount , permissions } = useAppContext();
+    const { permissions } = useAppContext();
     const router = useRouter();
-    useEffect(() => {
-        if (status === 'authenticated') {
-            ;(async () => {
-                try {
-                    const res = await axios.get(`/api/payments/subscription?uid=${session.user.id}`)
-                    if (res.data.success && res.data.data && res.data.data.mode != 'payment') {
-                        const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
-                        setDiscount({
-                            priceId: price.id,
-                            amount: price.discount
-                        })
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            })()
-        }
-    }, [session])
- 
     return (
         <div>
             <div className={'fixed z-9 w-full -mt-1'}>

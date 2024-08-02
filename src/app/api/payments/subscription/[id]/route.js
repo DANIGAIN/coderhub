@@ -26,15 +26,15 @@ export async function POST(req, context) {
         obj.planId =session.metadata.planId;
         obj.method = 'stripe';        
         let data = await Payment.findOne({ uid:obj.uid})
-        if (!data && session) {
-            data = await Payment.create(obj);
-            const user = await User.findOne({ _id: uid });
-            if (!user.about) {
-                const about = await About.create({ isSubscribe: true });
-                await User.findByIdAndUpdate({ _id: uid }, { $set: { about: about._id } }, { new: true })
-            } else {
-                await About.findByIdAndUpdate({ _id: user.about }, { $set: { isSubscribe: true } }, { new: true })
-            }
+        if (!data && session ) {
+                data = await Payment.create(obj);
+                const user = await User.findOne({ _id: uid });
+                if (!user.about) {
+                    const about = await About.create({ isSubscribe: true });
+                    await User.findByIdAndUpdate({ _id: uid }, { $set: { about: about._id } }, { new: true })
+                } else {
+                    await About.findByIdAndUpdate({ _id: user.about }, { $set: { isSubscribe: true } }, { new: true })
+                }
         }
         return NextResponse.json({
             success: true,
@@ -43,6 +43,7 @@ export async function POST(req, context) {
         }, { status: 201 });
 
     } catch (error) {
+        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }

@@ -12,7 +12,8 @@ const paymentSchema = new mongoose.Schema({
     },
     checkout_id: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     payment_status: {
         type: String
