@@ -5,35 +5,35 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 
 
-export default function Review({ service ,proposals}) {
+export default function Review({ service, proposals }) {
     const [isopenReview, setIsOpenReview] = useState(false);
     const { data: section, status } = useSession();
-    const [exists , setexists] = useState(true);
-    const [reviews, setReviews] = useState({data:[], error:null ,loading:true});
-    
+    const [exists, setexists] = useState(true);
+    const [reviews, setReviews] = useState({ data: [], error: null, loading: true });
+
     useEffect(() => {
         (async () => {
-            try{
+            try {
                 const res = await axios.get('/api/reviews');
                 if (res.data.success) {
-                    setReviews((prev) => ({...prev,data:res.data.data , loading:true}));
+                    setReviews((prev) => ({ ...prev, data: res.data.data, loading: true }));
                 }
-            }catch(error){
-                setReviews((prev) => ({...prev , error , loading:true}));
+            } catch (error) {
+                setReviews((prev) => ({ ...prev, error, loading: true }));
             }
-            
+
         })();
     }, [])
-    useEffect(()=>{
-        (async()=>{
-            if(status === 'authenticated' &&  !service.loading  && !proposals.loading){
-              const findReview = service.data.reviews.find((data) => data.uid === section.user.id);
-              if(!findReview && proposals.data[0].status === 'paid'){
-                setexists(false)
-              }
-            }  
+    useEffect(() => {
+        (async () => {
+            if (status === 'authenticated' && !service.loading && !proposals.loading) {
+                const findReview = service.data.reviews.find((data) => data.uid === section.user.id);
+                if (!findReview && proposals.data[0].status === 'paid') {
+                    setexists(false)
+                }
+            }
         })();
-    },[status,proposals.loading])
+    }, [status, proposals.loading ,exists ,service.loading ])
     return (
         <>
             {isopenReview && <ReviewModal
@@ -49,7 +49,7 @@ export default function Review({ service ,proposals}) {
                         <h2 className="text-2xl font-semibold text-gray-900 ">
                             Reviews
                         </h2>
-                        <div className="mt-2 flex items-center gap-2 sm:mt-0">
+                        {reviews.data.length ? <div className="mt-2 flex items-center gap-2 sm:mt-0">
                             <div className="flex items-center gap-0.5">
                                 {
                                     Array.from({
@@ -85,18 +85,21 @@ export default function Review({ service ,proposals}) {
                             >
                                 {reviews.data.length} Reviews
                             </a>
-                        </div>
+                        </div> : null}
                     </div>
                     <div className="my-6 gap-8 sm:flex sm:items-start md:my-8">
                         <div className="shrink-0 space-y-4">
-                            <p className="text-2xl font-semibold leading-none text-gray-900 dark:text-white">
-                                {(
-                                    reviews.data.reduce((acc, current) => acc + current.rating, 0) /
-                                    reviews.data.length
-                                ).toFixed(1)} out of 5
-                            </p>
-                        
-                            { status == 'authenticated' && !exists ?
+                            {
+                                reviews.data.length ?
+                                    <p className="text-2xl font-semibold leading-none text-gray-900 dark:text-white">
+                                        {(
+                                            reviews.data.reduce((acc, current) => acc + current.rating, 0) /
+                                            reviews.data.length
+                                        ).toFixed(1)} out of 5
+                                    </p> : null
+                            }
+
+                            {status == 'authenticated' && !exists ?
                                 <button
                                     type="button"
                                     onClick={() => setIsOpenReview(true)}
