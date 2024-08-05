@@ -18,7 +18,7 @@ export const pricingCards = [
       id:2,
       title: 'Company',
       price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_COMPANY,
-      disount:15,
+      discount:15,
       description: 'You will have 15% discout on every service',
       price: '$15',
       duration: 'month',
@@ -32,7 +32,7 @@ export const pricingCards = [
     {
       id:3,
       title: 'Enterprise',
-      disount:20,
+      discount:20,
       price_id: process.env.NEXT_PUBLIC_STRIPE_SUBSCRIPTION_ENTERPRICE,
       description: 'You will have 20% discout on every service .',
       price: '$20',
@@ -70,7 +70,8 @@ export const matcherPath = [
   '/home/:id',
   '/agency/dashboard',
   '/api/categories/:id*',
-  '/agency/forget-password'
+  '/agency/forget-password',
+  '/((?!api|_next/static|_next/image|.*\\.png$).*)'
 ]
 
 export const modalStyles = {

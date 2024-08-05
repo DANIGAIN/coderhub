@@ -13,7 +13,7 @@ import { CreateReviewSchema } from "@/schemas/reviewSchema";
 export default function ReviewModal(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
-  const { setIsOpenReview, service, isopenReview, setReviews } = props;
+  const { setIsOpenReview, service, isopenReview, setReviews,reviews,setexists} = props;
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver:zodResolver(CreateReviewSchema)
   }
@@ -26,7 +26,8 @@ export default function ReviewModal(props) {
         data.service = service.data._id;
         const res = await axios.post('/api/reviews', data);
         if (res.data.success) {
-          setReviews((prev) => ({...prev , data:[...prev.reviews.data ,res.data.data]}))
+          setexists(false)
+          setReviews((prev) => ({...prev , data:[...reviews.data ,res.data.data]}))
           toast.success(res.data?.message);
         }
       } else {
@@ -107,7 +108,7 @@ export default function ReviewModal(props) {
                   id="rating"
                   name="rating"
                   type="radio"
-                   defaultValue="4"
+                   defaultValue="5"
                   {
                   ...register('rating')
                   }

@@ -81,7 +81,8 @@ function servicePage(props) {
           </div>
         </div>
       </section >
-    <Review service={service} proposals={proposals} />
+    <Review service={service} 
+    proposals={proposals} />
     </div >
   )
 }

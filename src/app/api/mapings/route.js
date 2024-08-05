@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import RC_Maping from '@/modals/mapingModal';
+import Component from '@/modals/componentModel';
+import { cosmiconfig } from 'prettier/third-party';
 
 await connect();
 export async function POST(req) {
@@ -32,14 +34,25 @@ export async function GET(req) {
     try {
         const url = new URL(req.url);
         const role = url.searchParams.get('role')|| null;
+        const pathname = url.searchParams.get('pathname')|| null;
         let data = null ;
-        if(role){
+        if(role && !pathname ){
             data = await RC_Maping.find({role})
-                .populate([{path:'component', select:'_id name'},{path:'role', select:'_id name'}])
-                .select('-createdAt -updatedAt -__v')
-                .exec();
-
-        }else{
+            .populate([{path:'component', select:'_id name'},{path:'role', select:'_id name'}])
+            .select('-createdAt -updatedAt -__v')
+            .exec();
+        }
+        else if(role && pathname){
+            const component = await Component.findOne({name: pathname.split('/').pop()});
+            data = await RC_Maping.findOne({
+                $and:[
+                    {component:component._id},{role}
+                ]
+            })
+            .select('-createdAt -updatedAt -__v')
+            .exec();
+        }
+        else{
             data = await RC_Maping.find()
             .sort({'createdAt':-1})
             .populate('role','_id name')
@@ -55,6 +68,7 @@ export async function GET(req) {
         }, { status: 200 });
 
     } catch (error) {
+        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }

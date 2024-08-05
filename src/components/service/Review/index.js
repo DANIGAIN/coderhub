@@ -5,10 +5,10 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 
 
-export default function Review({ service, proposals }) {
+export default function Review({ service, proposals ,setService}) {
     const [isopenReview, setIsOpenReview] = useState(false);
     const { data: section, status } = useSession();
-    const [exists, setexists] = useState(true);
+    const [exists, setexists] = useState(false);
     const [reviews, setReviews] = useState({ data: [], error: null, loading: true });
 
     useEffect(() => {
@@ -21,7 +21,6 @@ export default function Review({ service, proposals }) {
             } catch (error) {
                 setReviews((prev) => ({ ...prev, error, loading: true }));
             }
-
         })();
     }, [])
     useEffect(() => {
@@ -29,15 +28,18 @@ export default function Review({ service, proposals }) {
             if (status === 'authenticated' && !service.loading && !proposals.loading) {
                 const findReview = service.data.reviews.find((data) => data.uid === section.user.id);
                 if (!findReview && proposals.data[0].status === 'paid') {
-                    setexists(false)
+                    setexists(true)
                 }
             }
-        })();
-    }, [status, proposals.loading ,exists ,service.loading ])
+        })();       
+    }, [status, proposals.loading ,service.loading])
+    console.log(exists)
     return (
         <>
             {isopenReview && <ReviewModal
                 service={service}
+                reviews={reviews}
+                setexists={setexists}
                 setIsOpenReview={setIsOpenReview}
                 isopenReview={isopenReview}
                 setReviews={setReviews}
@@ -99,7 +101,7 @@ export default function Review({ service, proposals }) {
                                     </p> : null
                             }
 
-                            {status == 'authenticated' && !exists ?
+                            {status == 'authenticated' && exists?
                                 <button
                                     type="button"
                                     onClick={() => setIsOpenReview(true)}
