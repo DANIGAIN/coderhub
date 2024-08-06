@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-export default function ContactPage() {
+export default function Contact() {
   const { data, status } = useSession()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)

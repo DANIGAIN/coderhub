@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image'
 import { GlobalContext } from '@/context';
 import React, { useContext } from 'react'
-export default function servicePage() {
+export default function Service() {
     const { discount } = useContext(GlobalContext)
     const { services } = useContext(GlobalContext)
     return (
@@ -11,10 +11,13 @@ export default function servicePage() {
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 mt-14">
                     <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
-                        <div>
-                            <h2 className="mt-3 text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-                                All Searvice
+                        <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+                            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 ">
+                                Our Services
                             </h2>
+                            <p className="text-gray-500 dark:text-gray-400">
+                                Our services include creating standards of excellence, training your people to work effectively, business consulting, market research, and growth strategies
+                            </p>
                         </div>
 
                     </div>
@@ -22,7 +25,7 @@ export default function servicePage() {
                         {
                             services.loading ?
                                 Array.from({ length: 2 }).map((_, index) => (
-                                    
+
                                     <div key={index} className="rounded-lg border border-gray-200 dark:bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                         <div className="h-45 w-full">
                                             <div className="flex animate-pulse items-center justify-center h-50 w-65 bg-slate-300 rounded  dark:bg-gray-700">

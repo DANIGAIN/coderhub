@@ -263,7 +263,7 @@ export default  function  UserModal(props){
             >
               <option disabled value="" hidden >Enter user specialist stack</option>
               {
-                categories.map((data, index) => (
+                categories.data.map((data, index) => (
                   <option key={index} value={data.id}>{data.name}</option>
                 ))
               }

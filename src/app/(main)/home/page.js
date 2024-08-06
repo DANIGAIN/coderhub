@@ -1,15 +1,18 @@
 import Banner from '@/components/atom/Banner'
 import Blog from '@/components/atom/Blog'
-import HomeC1 from '@/components/atom/HomeC1'
 import MemberPlan from '@/components/atom/MemberPlan'
 import React from 'react'
+import Service from '../service/page'
+import Contact from '../contact/page'
+import AdvanceFilter from '@/components/atom/AdvanceFilter'
 function Home() {
   return (<>
-      {/* <HomeC1/> */}
-      <Banner/>
-      <MemberPlan/>
-      <Blog/>
-
+      <Banner />
+      <AdvanceFilter />
+      <Service />
+      <MemberPlan />
+      <Blog />
+      <Contact />
   </>)
 }
 

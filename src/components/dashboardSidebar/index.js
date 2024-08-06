@@ -47,7 +47,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         priority
                     />
                 </Link>
-                <p className="font-bold text-xl "> Agency  Dashboard</p>
+                <p className="font-bold text-xl ">Coderhub Dashboard</p>
                 <button
                     ref={trigger}
                     onClick={() => setSidebarOpen(!sidebarOpen)}
