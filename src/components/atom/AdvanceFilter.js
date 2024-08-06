@@ -1,74 +1,86 @@
 'use client'
 import { useAppContext } from '@/context'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function () {
     const { setServices, services } = useAppContext();
-    console.log(services)
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        if (!services.loading) {
+            setCategories(Array.from(new Set(services.data.map(data => data.category.name))))
+        }
+    }, [services.loading])
     if (services.loading) {
-        return <section>
-        hi
-        </section>
+        return (
+            <section className="flex justify-center items-center relative z-1">
+                <div className="absolute mx-auto">
+                    <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
+                        <div className="flex flex-wrap justify-center mb-4 space-x-2 md:space-x-5 lg:space-x-10">
+                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
+                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
+                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
+                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
+                        </div>
+                    </div>
+                </div>
+            </section>)
     } else {
         return (
-            <section >
-                <div className="container mx-auto p-5 lg:mx-30">
-                    <div className=" bg-white rounded-lg shadow-md  p-7">
+            <section className="flex justify-center items-center relative z-1">
+                <div className="absolute mx-auto">
+                    <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
                         <form action="#" method="POST">
-                            <div className="flex flex-wrap justify-center mb-4 lg:gap-5">
-                                <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
+                            <div className="flex flex-wrap justify-center mb-4 space-x-2 md:space-x-5 lg:space-x-10">
+                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
                                     <select
-                                        className=" w-full p-2 text-medium text-slate-600"
+                                        className=" w-full p-2 text-medium text-slate-600 bg-white dark:bg-slate-400"
                                         name="category"
                                         id="category"
-                                        onChange={(e) => setServices((perv) => ({...perv , data:services.data.filter((data)=> data.category._id != e.target.value)}))}
+                                        onChange={(e) => setServices((perv) => ({ ...perv, data: services.data.filter((data) => data.category._id != e.target.value) }))}
                                         defaultValue=""
                                     >
-                                        <option value="" selected hidden >select your category</option>
+                                        <option value="" hidden >select your category</option>
                                         {
-                                            services.data.map((data , index) => (
+                                            categories.map((data, index) => (
+                                                <option key={index} value={data}>{data}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
+                                    <select
+                                        className=" w-full p-2 text-medium bg-white text-slate-600 dark:bg-slate-400"
+                                        name="time"
+                                        id="time"
+                                        onChange={(e) => setServices((perv) => ({ ...perv, data: services.data.filter((data) => data.category.name == e.target.value) }))}
+                                        defaultValue=""
+                                    >
+                                        <option value="" hidden >Time</option>
+                                        <option value={7}>{'as soon as (0<=7)'}</option>
+                                        <option value={8}>{'enough time (>7)'}</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
+                                    <select
+                                        className=" w-full p-2 text-medium text-slate-600 bg-white dark:bg-slate-400"
+                                        name="category"
+                                        id="category"
+                                        onChange={(e) => setServices((perv) => ({ ...perv, data: services.data.filter((data) => data.category._id != e.target.value) }))}
+                                        defaultValue=""
+                                    >
+                                        <option value="" hidden >select your category</option>
+                                        {
+                                            services.data.map((data, index) => (
                                                 <option key={index} value={data.category._id}>{data.category.name}</option>
                                             ))
                                         }
                                     </select>
                                 </div>
-                                <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
-                                    <select
-                                        className=" w-full p-2 text-medium text-slate-600"
-                                        name="category"
-                                        id="category"
-                                        defaultValue=""
-                                    >
-                                        <option value="" selected hidden >select your category</option>
-                                        {
-                                            services.data.map((data) => (
-                                                <option value={data.category._id}>{data.category.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-                                <div className="w-full lg:w-1/3 xl:w-1/4 mb-4 lg:mb-0">
-                                    <select
-                                        className=" w-full p-2 text-medium text-slate-600"
-                                        name="category"
-                                        id="category"
-                                        defaultValue=""
-                                    >
-                                        <option value="" selected hidden >select your category</option>
-                                        {
-                                            services.data.map((data) => (
-                                                <option value={data.category._id}>{data.category.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-                                <div className="w-full lg:w-1/3 xl:w-1/4 text-right">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary w-full p-2 text-sm text-white bg-blue-500 hover:bg-blue-700"
-                                        id="bookAppointment"
-                                    >
-                                        Book Now
+
+                                <div class="col-lg-3 col-md-6">
+                                    <button type="submit" className="rounded-lg bg-sky-600 hover:bg-sky-800 hover:bottom-2 border-graydark w-30 h-10" >
+                                        Find
                                     </button>
                                 </div>
                             </div>

@@ -41,9 +41,9 @@ export async function GET(req) {
             .populate([{path:'component', select:'_id name'},{path:'role', select:'_id name'}])
             .select('-createdAt -updatedAt -__v')
             .exec();
-        }
+        }   
         else if(role && pathname){
-            const component = await Component.findOne({name: pathname.split('/').pop()});
+            const component = await Component.findOne({name: pathname.split('/')[2]});
             data = await RC_Maping.findOne({
                 $and:[
                     {component:component._id},{role}
