@@ -15,6 +15,7 @@ export function GlobalState({ children }) {
   const [users, setUsers] = useState({ data: [], loading: true, error: null });
   const [permissions, setPermissions] = useState({ data: [], loading: true, error: null });
   const [discount, setDiscount] = useState({ priceId: '', amount: 0 })
+  const [showServices, setShowServices] = useState([]);
   useEffect(()=>{
      const getPermissions = async() =>{
       try{
@@ -109,12 +110,11 @@ export function GlobalState({ children }) {
       try {
         const res = await axios.get('/api/services');
         if (res.data.success) {
-          setServices((prev) => ({ ...prev, data: res.data?.data }));
+          setServices((prev) => ({ ...prev, data: res.data?.data ,loading:false}));
+          setShowServices(res.data?.data)
         }
       } catch (error) {
         setServices((prev) => ({ data: [], loading: false, error: error }));
-      } finally {
-        setServices((prev) => ({ ...prev, loading: false }));
       }
     }
     getServices();
@@ -146,6 +146,8 @@ export function GlobalState({ children }) {
         setUsers,
         services,
         setServices,
+        showServices,
+        setShowServices,
         categories,
         setCategories,
         roles,

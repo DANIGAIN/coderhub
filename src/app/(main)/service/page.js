@@ -5,7 +5,7 @@ import { GlobalContext } from '@/context';
 import React, { useContext } from 'react'
 export default function Service() {
     const { discount } = useContext(GlobalContext)
-    const { services } = useContext(GlobalContext)
+    const { services ,showServices} = useContext(GlobalContext)
     return (
         <div className='dark:bg-slate-900 mt-1 '>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
@@ -24,7 +24,7 @@ export default function Service() {
                     <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
                         {
                             services.loading ?
-                                Array.from({ length: 2 }).map((_, index) => (
+                                Array.from({ length: 4 }).map((_, index) => (
 
                                     <div key={index} className="rounded-lg border border-gray-200 dark:bg-slate-600 p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                         <div className="h-45 w-full">
@@ -49,7 +49,7 @@ export default function Service() {
                                     </div>
                                 ))
                                 :
-                                services.data.map((data, index) => (
+                                showServices.map((data, index) => (
                                     <div key={index} className="ransition ease-in-out delay-15 hover:-translate-y-1 hover:scale-110 duration-300 rounded-lg border border-gray-200 bg-slate-200 dark:bg-slate-600 p-6 ">
                                         <div className="h-45 w-full">
                                             <Image
