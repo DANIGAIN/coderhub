@@ -5,11 +5,9 @@ import { useAppContext } from "@/context";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import ListSkeleton from "@/components/loading/ListSkeleton";
 import toast from "react-hot-toast";
 const Categorys = () => {
-    const router = useRouter()
     const { categories, setCategories } = useAppContext();
     const handelDelete = async (id) => {
         try {
@@ -25,7 +23,7 @@ const Categorys = () => {
             }
         }
     }
-    if (categories.loading) {
+    if (categories.loading ) {
         return (
             <ListSkeleton />
         )

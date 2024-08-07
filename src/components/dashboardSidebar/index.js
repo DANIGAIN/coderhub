@@ -7,6 +7,7 @@ import SidebarLinkGroup from "./SidebarLinkGroup";
 import { FaUserLock } from "react-icons/fa6";
 import { AiOutlineBell } from "react-icons/ai";
 import { FaHandHoldingUsd } from "react-icons/fa";
+import { RiContactsBookUploadLine } from "react-icons/ri";
 import { useAppContext } from "@/context";
 
 const { usePathname } = require("next/navigation");
@@ -157,7 +158,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                     return (
                                         <React.Fragment>
                                             {
-                                            permissions.data.includes('users') ?
+                                                permissions.data.includes('users') ?
                                                     <div>
                                                         <Link
                                                             href="/users/role"
@@ -201,7 +202,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                                     <Link
                                                                         href="/agency/dashboard/users"
                                                                         className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-stone-800 dark:text-bodydark1 duration-300 ease-in-out hover:bg-slate-300 dark:hover:bg-meta-4${pathname === "/agency/dashboard/users" && "bg-slate-300 dark:bg-meta-4"
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         User
                                                                     </Link>
@@ -210,7 +211,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                                     <Link
                                                                         href="/agency/dashboard/roles"
                                                                         className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-stone-800 dark:text-bodydark1 duration-300 ease-in-out hover:bg-slate-300 dark:hover:bg-meta-4${pathname === "/agency/dashboard/roles" && "bg-slate-300 dark:bg-meta-4"
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         Role
                                                                     </Link>
@@ -219,7 +220,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                                     <Link
                                                                         href="/agency/dashboard/components"
                                                                         className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-stone-800 dark:text-bodydark1 duration-300 ease-in-out hover:bg-slate-300 dark:hover:bg-meta-4${pathname === "/agency/dashboard/components" && "bg-slate-300 dark:bg-meta-4"
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         Component
                                                                     </Link>
@@ -228,7 +229,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                                     <Link
                                                                         href="/agency/dashboard/mapings"
                                                                         className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-stone-800 dark:text-bodydark1 duration-300 ease-in-out hover:bg-slate-300 dark:hover:bg-meta-4${pathname === "/agency/dashboard/mapings" && "bg-slate-300 dark:bg-meta-4"
-                                                                        }`}
+                                                                            }`}
                                                                     >
                                                                         RC Maping
                                                                     </Link>
@@ -250,7 +251,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                         <Link
                                             href="/agency/dashboard/settings"
                                             className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium  text-stone-800 dark:text-bodydark1 duration-300 ease-in-out hover:bg-slate-300  dark:hover:bg-meta-4 ${pathname.includes("/agency/dashboard/settings") &&
-                                                    "bg-slate-300 dark:bg-meta-4"
+                                                "bg-slate-300 dark:bg-meta-4"
                                                 }`}
                                         >
                                             <svg
@@ -368,14 +369,14 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                                     />
                                                 </svg>
                                             </Link>
-                    
+
                                             <div
                                                 className={`translate transform overflow-hidden ${!open && "hidden"
                                                     }`}
                                             >
                                                 <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 pl-6">
                                                     {
-                                                       permissions.data.includes('services') ?
+                                                        permissions.data.includes('services') ?
                                                             <li>
                                                                 <Link
                                                                     href="/agency/dashboard/services"
@@ -435,6 +436,24 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                         >
                                             <FaHandHoldingUsd className="text-current h-5 w-5" />
                                             Transactions
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div> :
+                            null}
+                    {
+                        permissions.data.includes('contacts') ?
+                            <div>
+                                <ul className="flex flex-col gap-1.5">
+                                    <li>
+                                        <Link
+                                            href="/agency/dashboard/contacts"
+                                            className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium  duration-300 ease-in-out text-stone-800 dark:text-bodydark1 hover:bg-slate-300 dark:hover:bg-meta-4 ${pathname.includes("contacts") &&
+                                                "bg-slate-300 dark:bg-meta-4"
+                                                }`}
+                                        >
+                                            <RiContactsBookUploadLine className="text-current h-5 w-5" />
+                                            Contacts
                                         </Link>
                                     </li>
                                 </ul>

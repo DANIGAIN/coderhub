@@ -107,7 +107,7 @@ export default function Section1({ service, loading , proposals, setProposals}) 
                                             <span>
                                                 {service.category?.description.slice(0, 100) + ''}
                                                 <button
-                                                    onClick={() => window.scrollTo({top:250, behavior:'smooth'})}
+                                                    onClick={() => window.scrollTo({top:600, behavior:'smooth'})}
                                                     className="text-indigo-600 mt-2"
                                                 >
                                                     ... more
