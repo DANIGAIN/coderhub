@@ -12,7 +12,9 @@ const HomeC2 = () => {
                         your unique personality, style, and needs.Whether you havea clear idea in
                         mind or need guidance, our team is here to help.Contact us to discuss your
                         project and let's create something!</p>
-                    <button type="button" className="text-base px-6 py-3 lg:px-7 bg-sky-600 hover:bg-transparent hover:text-sky-800 border border-graydark rounded-lg hover:border-primary"> About </button>
+                    <div className="mt-10">
+                        <Link href={'/about'} className="text-base px-6 py-3 lg:px-7 bg-sky-600 hover:bg-transparent hover:text-sky-800 border border-graydark rounded-lg hover:border-primary"> About </Link>
+                    </div>
                     <div>
                         <p className="font-normal text-md text-base">Some of your client</p>
                         <div className="flex items-center">

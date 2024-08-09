@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const HomeC3 = () => {
     return (
@@ -8,7 +9,9 @@ const HomeC3 = () => {
                     <p className="text-3xl font-bold tracking-tight leading-[1.208] sm:text-[40px] xl:text-5xl"> we are solve <br/> existing bug for app.</p>
                     <p className="max-w-150 text-base">
                     At Coderhub, we specialize in solving existing bugs and issues in your software, application, or system. Our team of experienced developers and QA engineers are dedicated to providing efficient and effective solutions to get your project back on track.</p>
-                    <button type="button" className="text-base px-6 py-3 lg:px-7 bg-sky-600 hover:bg-transparent hover:text-sky-800 border border-graydark rounded-lg hover:border-primary"> About </button>
+                    <div className="mt-10">
+                        <Link href={'/about'} className="text-base px-6 py-3 lg:px-7 bg-sky-600 hover:bg-transparent hover:text-sky-800 border border-graydark rounded-lg hover:border-primary"> About </Link>
+                    </div>
                     <div>
                         <p className="font-normal text-md text-base">Some of your client</p>
                         <div className="flex items-center">

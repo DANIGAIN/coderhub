@@ -11,7 +11,6 @@ export default function RolePage() {
   const {roles , setRoles} = useContext(GlobalContext)
   const [role, setRole] = useState('');
   const [req, setReq] = useState(null);
-
   return (
     <div>
         <DefaultLayout>

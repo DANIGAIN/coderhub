@@ -21,15 +21,15 @@ export async function middleware(req) {
     }
     // permission ---------->>        
     if (pathname.startsWith('/agency/dashboard')) {
-        const url = new URL('/api/mapings',req.url);
-        url.searchParams.set('role', token.role);
-        url.searchParams.set('pathname', pathname);
-        const fullUrl = url.href;
-        const response = await  fetch(fullUrl)
-        const res =  await response.json()
-        if(!res.data){
-            return NextResponse.rewrite(new URL('/not-found', req.url))
-        }        
+        // const url = new URL('/api/mapings',req.url);
+        // url.searchParams.set('role', token.role);
+        // url.searchParams.set('pathname', pathname);
+        // const fullUrl = url.href;
+        // const response = await  fetch(fullUrl)
+        // const res =  await response.json()
+        // if(!res.data){
+        //     return NextResponse.rewrite(new URL('/not-found', req.url))
+        // }        
         return NextResponse.next()
     }
 

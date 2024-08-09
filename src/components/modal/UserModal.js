@@ -19,7 +19,7 @@ export default  function  UserModal(props){
     defaultValues: user ? {
       bio: user?.about?.bio,
       phone: JSON.stringify(user?.about?.phone),
-      role: user.role._id,
+      role: user.role?._id,
     } : {}
   });
   const onSubmit = async (data) => {
