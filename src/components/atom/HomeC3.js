@@ -17,7 +17,7 @@ const HomeC3 = () => {
                         <div className="flex items-center">
                             <Image src={"/images/client1.webp"} height={150} width={150} alt="oracle" />
                             <Image src={"/images/client2.webp"} height={150} width={150} alt="intel" />
-                            <Image src={"/images/client3.webp"} height={150} width={150} alt="logitech" />
+                            <Image className="hidden md:block" src={"/images/client3.webp"} height={150} width={150} alt="logitech" />
                         </div>
                     </div>
                 </div>

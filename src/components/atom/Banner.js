@@ -10,7 +10,7 @@ const Banner = () => {
   SwiperCore.use([Autoplay])
 
   return (
-    <div className='dark:bg-slate-900 pb-15'>
+    <div className='dark:bg-slate-900 md:pb-15 pb-30'>
       <Swiper
         slidesPerView={1}
         autoplay={{

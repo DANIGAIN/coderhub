@@ -51,10 +51,10 @@ export default function () {
             </section>)
     } else {
         return (
-            <section className="flex justify-center items-center mx-auto -my-15">
+            <section className="flex justify-center items-center mx-auto -my-30 md:-my-15">
                 <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
                     <form onSubmit={(e) => handelSubmit(e)}>
-                            <ul className="flex flex-row mb-2 space-x-2 md:space-x-5 lg:space-x-10">
+                            <ul className="flex flex-col md:flex-row space-y-2 md:space-x-5 lg:space-x-10">
                                 <li>
                                     <select
                                         className=" w-full py-2 px-5 text-medium text-slate-600 bg-white dark:bg-slate-400"
@@ -100,7 +100,7 @@ export default function () {
                                         <option value="large">{'large'}</option>
                                     </select>
                                 </li>
-                                <li>
+                                <li className='flex justify-center'>
                                     <button type="submit" className="rounded-lg px-6 py-2 bg-sky-600 hover:bg-sky-800 hover:bottom-2 border-graydark">
                                         Find
                                     </button>

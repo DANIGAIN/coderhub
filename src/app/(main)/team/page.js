@@ -5,7 +5,7 @@ import React, { useContext } from 'react'
 export default function teamPage() {
     const { users } = useContext(GlobalContext);
     return (
-        <section className='mt-1  dark:bg-slate-900'>
+        <section className='pt-10  md:pt-5 lg:pt-2 dark:bg-slate-900'>
             <div className="py-8  px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
                 <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
                     <h2 className="mb-4 mt-5 text-boxdark dark:text-gray-3 text-4xl tracking-tight font-extrabold ">

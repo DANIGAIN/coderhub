@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function aboutPage() {
     return (
-        <section className='dark:bg-slate-900 '>
+        <section className='dark:bg-slate-900 pt-10 lg:pt-0 '>
             <div className="py-12 max-w-screen-lg mx-auto  sm:flex items-center">
                 <div className="sm:w-1/2 p-10 hidden sm:block ">
                     <div className="image object-center text-center">
