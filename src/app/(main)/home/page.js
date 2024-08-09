@@ -11,7 +11,7 @@ function Home() {
       <AdvanceFilter />
       <Service />
       <MemberPlan />
-      <Blog />
+      {/* <Blog /> */}
       <Contact />
   </>)
 }

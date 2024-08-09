@@ -3,7 +3,8 @@ import React from 'react'
 
 export default function aboutPage() {
     return (
-            <div className="py-24 mx-5 dark:bg-slate-900 w-auto min-h-fit sm:flex items-center">
+        <section className='dark:bg-slate-900 '>
+            <div className="py-12 max-w-screen-lg mx-auto  sm:flex items-center">
                 <div className="sm:w-1/2 p-10 hidden sm:block ">
                     <div className="image object-center text-center">
                         <Image alt='no image ' width={500} height={500} src="https://i.imgur.com/WbQnbas.png" />
@@ -32,6 +33,9 @@ export default function aboutPage() {
                     </div>
                 </div>
             </div>
+
+        </section>
+
 
     )
 }

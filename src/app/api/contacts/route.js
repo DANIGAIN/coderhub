@@ -32,3 +32,18 @@ export async function POST(request) {
 
     }
 }
+
+export async function GET(req, res) {
+   try{
+      const data =await Contact.find({})
+        .sort({createdAt:-1})
+        .select('-__v -createdAt -updatedAt');
+       return NextResponse.json({
+        data,
+        message:"Get all contacts successfully",
+        success:true
+       })
+   }catch(error){
+    return NextResponse.json(CustomError.internalServerError(error),{status:500})
+   }    
+}

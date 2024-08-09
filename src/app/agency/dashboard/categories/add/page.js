@@ -8,9 +8,11 @@ import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateCategorySchema } from '@/schemas/categorySchema';
 import { useAppContext } from '@/context';
+import { useSession } from 'next-auth/react';
 
 function AddCategory() {
     const [subcategoris, setSubcategories] = useState([]);
+    const{data:session,status} = useSession();
     const {setCategories ,categories} = useAppContext();
     const [loading , setLoading] = useState(false);
     const [enabled, setEnabled] = useState(false);
@@ -31,6 +33,9 @@ function AddCategory() {
         setSubcategories(subcategoris.filter((d) => d !== subcategoris[ind]))
     }
     const onSubmit = async (d) => {
+        if(status === 'authenticated'){
+            toast('User can not found',{duration:5});
+        }
         const data = new FormData()
         d.image.length && data.append('image', d.image?.[0])
         d.logo.length && data.append('logo', d.logo?.[0])
@@ -39,6 +44,7 @@ function AddCategory() {
         data.append('status', d.status)
         subcategoris && data.append('subcategoris', subcategoris)
         d.slug && data.append('slug', d.slug)
+        data.append('uid',session.user.id)
 
         try {
             setLoading(true);

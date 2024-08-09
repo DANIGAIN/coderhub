@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema({
+    uid: {
+        type: mongoose.Types.ObjectId,
+        ref:'User'
+    },
     name: {
         type: String,
         required: true,
@@ -25,7 +29,8 @@ const categorySchema = new mongoose.Schema({
     description:{
         type:String,
         required: true
-    }
+    },
+   
 }, {
     timestamps: true
 });

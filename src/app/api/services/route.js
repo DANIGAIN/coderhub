@@ -51,7 +51,7 @@ export async function GET(req) {
             .sort({ 'createdAt': -1 })
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v' },
-                { path: 'uid', select: 'name' },
+                { path: 'uid', select: '_id name' },
                 { path: 'reviews', select: '_id rating comment uid' }
             ])
             .select('-createdAt -updatedAt -__v')
@@ -63,6 +63,7 @@ export async function GET(req) {
         }, { status: 200 });
 
     } catch (error) {
+        console.log(error)
         return NextResponse.json(CustomError.internalServerError(error), { status: 500 });
     }
 }

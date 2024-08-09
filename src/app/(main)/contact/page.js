@@ -31,7 +31,7 @@ export default function Contact() {
       setIsLoading(true)
       try {
         d.uid = data.user.id
-        const res = await axios.post('/api/contact', d)
+        const res = await axios.post('/api/contacts', d)
         if (res.data.success) {
           toast.success(res.data.message)
           router.push('/')
@@ -50,7 +50,7 @@ export default function Contact() {
      
       <section
         id="contact"
-        className="py-12 dark:bg-slate-900  flex justify-center items-center mt-1 "
+        className="py-12 dark:bg-slate-900  flex justify-center items-center "
       >
         <div className="container mx-auto px-4 w-full items-center md:w-2/3 lg:w-1/2 items center mt-20 ">
           <div className=" bg-slate-50 dark:bg-zinc-400 shadow-md  border-2 border-solid border-slate-50 dark:border-graydark rounded-lg p-5 ">
@@ -84,7 +84,7 @@ export default function Contact() {
               <div className="sm:col-span-2">
                 {!errors.subject ?
                   <label htmlFor="subject" className="block font-semibold mb-2" > Subject </label> :
-                  <label htmlFor="subject" className="block mb-2" > {errors.subject.message} </label>
+                  <label htmlFor="subject" className="block mb-2 text-red" > {errors.subject.message} </label>
                 }
 
                 <input

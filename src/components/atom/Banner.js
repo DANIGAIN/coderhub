@@ -10,21 +10,21 @@ const Banner = () => {
   SwiperCore.use([Autoplay])
 
   return (
-      <div className="mx-auto py-0 flex justify-center items-center relative mt-1 ">
-        <Swiper
-          slidesPerView={1}
-          autoplay={{
-            delay: 2500,
-            disableOnInteraction: false,
-          }}
-          className="h-full w-full rounded-lg overflow-hidden"
-        >
-            <SwiperSlide ><HomeC2/></SwiperSlide>
-            <SwiperSlide ><HomeC3/></SwiperSlide>
-  
-        </Swiper>
-      </div>
-    )
+    <div className='dark:bg-slate-900 pb-15'>
+      <Swiper
+        slidesPerView={1}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        className="h-full w-full rounded-lg overflow-hidden"
+      >
+        <SwiperSlide ><HomeC2 /></SwiperSlide>
+        <SwiperSlide ><HomeC3 /></SwiperSlide>
+      </Swiper>
+    </div>
+
+  )
 };
 
 export default Banner;

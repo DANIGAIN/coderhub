@@ -7,8 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import ListSkeleton from "@/components/loading/ListSkeleton";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 const Categorys = () => {
     const { categories, setCategories } = useAppContext();
+    const {data:session,status} = useSession();
     const handelDelete = async (id) => {
         try {
             const res = await axios.delete(`/api/categories/${id}`)
@@ -23,7 +25,7 @@ const Categorys = () => {
             }
         }
     }
-    if (categories.loading ) {
+    if (categories.loading || status === 'loading') {
         return (
             <ListSkeleton />
         )
@@ -57,22 +59,26 @@ const Categorys = () => {
                 </div>
 
                 {categories.data.map((category, key) => (
-                    <div
+                   session.user.id === category.uid ?
+                     <div
                         className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                         key={key}
                     >
                         <div className="col-span-3 flex items-center">
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                <div className="h-12.5 w-15 rounded-md">
-                                    {category?.logo ? <Image
+                                <div className="h-15 w-10 rounded-lg">
+                                    {category?.logo ?
+                                      <Image
                                         src={`/category/${category.logo}`}
-                                        width={60}
-                                        height={50}
+                                        width={0}
+                                        height={0}
+                                        style={{height:'100%',width:'100%'}}
                                         alt="category"
                                     /> : <Image
                                         src={`/images/cards/cards-02.png`}
-                                        width={60}
-                                        height={50}
+                                        width={0}
+                                        height={0}
+                                        style={{height:'100%',width:'100%'}}
                                         alt="category"
                                     />}
                                 </div>
@@ -115,8 +121,7 @@ const Categorys = () => {
                             </div>
                         </div>
 
-                    </div>
-                ))}
+                    </div>:null))}
             </div>
         );
     }

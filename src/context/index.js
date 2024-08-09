@@ -14,6 +14,7 @@ export function GlobalState({ children }) {
   const [roles, setRoles] = useState({ data: [], loading: true, error: null });
   const [users, setUsers] = useState({ data: [], loading: true, error: null });
   const [permissions, setPermissions] = useState({ data: [], loading: true, error: null });
+  const [contacts , setContacts] = useState({data:[], loading:true , error:null})
   const [discount, setDiscount] = useState({ priceId: '', amount: 0 })
   const [showServices, setShowServices] = useState([]);
   useEffect(()=>{
@@ -104,6 +105,19 @@ export function GlobalState({ children }) {
     }
     getCategories();
   }, [])
+  useEffect(() => {
+    const getContacts = async () => {
+      try {
+        const res = await axios.get('/api/contacts');
+        if (res.data.success) {
+          setContacts((prev) => ({ ...prev, data: res.data.data, loading: false }))
+        }
+      } catch (error) {
+         setContacts((prev) => ({ ...prev, error, loading: false }))
+      }
+    }
+    getContacts();
+  }, [])
 
   useEffect(() => {
     const getServices = async () => {
@@ -158,7 +172,9 @@ export function GlobalState({ children }) {
         setMapings,
         discount,
         setDiscount,
-        permissions
+        permissions,
+        contacts,
+        setContacts
       }}
     >
       {children}

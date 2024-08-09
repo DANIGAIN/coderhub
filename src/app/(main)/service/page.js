@@ -7,7 +7,7 @@ export default function Service() {
     const { discount } = useContext(GlobalContext)
     const { services ,showServices} = useContext(GlobalContext)
     return (
-        <div className='dark:bg-slate-900 mt-1 '>
+        <div className='dark:bg-slate-900'>
             <section className="bg-gray-50 py-8 antialiased dark:bg-gray-900 md:py-12">
                 <div className="mx-auto max-w-screen-xl px-4 2xl:px-0 mt-14">
                     <div className="mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">

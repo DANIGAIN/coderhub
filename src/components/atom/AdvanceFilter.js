@@ -35,33 +35,29 @@ export default function () {
         else if (category) {
             setShowServices(services.data.filter((data) => data.category.name === category));
         }
-        window.scrollTo({ top: 808, behavior: 'smooth' });
+        window.scrollTo({ top: 700, behavior: 'smooth' });
 
     }
     if (services.loading) {
         return (
-            <section className="flex justify-center items-center relative z-1">
-                <div className="absolute mx-auto">
-                    <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
-                        <div className="flex flex-wrap justify-center mb-4 space-x-2 md:space-x-5 lg:space-x-10">
-                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
-                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
-                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
-                            <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-44" />
-                        </div>
+            <section className="flex justify-center items-center mx-auto -my-15">
+                <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md pb-4 pt-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
+                    <div className="flex flex-wrap justify-center mb-4 space-x-2 md:space-x-5 lg:space-x-10">
+                        <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-50" />
+                        <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-50" />
+                        <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3 dark:bg-slate-200 animate-pulse h-8 w-50" />
                     </div>
                 </div>
             </section>)
     } else {
         return (
-            <section className="flex justify-center items-center relative z-1">
-                <div className="absolute mx-auto">
-                    <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
-                        <form onSubmit={(e) => handelSubmit(e)}>
-                            <div className="flex flex-wrap justify-center mb-4 space-x-2 md:space-x-5 lg:space-x-10">
-                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
+            <section className="flex justify-center items-center mx-auto -my-15">
+                <div className=" bg-white dark:bg-slate-800 rounded-lg shadow-md py-7 lg:px-50 md:px-25 sm:px-10 px-5 ">
+                    <form onSubmit={(e) => handelSubmit(e)}>
+                            <ul className="flex flex-row mb-2 space-x-2 md:space-x-5 lg:space-x-10">
+                                <li>
                                     <select
-                                        className=" w-full p-2 text-medium text-slate-600 bg-white dark:bg-slate-400"
+                                        className=" w-full py-2 px-5 text-medium text-slate-600 bg-white dark:bg-slate-400"
                                         name="category"
                                         id="category"
                                         onChange={(e) => (
@@ -76,10 +72,11 @@ export default function () {
                                             ))
                                         }
                                     </select>
-                                </div>
-                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
+
+                                </li>
+                                <li>
                                     <select
-                                        className=" w-full p-2 text-medium bg-white text-slate-600 dark:bg-slate-400"
+                                        className=" w-full py-2 px-5  text-medium bg-white text-slate-600 dark:bg-slate-400"
                                         name="time"
                                         id="time"
                                         onChange={(e) => setTime(e.target.value)}
@@ -88,11 +85,10 @@ export default function () {
                                         <option value="" hidden >Time</option>
                                         <option value={7}>{'as soon as (0 - 7)'}</option>
                                     </select>
-                                </div>
-
-                                <div className="col-lg-3 col-md-6 text-center mb-lg-0 mb-3">
+                                </li>
+                                <li>
                                     <select
-                                        className=" w-full p-2 text-medium text-slate-600 bg-white dark:bg-slate-400"
+                                        className=" w-full py-2 px-5 text-medium text-slate-600 bg-white dark:bg-slate-400"
                                         name="type"
                                         id="type"
                                         onChange={(e) => setType(e.target.value)}
@@ -103,16 +99,15 @@ export default function () {
                                         <option value="medium">{'medium'}</option>
                                         <option value="large">{'large'}</option>
                                     </select>
-                                </div>
-
-                                <div className="col-lg-3 col-md-6">
-                                    <button type="submit" className="rounded-lg bg-sky-600 hover:bg-sky-800 hover:bottom-2 border-graydark w-30 h-10" >
+                                </li>
+                                <li>
+                                    <button type="submit" className="rounded-lg px-6 py-2 bg-sky-600 hover:bg-sky-800 hover:bottom-2 border-graydark">
                                         Find
                                     </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                                </li>
+                            </ul>
+                    
+                    </form>
                 </div>
             </section>
 

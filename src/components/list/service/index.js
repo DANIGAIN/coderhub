@@ -8,8 +8,10 @@ import { useContext } from "react";
 import ListSkeleton from "@/components/loading/ListSkeleton";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const Services = () => {
+    const {data:session , status}= useSession();
     const {  services, setServices } = useContext(GlobalContext);
     const handelDelete = async(id)=>{
           try{
@@ -26,7 +28,7 @@ const Services = () => {
           }
     }
 
-    if (services.loading)
+    if (services.loading || status === 'loading')
         return <ListSkeleton />
     else
         return (
@@ -56,7 +58,7 @@ const Services = () => {
                     </div>
                 </div>
 
-                {services.data.map((service, key) => (service?.category?.status && (
+                {services.data.map((service, key) => (service?.category?.status && service.uid._id === session.user.id && (
                     <div
                         className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                         key={key}

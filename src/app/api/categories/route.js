@@ -53,7 +53,7 @@ export async function POST(req) {
     if (sub.length && sub[0].length) {
       obj.subcategoris = formData.get('subcategoris').split(',')
     }
-
+    obj.uid = formData.get('uid');
     const data = await Category.create(obj);
     return NextResponse.json({
       success: true,
