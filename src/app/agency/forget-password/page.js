@@ -1,60 +1,56 @@
 "use client"
-import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import React, { useEffect, useState } from 'react'
 import { Loading } from '@/components/loading/dot'
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 
-export default function ForgetToken() {
+export default function ForgetToken({ params, searchParams }) {
     const [isLoading, setIsLoading] = useState(false)
-    const { register, handleSubmit,watch, formState: { errors } } = useForm()
-    const [time , setTime] = useState(null);
-    const search  = useSearchParams();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const [time, setTime] = useState(null);
     const router = useRouter()
-    const email = search.get('email')|| null;
-    const token = search.get('token')|| null;
-    const extime = search.get('extime')|| null;
-    useEffect(()=>{
-        const intervalId = setInterval(()=>{
-            const ex = new Date(parseInt(extime) + (2* 60  *1000));
+    const { email, token, extime } = searchParams;
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const ex = new Date(parseInt(extime) + (2 * 60 * 1000));
             const current = new Date(Date.now())
             let diff = ex - current;
             diff = Math.max(0, diff);
             const totalSeconds = Math.floor(diff / 1000);
-            if(totalSeconds >= 0){
+            if (totalSeconds >= 0) {
                 const minutes = Math.floor(totalSeconds / 60);
                 const seconds = totalSeconds % 60;
-                setTime(minutes +':'+ seconds) 
+                setTime(minutes + ':' + seconds)
             }
-        },1000)
+        }, 1000)
         return () => clearInterval(intervalId);
-    },[])
+    }, [])
 
     const onSubmit = async (data) => {
         try {
             setIsLoading(true)
-            const res = await axios.post(`/api/auth/verify-forget-passowrd`,{
+            const res = await axios.post(`/api/auth/verify-forget-passowrd`, {
                 email,
                 token,
-                password:data.password,
+                password: data.password,
             })
-            if(res?.data?.success){
+            if (res?.data?.success) {
                 toast.success(res.data.message)
                 router.push('/agency/login')
             }
         } catch (error) {
             if (!error.response?.data?.success && error.response?.data?.status === 400) {
-                router.push(`/forget-error?message=${error.response?.data.message }&status=${error.response?.data?.status}`);
-              }
+                router.push(`/forget-error?message=${error.response?.data.message}&status=${error.response?.data?.status}`);
+            }
             setIsLoading(false)
         } finally {
             setIsLoading(false)
         }
     }
-    return (   
+    return (
         <div className="flex h-screen">
             <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
                 <div className="max-w-md text-center">
@@ -273,11 +269,11 @@ export default function ForgetToken() {
             <div className="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
                 <div className="max-w-md w-full p-6">
                     <h1 className="text-3xl font-semibold mb-6 text-width text-center">
-                         new password
+                        new password
                     </h1>
-                
+
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                          <div>
+                        <div>
                             {
                                 !errors.password ?
                                     (
@@ -369,11 +365,11 @@ export default function ForgetToken() {
                                     className="w-full  bg-blue-500 focus:bg-blue-700  text-white p-2 rounded-md hover:bg-gray-800 focus:outline-none  focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
                                 >
                                     conform
-                                </button> : <Loading/>}
+                                </button> : <Loading />}
                         </div>
                     </form>
                     <h1 className="text-sm font-semibold mb-6  text-center mt-5">
-                         Time :  {time}
+                        Time :  {time}
                     </h1>
                 </div>
             </div>

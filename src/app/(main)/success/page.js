@@ -3,23 +3,20 @@ import React, { useContext, useEffect } from 'react';
 import { pricingCards } from "@/utils/Constants";
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
 import { GlobalContext } from '@/context';
 import axios from 'axios';
 import Link from 'next/link';
 
-const SuccessPage = () => {
+const SuccessPage = ({params , searchParams}) => {
     const { data: section, status } = useSession();
     const { setDiscount } = useContext(GlobalContext);
-    const search = useSearchParams()
-    const checkout_id = search.get('session_id');
-    const mode = search.get('mode')
+    const {mode ,session_id} = searchParams ;
     useEffect(() => {
-        if(checkout_id && status === 'authenticated') {
-            ; (async () => {
+        if(session_id && status === 'authenticated') {
+            ;(async () => {
                 try {
                     if(mode != 'payment'){
-                        const res = await axios.post(`/api/payments/subscription/${checkout_id}`, { uid: section.user.id })
+                        const res = await axios.post(`/api/payments/subscription/${session_id}`, { uid: section.user.id })
                         const price = pricingCards.find((data) => data.id === parseInt(res.data.data.planId));
                         console.log(res.data.data)
                         if (res.data.success && res.data.data.payment_status == "paid") {
@@ -29,7 +26,7 @@ const SuccessPage = () => {
                             })
                         }
                     }else{
-                        const res = await axios.post(`/api/payments/${checkout_id}`, { uid: section.user.id })
+                          await axios.post(`/api/payments/${session_id}`, { uid: section.user.id });
                     }
                 } catch (error) {
                     console.log(error)
