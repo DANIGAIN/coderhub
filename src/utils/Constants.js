@@ -62,17 +62,6 @@ export const publicDomain =[
     '/contact'
 ]    
 
-export const matcherPath = [
-  '/',
-  '/home',
-  '/agency/login',
-  '/agency/signup',
-  '/home/:id',
-  '/agency/dashboard',
-  '/api/categories/:id*',
-  '/agency/forget-password',
-  '/((?!api|_next/static|_next/image|.*\\.png$).*)'
-]
 
 export const modalStyles = {
   content: {

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { varifyToken } from "./helpers/varifyToken";
-import { matcherPath } from "./utils/Constants";
 const SECRET = process.env.SECRET;
 export async function middleware(req) {
     const token = await getToken({ req, secret: SECRET })
@@ -36,5 +35,15 @@ export async function middleware(req) {
     return NextResponse.next()
 }
 export const config = {
-    matcher: matcherPath
+    matcher: [
+        '/',
+        '/home',
+        '/agency/login',
+        '/agency/signup',
+        '/home/:id',
+        '/agency/dashboard',
+        '/api/categories/:id*',
+        '/agency/forget-password',
+        '/((?!api|_next/static|_next/image|.*\\.png$).*)'
+      ]
 } 

@@ -12,7 +12,6 @@ function Navigation() {
     const [openSideManue , setOpenSideManus] = useState(false);
     const { permissions } = useAppContext();
     const router = useRouter();
-
     useEffect(()=>{
         const handleScroll = () => {
             if (window.scrollY > 20) {
