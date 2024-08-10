@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['lh3.googleusercontent.com','avatars.githubusercontent.com' ,'i.imgur.com','www.google.com','www.gadstyle.com'], 
+        domains: ['lh3.googleusercontent.com','avatars.githubusercontent.com' ,'i.imgur.com','www.google.com','www.gadstyle.com','coderhub1.netlify.app'], 
       },
     env: {
         MONGO_URI: process.env.MONGO_URI,
