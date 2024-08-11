@@ -3,7 +3,7 @@ import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import RC_Maping from '@/modals/mapingModal';
 import Component from '@/modals/componentModel';
-import { cosmiconfig } from 'prettier/third-party';
+import Role from '@/modals/roleModel';
 
 await connect();
 export async function POST(req) {
@@ -38,7 +38,17 @@ export async function GET(req) {
         let data = null ;
         if(role && !pathname ){
             data = await RC_Maping.find({role})
-            .populate([{path:'component', select:'_id name'},{path:'role', select:'_id name'}])
+            .populate([
+                { 
+                    path:'component', 
+                    select:'_id name',
+                    model:Component
+
+                },{
+                    path:'role',
+                    select:'_id name',
+                    model:Role
+                }])
             .select('-createdAt -updatedAt -__v')
             .exec();
         }   
@@ -55,8 +65,17 @@ export async function GET(req) {
         else{
             data = await RC_Maping.find()
             .sort({'createdAt':-1})
-            .populate('role','_id name')
-            .populate('component','_id name')
+            .populate([
+                { 
+                    path:'component', 
+                    select:'_id name',
+                    model:Component
+
+                },{
+                    path:'role',
+                    select:'_id name',
+                    model:Role
+                }])
             .select('-createdAt -updatedAt -__v')
             .exec();
         }
