@@ -50,10 +50,10 @@ export async function GET(req) {
         const data = await Service.find({})
             .sort({ 'createdAt': -1 })
             .populate([
-                { path: 'category', select: '-createdAt -updatedAt -__v' },
+                { path: 'category', select: '-createdAt -updatedAt -__v',},
                 { path: 'uid', select: '_id name' },
-                { path: 'reviews', select: '_id rating comment uid' }
             ])
+            .populate('reviews')
             .select('-createdAt -updatedAt -__v')
             .exec();
         return NextResponse.json({
