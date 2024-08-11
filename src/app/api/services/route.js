@@ -3,6 +3,7 @@ import { connect } from '@/db/dbConfig'
 import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
 import { CreateServiceSchema } from '@/schemas/serviceSchema';
+import Category from '@/modals/categoryModel';
 
 await connect();
 export async function POST(req) {
@@ -50,7 +51,7 @@ export async function GET(req) {
         const data = await Service.find({})
             .sort({ 'createdAt': -1 })
             .populate('uid')
-            .populate('category')
+            .populate({path:'category', model:Category})
             .populate('reviews')
             .select('-createdAt -updatedAt -__v')
             .exec();
