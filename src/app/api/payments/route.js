@@ -3,6 +3,7 @@ import CustomError from "@/utils/Error";
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import Payment from "@/modals/paymentModel";
+import User from "@/modals/userModel";
 await connect();
 export async function POST(req) {
     try {
@@ -71,7 +72,7 @@ export async function POST(req) {
 export async function GET(req) {
   try {
       const data = await Payment.find({})
-      .populate({path:'uid', select:'_id name'})
+      .populate({path:'uid', select:'_id name',model:User})
       .sort({createdAt: -1 })
       .select('-checkout_id -__v')
       return NextResponse.json({
