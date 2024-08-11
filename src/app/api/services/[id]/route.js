@@ -4,6 +4,7 @@ import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
 import { UpdateServiceSchema } from '@/schemas/serviceSchema';
 import Porposal from '@/modals/proposalModal';
+import Category from '@/modals/categoryModel';
 
 await connect();
 export async function GET(req, context) {
@@ -11,7 +12,7 @@ export async function GET(req, context) {
     try {
         const data = await Service.findOne({ _id: id })
             .populate([
-                { path: 'category', select: '-createdAt -updatedAt -__v' },
+                { path: 'category', select: '-createdAt -updatedAt -__v', model:Category},
                 { path: 'uid', select: 'name' },
                 { path: 'reviews', select: '_id rating comment uid' }
             ])
