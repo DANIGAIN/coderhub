@@ -32,6 +32,10 @@ export async function middleware(req) {
         return NextResponse.next()
     }
 
+    if(pathname.startsWith('/service/my-proposal') && !token) {
+        return NextResponse.rewrite(new URL('/not-found', req.url))
+    }
+
     return NextResponse.next()
 }
 export const config = {
