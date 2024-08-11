@@ -4,6 +4,8 @@ import CustomError from '@/utils/Error'
 import Service from '@/modals/serviceModel';
 import { CreateServiceSchema } from '@/schemas/serviceSchema';
 import Category from '@/modals/categoryModel';
+import User from '@/modals/userModel';
+import Review from '@/modals/reviewModel';
 
 await connect();
 export async function POST(req) {
@@ -49,12 +51,13 @@ export async function POST(req) {
 export async function GET(req) {
     try {
         const data = await Service.find({})
-            .sort({ 'createdAt': -1 })
-            .populate('uid')
-            .populate({path:'category', model:Category})
-            .populate('reviews')
-            .select('-createdAt -updatedAt -__v')
-            .exec();
+        .populate([
+            { path: 'category', select: '-createdAt -updatedAt -__v', model:Category},
+            { path: 'uid', select: 'name' ,model:User},
+            { path: 'reviews', select: '_id rating comment uid' , model:Review}
+        ])
+        .select('-__v')
+        .exec();
         return NextResponse.json({
             success: true,
             data,

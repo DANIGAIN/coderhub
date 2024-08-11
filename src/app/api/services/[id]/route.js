@@ -5,6 +5,8 @@ import Service from '@/modals/serviceModel';
 import { UpdateServiceSchema } from '@/schemas/serviceSchema';
 import Porposal from '@/modals/proposalModal';
 import Category from '@/modals/categoryModel';
+import User from '@/modals/userModel';
+import Review from '@/modals/reviewModel';
 
 await connect();
 export async function GET(req, context) {
@@ -13,8 +15,8 @@ export async function GET(req, context) {
         const data = await Service.findOne({ _id: id })
             .populate([
                 { path: 'category', select: '-createdAt -updatedAt -__v', model:Category},
-                { path: 'uid', select: 'name' },
-                { path: 'reviews', select: '_id rating comment uid' }
+                { path: 'uid', select: 'name' ,model:User},
+                { path: 'reviews', select: '_id rating comment uid' , model:Review }
             ])
             .select('-__v')
             .exec();
