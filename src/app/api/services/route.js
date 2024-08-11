@@ -49,10 +49,8 @@ export async function GET(req) {
     try {
         const data = await Service.find({})
             .sort({ 'createdAt': -1 })
-            .populate([
-                { path: 'category', select: '-createdAt -updatedAt -__v',},
-                { path: 'uid', select: '_id name' },
-            ])
+            .populate('uid')
+            .populate('category')
             .populate('reviews')
             .select('-createdAt -updatedAt -__v')
             .exec();
