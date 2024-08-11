@@ -3,12 +3,10 @@ const mapingSchema = new mongoose.Schema({
     component:{
         type:mongoose.Types.ObjectId,
         ref:'Component',
-        required:true
     },
     role:{
         type:mongoose.Types.ObjectId,
         ref:'Role',
-        required:true
     }
 }, { 
     timestamps:true,
