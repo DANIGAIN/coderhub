@@ -13,15 +13,24 @@ const transporter = nodemailer.createTransport({
 
 export async function sendEmail(receiver , type , subject , html) {
   if(type === 'varify'){
-    const info = await transporter.sendMail({
+    await new Promise((resolve, reject) => {
+    transporter.sendMail({
       from: process.env.GMAIL, 
       to: receiver,
       subject, 
       text: "Hey ! please click the link for verify your application ", 
       html, 
-    });
-  
-    console.log("Message sent: %s", info.messageId); 
+    },(error, info) => {
+      if(error){
+        console.log(error);
+            reject(error);
+      }else{
+        console.log(info);
+        resolve(info);
+      }
+    })
+    
+  });
   }else{
     const info = await transporter.sendMail({
       from: process.env.GMAIL, 
